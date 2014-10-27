@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="ui-mobile-rendering" lang="en">
+<head>
+    <title>Hoteles Solana</title>
+
+    <!--<meta name="viewport" content="user-scalable=0, initial-scale=1.0">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />-->
+
+    <!--<meta name="apple-mobile-web-app-status-bar-style" content="#ececec" />-->
+    <meta http-equiv="Content-type" content="text/htm1;charset=utf-8">
+    <meta charset="utf-8">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="stylesheet" href="css/jquery.mobile-1.3.2.css"/>
+
+    <link rel="stylesheet" href="css/handler.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+
+    <script>
+        window.onerror = function(message, url, lineNumber) {
+            console.log("Error: "+message+" in "+url+" at line "+lineNumber);
+        }
+    </script>
+
+    <script type="text/template" id="menu">
+        <div class="header" data-role="header" data-position="fixed" data-id="header">
+            <div class="content-menu-izq">
+                <div class="icon-izq"></div>
+                <ul class="menu-izq">
+                    <li><a href="#serv_horario" data-role="none">Servicios y horarios</a></li>
+                    <li><a href="#cron_das" data-role="none">Cronograma D.A.S.</a></li>
+                    <li><a href="#serv_horario" data-role="none">Solanas Kids</a></li>
+                    <li><a href="#plano_complejo" data-role="none">Plano del complejo</a></li>
+                    <li><a href="#gastronomia" data-role="none">Gastronomía</a></li>
+                    <li><a href="#serv_horario" data-role="none">Acesoramiento e Inversiones</a></li>
+                    <li><a href="#serv_horario" data-role="none">Solanas Aventuras</a></li>
+                    <li><a href="#bethel_spa" data-role="none">Bethel Spa</a></li>
+                    <li><a href="#convention_center" data-role="none">Solanas Convention Center</a></li>
+                    <li><a href="#datos_utiles" data-role="none">Datos útiles</a></li>
+
+                </ul>
+            </div>
+            <div class="ave"></div>
+
+            <% if(title != '') {%>
+                <h1><%= title %></h1>
+            <% }else{%>
+                <h1 class="logo"></h1>
+            <% }%>
+            <div class="search"></div>
+            <div class="content-menu-der">
+                <div class="icon-der"></div>
+                <ul class="menu-der">
+                    <li class="icon_promo">Promo</li>
+                    <li class="icon_galeria">Galeria</li>
+                    <li class="icon_videos">Videos</li>
+                    <li class="icon_facebook">Facebook</li>
+                    <li class="icon_avisos">Avisos</li>
+                </ul>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="index">
+        <div data-role="content">
+            <div style="background-color: red; height:337px"></div>
+            <div style="background-color: yellow; height: 166px"></div>
+        </div>
+    </script>
+
+    <script type="text/template" id="cronograma_das">
+        <div data-role="content">
+            <div class="tap-view">
+                <div>Por día</div>
+                <div>Favoritos</div>
+            </div>
+            <div class="type2">
+                <div class="title">
+                    <div class="slider_left"></div>
+                    <h2>Hoy</h2>
+                    <div class="slider_right"></div>
+                </div>
+                <div class="content-type2">
+                    <ul>
+                        <li>
+                            Item por dia
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-type1" style="height: 48px;">
+
+                </div>
+            </div>
+        </div>
+    </script>
+    <script type="text/template" id="serv_horario">
+
+        <div data-role="content">
+            <ul class="list">
+                <% for(var i=0; i<30; i++){ %>
+                <li class="item" data-index="<%= i %>">
+                    <div class="icon-item"></div>
+                    <div class="txt-item">
+                        <div>
+                            <span class="title-item">Recepcion <%= i %></span>
+                            <span class="subtitle-item">Lunes  a Viernes de 9:00 a 12:00hs.</span>
+                        </div>
+                    </div>
+                </li>
+                <% } %>
+            </ul>
+        </div>
+    </script>
+
+    <script type="text/template" id="item_serv_horario">
+        <div data-role="content">
+            <div class="title">
+                <div class="back"></div>
+                <h2><%= title %></h2>
+            </div>
+            <div class="content-type1">
+                <div class="image"></div>
+                <span class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis </span>
+                <p class="title_horario">Horarios:</p>
+                            <span class="description_horario">Lunes a Viernes de 09:00 a 23:00 hs <br/>
+                                Sábados, Domingos y Feriados de 10:00 a 21 hs.</span>
+                <p class="title_horario" style="margin-bottom: 10px">Ir a Pagina</p>
+            </div>
+            <div class="footer-type1" style="height: 48px;">
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript" src="phonegap.js"></script>
+
+    <!-- The Scripts -->
+    <script src="vendor/jquery-2.0.3.min.js"></script>
+
+    <!-- The Scripts -->
+    <script src="vendor/bxslider/jquery.bxslider.min.js"></script>
+    <link rel="stylesheet" href="vendor/bxslider/jquery.bxslider.css"/>
+
+    <script src="js/Storage.js"></script>
+    <script src="js/PushNotification.js"></script>
+
+    <script src="js/jqm-config.js"></script>
+    <script src="vendor/jquery.mobile-1.3.2.js"></script>
+    <script src="vendor/underscore.js"></script>
+    <script src="vendor/backbone.js"></script>
+
+    <script src="js/models.js"></script>
+    <script src="js/views.js"></script>
+    <script src="js/collections.js"></script>
+    <script src="js/router.js"></script>
+
+    <script src="js/main.js"></script>
+
+
+
+</head>
+<body>
+</body>
+
+</html>
