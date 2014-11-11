@@ -17,7 +17,7 @@ var AppRouter = Backbone.Router.extend({
         'videos':'videos',
 
         'galerias(/:reverse)':'galerias',
-        'item_gallery':'item_gallery',
+        'list_image/:id':'list_image',
 
         'datos_utiles(/:reverse)':'datos_utiles',
         'avisos(/:reverse)':'avisos',
@@ -94,7 +94,6 @@ var AppRouter = Backbone.Router.extend({
         });
     },
     gastronomia:function(reverse){
-
         app.pushHistory();
         var serv = new Solana.Views.ViewList({title: 'Gastronomia',item_type:'3'});
         app.changePage(serv, 'fade');
@@ -123,11 +122,18 @@ var AppRouter = Backbone.Router.extend({
     },
     galerias:function(reverse){
         app.pushHistory();
-        app.changePage(new Solana.Views.Galerias(), 'fade');
+        var serv = new Solana.Views.Galerias({title: 'Galeria de fotos'});
+        app.changePage(serv, 'fade');
+
+        if(reverse){
+            serv.parseJSON(getStorage(app.lastHistoy(),null));
+        }else{
+            serv.loadMoreView();
+        }
     },
-    item_gallery:function(){
+    list_image:function(id){
         app.pushHistory();
-        app.changePage(new Solana.Views.ItemsGalerias(), 'fade');
+        app.changePage(new Solana.Views.GaleryImages(getStorage('list_image/'+id,null)), 'fade');
     },
     datos_utiles:function(){
         app.pushHistory();

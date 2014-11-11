@@ -306,30 +306,27 @@
     <script type="text/template" id="galerias">
         <div data-role="content" class="content-galerias">
             <ul class="list">
-                <% for(var i=0; i<15; i++){ %>
-                <li class="galerias-item">
-                    <div>
-                        <div class="galeria-image"></div>
-                        <span class="galeria-title">Galeria 01</span>
-                        <span class="galeria-date">Octubre 2014</span>
-                    </div>
-                </li>
-                <% } %>
             </ul>
-        </div>e
+        </div>
     </script>
-        <script type="text/template" id="item_galerias">
-            <div class="header" data-role="header" data-position="fixed" data-id="header">
-                <div class="back"></div>
-                <h2 class="title_header"><%= title %></h2>
-            </div>
+        <script type="text/template" id="item_galery">
+            <li class="galerias-item">
+                <div>
+                    <%  var date = formatDateYear(fecha); %>
+                    <div class="galeria-image" style="background-image: url(<%= imagen %>);"></div>
+                    <span class="galeria-title"><%= titulo %></span>
+                    <span class="galeria-date"><%= date[1] + ' ' +date[0] %></span>
+                </div>
+            </li>
+        </script>
 
+        <script type="text/template" id="item_galerias">
             <div data-role="content">
                 <ul class="list list-item-gallery">
                     <% for(var i=0; i<15; i++){ %>
-                    <li class="galerias-item galerias-item-view">
+                    <li class="galerias-item galerias-item-view" >
                         <div>
-                            <div class="galeria-image galeria-image-view"></div>
+                            <div class="galeria-image galeria-image-view" style="background-image: url('assets/img_home.png');"></div>
                         </div>
                     </li>
                     <% } %>

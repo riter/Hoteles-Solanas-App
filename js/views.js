@@ -128,7 +128,6 @@ Solana.Views.ViewList = Backbone.View.extend({
             'tap li.item': 'view_item'
         },
         view_item:function(ev){
-            console.log(this.model.toJSON());
             this.model.set('title',this.model.get('titulo'));
             setStorage('item_type'+this.model.get('item_type')+'/'+this.model.get('id'),this.model.toJSON());
             app.navigate('#item_type'+this.model.get('item_type')+'/'+ this.model.get('id'),{trigger:true});
@@ -274,41 +273,73 @@ Solana.Views.CronogramaDas = Backbone.View.extend({
 
 Solana.Views.Galerias = Backbone.View.extend({
     template: _.template($('#galerias').html()),
-    menu:Solana.Views.Menu,
+    menu: Solana.Views.Menu,
+    collection: Solana.Collections.Galerias,
 
-    initialize:function(){
-        this.menu = new Solana.Views.Menu({title:'Galeria de fotos'})
+    initialize:function(options){
+        this.menu = new Solana.Views.Menu(options);
+
+        this.collection = new Solana.Collections.Galerias();
+        this.collection.on('add',this.newModel,this);
     },
     render:function () {
         $(this.el).html(this.template());
         this.$el.prepend(this.menu.render().el);
 
         this.el.querySelector('ul.list').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
-
         return this;
     },
-    events:{
-        'tap li.galerias-item':'item_gallery'
+    loadMoreView:function(){
+        var self = this;
+        this.collection.loadMore(function(){
+            setStorage(app.lastHistoy(),self.toJSON());
+        });
     },
-    item_gallery:function(ev){
-        app.navigate('#item_gallery',{trigger:true});
+    newModel:function(model){
+        var view = new Solana.Views.ItemGalery({model:model});
+        view.render();
+    },
+    toJSON:function(){
+        return {collection:this.collection.toJSON(), page:this.collection.attr('page')};
+    },
+    parseJSON:function(json){
+        this.collection.attr('page',json.page);
+        this.collection.set(json.collection);
     }
 });
-    Solana.Views.ItemsGalerias = Backbone.View.extend({
-        template: _.template($('#item_galerias').html()),
+    Solana.Views.ItemGalery = Backbone.View.extend({
+        template: _.template($('#item_galery').html()),
+        model: Solana.Models.Galery,
 
-        initialize:function(){
-        },
         render:function () {
-            $(this.el).html(this.template({title:'Galeri 01'}));
-            this.el.querySelector('ul.list').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
-            return this;
+            $(this.el).html(this.template(this.model.toJSON()));
+            document.querySelector('.content-galerias ul.list').appendChild(this.el)
         },
         events:{
-            'click div.back': 'back'
+            'tap li.galerias-item': 'item_gallery'
         },
-        back:function(ev){
-            app.navigate('#'+app.popHistory()+'/reverse',{trigger:true});
+        item_gallery:function(ev){
+            this.model.set('title',this.model.get('titulo'));
+            setStorage('list_image/'+this.model.get('id'),this.model.toJSON());
+            app.navigate('#list_image/'+ this.model.get('id'),{trigger:true});
+        }
+    });
+    Solana.Views.GaleryImages = Backbone.View.extend({
+        template: _.template($('#item_galerias').html()),
+        menu:Solana.Views.Menu,
+        model: Solana.Models.Galery,
+
+        initialize:function(options){
+            options['type'] = 'back';
+            this.menu = new Solana.Views.Menu(options);
+            this.model = new Solana.Models.Type1(options);
+        },
+        render:function () {
+            $(this.el).html(this.template(this.model.toJSON()));
+            this.$el.prepend(this.menu.render().el);
+
+            this.el.querySelector('ul.list').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
+            return this;
         }
     });
 

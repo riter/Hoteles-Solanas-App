@@ -75,6 +75,43 @@ Solana.Collections.ItemLists = Backbone.Collection.extend({
     }
 });
 
+Solana.Collections.Galerias = Backbone.Collection.extend({
+    url: api_host + '/listarGalerias',
+    model: Solana.Models.Galery,
+    loading:false,
+    initialize:function(){
+        this._attributes = {page:1,limit:20};
+    },
+    attr: function(prop, value) {
+        return  value === undefined ? this._attributes[prop] : this._attributes[prop] = value;
+    },
+    loadMore : function(callback){
+        var self = this;
+        if(parseInt(self.attr('page'))>0 && !this.loading){
+            this.loading = true;
+            this.fetch({data: $.param(this._attributes),
+                success: function(model, response, options){
+                    self.loading = false;
+                    if(typeof callback == 'function')
+                        callback();
+                },error:function(){
+                    self.loading = false;
+                }
+            });
+        }
+    },
+    parse:function(response){
+        if(response.datos.length > 0){
+            _.each(response.datos,function(galerias){
+                var model = new Solana.Models.Galery();
+                model.set(galerias.Galeria);
+                this.add(model);
+            },this);
+        }
+        return this.models;
+    }
+});
+
 Solana.Collections.Favorites = Backbone.Collection.extend({
     model: Solana.Models.DAS
 });

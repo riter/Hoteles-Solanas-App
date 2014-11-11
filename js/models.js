@@ -16,33 +16,27 @@ Solana.Models.ItemList = Backbone.Model.extend({
         }
     });
 
-Solana.Models.Type3 = Backbone.Model.extend({
-    initialize: function () {
-    },
-    load:function(callback){
-        this.fetch({data: $.param(this.attributes),
-            success: function(model, response, options){
-                if(typeof callback == 'function')
-                    callback();
-            },error:function(){
-                alert('Error');
-            }
-        });
-    },
-    parse:function(response){
+    Solana.Models.Type3 = Backbone.Model.extend({
+        initialize: function () {
+        },
+        load:function(callback){
+            this.fetch({data: $.param(this.attributes),
+                success: function(model, response, options){
+                    if(typeof callback == 'function')
+                        callback();
+                },error:function(){
+                    alert('Error');
+                }
+            });
+        },
+        parse:function(response){
 
-        if(response.datos.length > 0){
-            var modelo = response.datos[_.keys(response.datos)[0]];
-            this.set(modelo[_.keys(modelo)[0]]);
+            if(response.datos.length > 0){
+                var modelo = response.datos[_.keys(response.datos)[0]];
+                this.set(modelo[_.keys(modelo)[0]]);
+            }
         }
-        /*this.set({
-            id:'1',
-            imagen:'img/img3.png',
-            tipo:'solanas_kids',
-            urlinterna:'Galerias/5/14'
-        });*/
-    }
-});
+    });
 
 Solana.Models.DAS = Backbone.Model.extend({
     defaults:{
@@ -59,5 +53,9 @@ Solana.Models.Videos = Backbone.Model.extend({
     }
 });
 
+Solana.Models.Galery = Backbone.Model.extend({
+    initialize: function () {
+    }
+});
 
 
