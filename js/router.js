@@ -4,11 +4,26 @@
 var AppRouter = Backbone.Router.extend({
     history: [],
     routes:{
-        '(/:transition)': 'index',
+        //'(/:transition)': 'index',
         'home(/:transition)': 'index',
-        'serv_horario':'servicio_horario',
-        'item_serv_horario':'item_servicio_horario',
-        'cron_das':'cronograma_das'
+
+        'serv_horario(/:reverse)':'servicio_horario',
+        'item_type1/:id':'item_type1',
+        'item_type3/:id':'item_type3',
+
+        'cron_das':'cronograma_das',
+        'gastronomia(/:reverse)':'gastronomia',
+
+        'videos':'videos',
+
+        'galerias(/:reverse)':'galerias',
+        'item_gallery':'item_gallery',
+
+        'datos_utiles(/:reverse)':'datos_utiles',
+        'avisos(/:reverse)':'avisos',
+
+        'kids':'kids',
+        'plano_complejo':'plano_complejo'
     },
     pushHistory:function(fragment){
         var split='';
@@ -54,13 +69,92 @@ var AppRouter = Backbone.Router.extend({
     index:function(transition){
         app.changePage(new Solana.Views.Index(), transition?transition:'none');
     },
-    servicio_horario:function(){
-        app.changePage(new Solana.Views.ServicioHorario(), 'fade');
+    servicio_horario:function(reverse){
+        app.pushHistory();
+        var serv = new Solana.Views.ViewList({title: 'Servicios y horarios',item_type:'1'});
+        app.changePage(serv, 'fade');
+        serv.collection.url = api_host + '/listarServiciosYHorarios';
+
+        if(reverse){
+            serv.parseJSON(getStorage(app.lastHistoy(),null));
+        }else{
+            serv.loadMoreView();
+        }
+    },
+    item_type1:function(id){
+        app.pushHistory();
+
+        var model = new Solana.Models.Type1(getStorage(app.lastHistoy(),null));
+        app.changePage(new Solana.Views.Type1(model.toJSON()), 'fade');
     },
     cronograma_das:function(){
-        app.changePage(new Solana.Views.CronogramaDas(), 'fade');
+        var crono = new Solana.Views.CronogramaDas();
+        app.changePage(crono, 'fade',null,function(){
+            crono.showSlider();
+        });
     },
-    item_servicio_horario:function(){
-        app.changePage(new Solana.Views.CronogramaDas(), 'fade');
+    gastronomia:function(reverse){
+
+        app.pushHistory();
+        var serv = new Solana.Views.ViewList({title: 'Gastronomia',item_type:'3'});
+        app.changePage(serv, 'fade');
+        serv.collection.url = api_host + '/listarGastronomias';
+
+        if(reverse){
+            serv.parseJSON(getStorage(app.lastHistoy(),null));
+        }else{
+            serv.loadMoreView();
+        }
+    },
+    item_type3:function(id){
+        app.pushHistory();
+
+        var type = new Solana.Views.Type3(getStorage('item_type3/'+id,null));
+
+        var serv = new Solana.Views.ViewList({title: type.model.get('title'),type:'back'});
+        app.changePage(serv, 'fade');
+
+        type.render(serv);
+    },
+    videos:function(){
+        var videos = new Solana.Views.Videos();
+        app.changePage(videos, 'fade');
+        videos.collection.loadMore();
+    },
+    galerias:function(reverse){
+        app.pushHistory();
+        app.changePage(new Solana.Views.Galerias(), 'fade');
+    },
+    item_gallery:function(){
+        app.pushHistory();
+        app.changePage(new Solana.Views.ItemsGalerias(), 'fade');
+    },
+    datos_utiles:function(){
+        app.pushHistory();
+        app.changePage(new Solana.Views.DatosUtiles(), 'fade');
+    },
+    avisos:function(){
+        app.pushHistory();
+        app.changePage(new Solana.Views.Avisos(), 'fade');
+    },
+    kids:function(){
+        app.pushHistory();
+        var serv = new Solana.Views.ViewList({title: 'Solana kids'});
+        app.changePage(serv, 'fade');
+
+        var type = new Solana.Views.Type3();
+        type.model.url = api_host + '/listarSolanasKids';
+        type.loadModel(serv);
+
+    },
+    plano_complejo:function(){
+        app.pushHistory();
+        var serv = new Solana.Views.ViewList({title: 'Solana kids'});
+        app.changePage(serv, 'fade');
+
+        var type = new Solana.Views.Type3();
+        type.model.url = api_host + '/listarPlanos';
+        type.loadModel(serv);
+
     }
 });

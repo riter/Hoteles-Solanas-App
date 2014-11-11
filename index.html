@@ -25,26 +25,33 @@
 
     <script type="text/template" id="menu">
         <div class="header" data-role="header" data-position="fixed" data-id="header">
+            <% if(typeof(type) !== 'undefined' && type == 'back'){ %>
+            <div class="back"></div>
+            <% }else{ %>
             <div class="content-menu-izq">
-                <div class="icon-izq"></div>
+                <div>
+                    <div class="icon-izq"></div>
+                    <div class="ave"></div>
+                </div>
+
+                <div class="fondo-menu"></div>
                 <ul class="menu-izq">
                     <li><a href="#serv_horario" data-role="none">Servicios y horarios</a></li>
                     <li><a href="#cron_das" data-role="none">Cronograma D.A.S.</a></li>
-                    <li><a href="#serv_horario" data-role="none">Solanas Kids</a></li>
+                    <li><a href="#kids" data-role="none">Solanas Kids</a></li>
                     <li><a href="#plano_complejo" data-role="none">Plano del complejo</a></li>
                     <li><a href="#gastronomia" data-role="none">Gastronomía</a></li>
                     <li><a href="#serv_horario" data-role="none">Acesoramiento e Inversiones</a></li>
                     <li><a href="#serv_horario" data-role="none">Solanas Aventuras</a></li>
-                    <li><a href="#bethel_spa" data-role="none">Bethel Spa</a></li>
+                    <!--<li><a href="#bethel_spa" data-role="none">Bethel Spa</a></li>-->
                     <li><a href="#convention_center" data-role="none">Solanas Convention Center</a></li>
                     <li><a href="#datos_utiles" data-role="none">Datos útiles</a></li>
-
                 </ul>
             </div>
-            <div class="ave"></div>
+            <% } %>
 
-            <% if(title != '') {%>
-                <h1><%= title %></h1>
+            <% if( typeof(title) !== 'undefined' && title != '') {%>
+                <h1 class="title_header"><%= title %></h1>
             <% }else{%>
                 <h1 class="logo"></h1>
             <% }%>
@@ -52,11 +59,11 @@
             <div class="content-menu-der">
                 <div class="icon-der"></div>
                 <ul class="menu-der">
-                    <li class="icon_promo">Promo</li>
-                    <li class="icon_galeria">Galeria</li>
-                    <li class="icon_videos">Videos</li>
-                    <li class="icon_facebook">Facebook</li>
-                    <li class="icon_avisos">Avisos</li>
+                    <li class="icon_promo"><a href="#promos" data-role="none">Promo</a></li>
+                    <li class="icon_galeria"><a href="#galerias" data-role="none">Galeria</a></li>
+                    <li class="icon_videos"><a href="#videos" data-role="none">Videos</a></li>
+                    <li class="icon_facebook"><a href="#facebook" data-role="none">Facebook</a></li>
+                    <li class="icon_avisos"><a href="#avisos" data-role="none">Avisos</a></li>
                 </ul>
             </div>
         </div>
@@ -64,71 +71,340 @@
 
     <script type="text/template" id="index">
         <div data-role="content">
-            <div style="background-color: red; height:337px"></div>
-            <div style="background-color: yellow; height: 166px"></div>
+            <div class="banner_home"></div>
+            <div class="img_home"></div>
         </div>
     </script>
 
     <script type="text/template" id="cronograma_das">
         <div data-role="content">
-            <div class="tap-view">
-                <div>Por día</div>
-                <div>Favoritos</div>
+            <div style="border-bottom: 1px rgba(233, 232, 232, 0.51) solid; overflow: hidden;">
+                <div class="tap-view">
+                    <div class="por_dia active">Por día</div>
+                    <hr class="active"/>
+                    <div class="favoritos">Favoritos</div>
+                </div>
             </div>
-            <div class="type2">
-                <div class="title">
-                    <div class="slider_left"></div>
-                    <h2>Hoy</h2>
-                    <div class="slider_right"></div>
-                </div>
-                <div class="content-type2">
-                    <ul>
-                        <li>
-                            Item por dia
-                        </li>
-                    </ul>
-                </div>
-                <div class="footer-type1" style="height: 48px;">
+            <div class="content_por_dia">
+                <ul class="bxslider">
+                    <li class="type2">
+                        <div class="title">
+                            <div class="slider_left"></div>
+                            <h2>Sabado</h2>
+                            <div class="slider_right"></div>
+                        </div>
+                        <div class="content-type2">
+                            <ul class="list2">
+                                <% for(var i=0; i<30; i++){ %>
+                                <li>
+                                    <div class="time">
+                                        10:00 hs
+                                    </div>
+                                    <div class="content-item">
+                                        <span class="title-item">Nombre de Actividad</span>
+                                        <span class="subtitle-item">Tipo de actividad</span>
+                                        <span class="subtitle-item">Lugar de actividad</span>
+                                        <span class="favorite-item">Agregar a Favoritos</span>
+                                    </div>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="type2">
+                        <div class="title">
+                            <div class="slider_left"></div>
+                            <h2>Hoy</h2>
+                            <div class="slider_right"></div>
+                        </div>
+                        <div class="content-type2">
+                            <ul class="list2">
+                                <% for(var i=0; i<30; i++){ %>
+                                <li>
+                                    <div class="time">
+                                        10:00 hs
+                                    </div>
+                                    <div class="content-item">
+                                        <span class="title-item">Nombre de Actividad</span>
+                                        <span class="subtitle-item">Tipo de actividad</span>
+                                        <span class="subtitle-item">Lugar de actividad</span>
+                                        <span class="favorite-item">Agregar a Favoritos</span>
+                                    </div>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="type2">
+                        <div class="title">
+                            <div class="slider_left"></div>
+                            <h2>Lunes</h2>
+                            <div class="slider_right"></div>
+                        </div>
+                        <div class="content-type2">
+                            <ul class="list2">
+                                <% for(var i=0; i<30; i++){ %>
+                                <li>
+                                    <div class="time">
+                                        10:00 hs
+                                    </div>
+                                    <div class="content-item">
+                                        <span class="title-item">Nombre de Actividad</span>
+                                        <span class="subtitle-item">Tipo de actividad</span>
+                                        <span class="subtitle-item">Lugar de actividad</span>
+                                        <span class="favorite-item">Agregar a Favoritos</span>
+                                    </div>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="favorite" style="display: none">
+                <ul>
+                    <li>
+                        <div class="title-favorite">Lunes 6 de Octubre</div>
+                        <ul class="list2">
+                            <% for(var i=0; i<2; i++){ %>
+                            <li>
+                                <div class="time">
+                                    10:00 hs
+                                </div>
+                                <div class="content-item">
+                                    <span class="title-item">Nombre de Actividad</span>
+                                    <span class="subtitle-item">Tipo de actividad</span>
+                                    <span class="subtitle-item">Lugar de actividad</span>
+                                    <span class="favorite-item">Agregar a Favoritos</span>
+                                </div>
+                            </li>
+                            <% } %>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="title-favorite">Martes 7 de Octubre</div>
+                        <ul class="list2">
+                            <% for(var i=0; i<2; i++){ %>
+                            <li>
+                                <div class="time">
+                                    10:00 hs
+                                </div>
+                                <div class="content-item">
+                                    <span class="title-item">Nombre de Actividad</span>
+                                    <span class="subtitle-item">Tipo de actividad</span>
+                                    <span class="subtitle-item">Lugar de actividad</span>
+                                    <span class="favorite-item active">Eliminar de Favoritos</span>
+                                </div>
+                            </li>
+                            <% } %>
+                        </ul>
+                    </li>
+                </ul>
 
-                </div>
             </div>
         </div>
     </script>
-    <script type="text/template" id="serv_horario">
 
+    <script type="text/template" id="view_list">
+        <div data-role="content" class="content">
+            <ul class="list">
+            </ul>
+        </div>
+    </script>
+        <script type="text/template" id="item_list">
+            <li data-id="<%= id %>" class="item">
+                <div class="icon-item" style="background-image: url('<%= typeof(icono) !== 'undefined'? icono : imagen %>')"></div>
+                <div class="txt-item">
+                    <span class="title-item"><%= titulo %></span>
+
+                    <% if(typeof(horario) !== 'undefined' && horario != ''){ %>
+                    <span class="subtitle-item"><%= horario %></span>
+                    <% } %>
+                </div>
+            </li>
+        </script>
+            <script type="text/template" id="type1_list_view">
+
+                <div data-role="content">
+                    <div class="content-type1">
+                        <% if(typeof(imagen) !== 'undefined' && imagen != ''){ %>
+                        <div class="image" style="background-image: url('<%= imagen %>')"></div>
+                        <% } %>
+
+                        <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
+                        <span class="description"><%= contenido %></span>
+                        <% } %>
+
+                        <% if(typeof(horariosescritos) !== 'undefined' && horariosescritos != ''){ %>
+                        <p class="title_horario">Horarios:</p>
+                        <span class="description_horario"><%= horariosescritos %></span>
+                        <% } %>
+
+                        <% if(typeof(urlinterna) !== 'undefined' && urlinterna != ''){ %>
+                        <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="footer" data-role="footer" data-position="fixed" data-id="footer">
+                    <div class="footer-type1" ></div>
+                </div>
+            </script>
+
+    <script type="text/template" id="gastronomia">
         <div data-role="content">
             <ul class="list">
                 <% for(var i=0; i<30; i++){ %>
-                <li class="item" data-index="<%= i %>">
-                    <div class="icon-item"></div>
+                <li data-id="<%= i %>" class="item">
+                    <div class="icon-item" style="background-image: url(img/img3.png);"></div>
                     <div class="txt-item">
-                        <div>
-                            <span class="title-item">Recepcion <%= i %></span>
-                            <span class="subtitle-item">Lunes  a Viernes de 9:00 a 12:00hs.</span>
-                        </div>
+                        <span class="title-item">Kaluha <%= i %></span>
                     </div>
                 </li>
                 <% } %>
             </ul>
         </div>
     </script>
-
-    <script type="text/template" id="item_serv_horario">
-        <div data-role="content">
-            <div class="title">
+        <script type="text/template" id="item_gastronomia">
+            <div class="header" data-role="header" data-position="fixed" data-id="header">
                 <div class="back"></div>
-                <h2><%= title %></h2>
+                <h2 class="title_header"><%= title %></h2>
             </div>
-            <div class="content-type1">
-                <div class="image"></div>
-                <span class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis </span>
-                <p class="title_horario">Horarios:</p>
-                            <span class="description_horario">Lunes a Viernes de 09:00 a 23:00 hs <br/>
-                                Sábados, Domingos y Feriados de 10:00 a 21 hs.</span>
-                <p class="title_horario" style="margin-bottom: 10px">Ir a Pagina</p>
+
+            <div data-role="content">
+                <div class="content-type3">
+                    <img src="img/img3.png" alt="tipe3"/>
+                </div>
             </div>
-            <div class="footer-type1" style="height: 48px;">
+            <div class="footer" data-role="footer" data-position="fixed" data-id="footer">
+                <div class="footer-type1" ></div>
             </div>
+        </script>
+
+    <script type="text/template" id="videos">
+        <div data-role="content" class="content-videos">
+            <ul class="list">
+            </ul>
+        </div>
+    </script>
+        <script type="text/template" id="video_list">
+            <li  class="videos-item">
+                <%
+                    var res = urlexterna.split('watch?v=');
+                    var date = formatDateYear(fecha);
+                %>
+                <iframe width="100%" height="184"
+                        src="http://www.youtube.com/embed/<%= res[1] %>?html5=1">
+                </iframe>
+                <div>
+                    <span class="title-video"><%= titulo %></span>
+                    <span class="subtitle-video"><%= descripcion %></span>
+                    <span class="date-video"><%= date[2]+' '+date[1]+', '+date[0] %></span>
+                </div>
+            </li>
+        </script>
+
+    <script type="text/template" id="galerias">
+        <div data-role="content" class="content-galerias">
+            <ul class="list">
+                <% for(var i=0; i<15; i++){ %>
+                <li class="galerias-item">
+                    <div>
+                        <div class="galeria-image"></div>
+                        <span class="galeria-title">Galeria 01</span>
+                        <span class="galeria-date">Octubre 2014</span>
+                    </div>
+                </li>
+                <% } %>
+            </ul>
+        </div>e
+    </script>
+        <script type="text/template" id="item_galerias">
+            <div class="header" data-role="header" data-position="fixed" data-id="header">
+                <div class="back"></div>
+                <h2 class="title_header"><%= title %></h2>
+            </div>
+
+            <div data-role="content">
+                <ul class="list list-item-gallery">
+                    <% for(var i=0; i<15; i++){ %>
+                    <li class="galerias-item galerias-item-view">
+                        <div>
+                            <div class="galeria-image galeria-image-view"></div>
+                        </div>
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+        </script>
+
+    <script type="text/template" id="datos_utiles">
+        <div data-role="content">
+            <ul class="list">
+                <li class="item">
+                    <div class="icon-item" style="background-size: 50%;background-image: url(assets/clima.png);"></div>
+                    <div class="txt-item">
+                        <span class="title-item">Clima</span>
+                        <span class="subtitle-item">Ver pronóstico del tiempo</span>
+                    </div>
+                </li>
+                <li class="item">
+                    <div class="icon-item" style="background-size: 50%;background-image: url(assets/map.png);"></div>
+                    <div class="txt-item">
+                        <span class="title-item">Puntos de Interés</span>
+                        <span class="subtitle-item">Lugares en Punta del Este</span>
+                    </div>
+                </li>
+                <li class="item">
+                    <div class="icon-item" style="background-size: 50%;background-image: url(assets/map-route.png);"></div>
+                    <div class="txt-item">
+                        <span class="title-item">Cómo llegar</span>
+                        <span class="subtitle-item">Direcciones desde y hasta</span>
+                    </div>
+                </li>
+                <li class="item">
+                    <div class="icon-item" style="background-size: 50%;background-image: url(assets/transporte.png);"></div>
+                    <div class="txt-item">
+                        <span class="title-item">Transporte local</span>
+                        <span class="subtitle-item">Horarios de ómnibus</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="footer" data-role="footer" data-position="fixed" data-id="footer">
+            <div class="footer-type1" ></div>
+        </div>
+    </script>
+
+    <script type="text/template" id="avisos">
+        <div data-role="content">
+            <ul class="list">
+                <% for(var i=0; i<5; i++){ %>
+                <li class="item">
+                    <div class="icon-item" style="background-size: 50%;background-image: url(img/campana.png);"></div>
+                    <div class="txt-item">
+                        <span class="title-item">Notificación <%= i %></span>
+                        <span class="subtitle-item">Lorem ipsum dolor sit amet,
+                            consectetur adipiscing elit.
+                            Nam placerat eu sem a interdum.</span>
+                    </div>
+                </li>
+                <% } %>
+            </ul>
+        </div>
+        <div class="footer" data-role="footer" data-position="fixed" data-id="footer">
+            <div class="footer-type1" ></div>
+        </div>
+    </script>
+
+    <script type="text/template" id="type3_list_view">
+        <div data-role="content">
+            <div class="content-type3">
+                <img src="<%= imagen %>" alt="tipe3"/>
+            </div>
+            <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
+        </div>
+        <div class="footer" data-role="footer" data-position="fixed" data-id="footer">
+            <div class="footer-type1" ></div>
         </div>
     </script>
 
