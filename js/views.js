@@ -5,17 +5,23 @@ var heightHeader = 42;
 
 Solana.Views.Menu = Backbone.View.extend({
     template: _.template($('#menu').html()),
+    collection:Solana.Collections.Menus,
     model: Solana.Models.Menu,
 
     initialize:function(options){
         this.model = new Solana.Models.Menu();
         typeof(options) !== 'undefined'? this.model.set(options) : '';
+
+        this.collection = new Solana.Collections.Menus();
+        this.collection.on('add',this.newModel,this);
     },
     render:function () {
+        console.log(this.model.toJSON());
         this.setElement(this.template(this.model.toJSON()));
         if( this.model.get('type') != 'back'){
             this.el.querySelector('ul.menu-izq').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
             this.el.querySelector('.fondo-menu').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
+            this.parseJSON();
         }
         return this;
     },
@@ -28,6 +34,32 @@ Solana.Views.Menu = Backbone.View.extend({
         'touchmove .fondo-menu':'touch',
         'click div.back': 'back'
     },
+    loadMoreView:function(){
+        var self = this;
+
+        var newCollection = new Solana.Collections.Menus();
+        newCollection.loadMore(function(){
+            if(getStorage(newCollection.url,null) &&
+                JSON.stringify(getStorage(newCollection.url,null)) == JSON.stringify(newCollection.toJSON())){
+                return;
+            }
+            setStorage(newCollection.url,newCollection.toJSON());
+            self.parseJSON();
+        });
+    },
+    newModel:function(model){
+        var view = new Solana.Views.ItemMenu({model:model});
+
+        if(model.get('tipo') == 'principal1'){
+            this.el.querySelector('ul.menu-izq').appendChild(view.render().el) ;
+        }else{
+            this.el.querySelector('ul.menu-der').appendChild(view.render().el) ;
+        }
+    },
+    parseJSON:function(){
+        this.$el.find('ul.menu-izq,ul.menu-der').empty();
+        this.collection.loadJSON();
+    },
     touch:function(ev){
         ev.preventDefault();
     },
@@ -35,7 +67,7 @@ Solana.Views.Menu = Backbone.View.extend({
         app.navigate('#home/fade',{trigger:true});
     },
     hideMenu:function(ev){
-      this.$el.find('.menu-izq, .menu-der, .fondo-menu').hide();
+        this.$el.find('.menu-izq, .menu-der, .fondo-menu').hide();
     },
     toggleMenuIzq:function(ev){
         this.el.querySelector('.menu-der').style.display = 'none';
@@ -55,17 +87,30 @@ Solana.Views.Menu = Backbone.View.extend({
         app.navigate('#'+app.popHistory()+'/reverse',{trigger:true});
     }
 });
+    Solana.Views.ItemMenu = Backbone.View.extend({
+        template: _.template($('#item_menu').html()),
+        model:Solana.Models.Menu,
+
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+            'tap a':'submenu'
+        },
+        submenu:function(ev){
+            ev.preventDefault();
+            app.navigate('#pagina4',{trigger:true});
+        }
+    });
 
 Solana.Views.Index = Backbone.View.extend({
     template: _.template($('#index').html()),
-    menu:Solana.Views.Menu,
 
-    initialize:function(){
-        this.menu = new Solana.Views.Menu()
-    },
     render:function () {
         $(this.el).html(this.template());
-        this.$el.prepend(this.menu.render().el);
+        window.views.menu.model.clear();
+        this.$el.prepend(window.views.menu.render().el);
 
         var banner = $(window).height() * 0.6150;
         this.el.querySelector('.banner_home').style.height = banner + 'px';
@@ -75,314 +120,209 @@ Solana.Views.Index = Backbone.View.extend({
     }
 });
 
-Solana.Views.ViewList = Backbone.View.extend({
-    template: _.template($('#view_list').html()),
-    menu:Solana.Views.Menu,
-    collection:Solana.Collections.ItemLists,
+Solana.Views.Categorias = Backbone.View.extend({
+    template: _.template($('#listSecundario').html()),
+
+    collection:null,
+    model: Solana.Models.Datos,
 
     initialize:function(options){
-        this.menu = new Solana.Views.Menu(options);
-        this.collection = new Solana.Collections.ItemLists();
-        this.collection.on('add',this.newModel,this);
+        _.bindAll(this, 'render');
+        this.model = new Solana.Models.Datos(options);
     },
     render:function () {
-        $(this.el).html(this.template());
-        this.$el.prepend(this.menu.render().el);
+        $(this.el).html(this.template(this.model.toJSON()));
+        window.views.menu.model.set(this.model.toJSON());
+        this.$el.prepend(window.views.menu.render().el);
 
-        this.el.querySelector('ul.list').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
+        var $list = this.el.querySelectorAll('.content, .list');
+        $list[0].style.maxHeight = (window.innerHeight - heightHeader) + 'px';
+        $list[1].style.minHeight = ($list[0].style.maxHeight.replace('px','') - this.$el.find('.footer').getSize().height) + 'px';
+
+        this.parseJSON();
         return this;
     },
     loadMoreView:function(){
         var self = this;
-        this.collection.loadMore(function(){
-            setStorage(app.lastHistoy(),self.toJSON());
-        });
-    },
-    newModel:function(model){
-        if(typeof(this.menu.model.get('item_type')) !== 'undefined' && this.menu.model.get('item_type') != ''){
-            model.set('item_type',this.menu.model.get('item_type'));
-        }
-        var view = new Solana.Views.ItemList({model:model});
-        view.render();
-    },
-    toJSON:function(){
-        return {collection:this.collection.toJSON(), page:this.collection.attr('page')};
-    },
-    parseJSON:function(json){
-        this.collection.attr('page',json.page);
-        this.collection.set(json.collection);
-    }
-});
 
-    Solana.Views.ItemList = Backbone.View.extend({
-        template: _.template($('#item_list').html()),
-        model: Solana.Models.ItemList,
+        var newCollection = this.collection.clone();
+        newCollection.reset();
 
-        initialize:function(){
-        },
-        render:function () {
-            $(this.el).html(this.template(this.model.toJSON()));
-            document.querySelector('ul.list').appendChild(this.el);
-        },
-        events:{
-            'tap li.item': 'view_item'
-        },
-        view_item:function(ev){
-            this.model.set('title',this.model.get('titulo'));
-            setStorage('item_type'+this.model.get('item_type')+'/'+this.model.get('id'),this.model.toJSON());
-            app.navigate('#item_type'+this.model.get('item_type')+'/'+ this.model.get('id'),{trigger:true});
-        }
-    });
-
-        Solana.Views.Type1 = Backbone.View.extend({
-            template: _.template($('#type1_list_view').html()),
-            menu:Solana.Views.Menu,
-            model: Solana.Models.Type1,
-
-            initialize:function(options){
-                options['type'] = 'back';
-                this.menu = new Solana.Views.Menu(options);
-                this.model = new Solana.Models.Type1(options);
-            },
-            render:function () {
-                $(this.el).html(this.template(this.model.toJSON()));
-                this.$el.prepend(this.menu.render().el);
-
-                this.el.querySelector('.image').style.height = ($(window).height() * 0.3392) + 'px';
-                return this;
+        newCollection.loadMore(function(){
+            if(getStorage(newCollection.url,null) &&
+                JSON.stringify(getStorage(newCollection.url,null)) == JSON.stringify(newCollection.toJSON())){
+                return;
             }
+            setStorage(newCollection.url,newCollection.toJSON());
+            self.parseJSON();
         });
-
-        Solana.Views.Type3 = Backbone.View.extend({
-            template: _.template($('#type3_list_view').html()),
-            model: Solana.Models.Type3,
-
-            initialize:function(data){
-                this.model = new Solana.Models.Type3(data);
-            },
-            loadModel:function(view){
-                var self = this;
-
-                this.model.set({page:-1,limit:-1});
-                this.model.load(function(){
-                    self.render(view);
-                });
-            },
-            render:function (view) {
-                $(this.el).html(this.template(this.model.toJSON()));
-                this.el.querySelector('.content-type3').style.maxHeight = ($(window).height() - heightHeader - 67 - 6) + 'px';
-
-                if(typeof (view) !== 'undefined'){
-                    view.$el.find('.content').replaceWith(this.el);
-                    view.$el.trigger('pagecreate');
-                }
-                return this;
-            }
-        });
-
-/* Start Videos*/
-Solana.Views.Videos = Backbone.View.extend({
-    template: _.template($('#videos').html()),
-    menu:Solana.Views.Menu,
-    collection:Solana.Collections.Videos,
-
-    initialize:function(){
-        this.menu = new Solana.Views.Menu({title:'Videos'});
-        this.collection = new Solana.Collections.Videos();
-
-        this.collection.on('add',this.newModel,this);
     },
-    render:function () {
-        $(this.el).html(this.template());
-        this.$el.prepend(this.menu.render().el);
-        this.el.querySelector('ul.list').style.maxHeight = (window.innerHeight - heightHeader - 8) + 'px';
-        return this;
+    newModelAviso:function(model){
+        var view = new Solana.Views.Aviso({model:model});
+        this.el.querySelector('ul.list').appendChild(view.render().el) ;
     },
-    newModel:function(model){
-        var view = new Solana.Views.VideoList({model:model});
-        view.render();
-    }
-});
-    Solana.Views.VideoList = Backbone.View.extend({
-        template: _.template($('#video_list').html()),
-        model: Solana.Models.Videos,
-
-        render:function () {
-            $(this.el).html(this.template(this.model.toJSON()));
-            document.querySelector('ul.list').appendChild(this.el);
-            return this;
-        }
-    });
-/* End Videos*/
-
-Solana.Views.CronogramaDas = Backbone.View.extend({
-    template: _.template($('#cronograma_das').html()),
-    menu:Solana.Views.Menu,
-    slider:null,
-
-    initialize:function(){
-        this.menu = new Solana.Views.Menu({title:'Cronograma DAS'})
-    },
-    render:function () {
-        $(this.el).html(this.template());
-        this.$el.prepend(this.menu.render().el);
-        return this;
+    parseJSON:function(){
+        this.$el.find('ul.list').empty();
+        this.collection.loadJSON();
     },
     events:{
-        'tap div.slider_left':'backSlider',
-        'tap div.slider_right':'nextSlider',
-
-        'tap div.por_dia':'por_dia',
-        'tap div.favoritos':'favoritos'
-    },
-    por_dia:function(ev){
-        this.$el.find('.tap-view > div').removeClass('active');
-        this.$el.find('.tap-view > hr').addClass('active');
-        ev.target.classList.add("active");
-
-        this.el.querySelector('.content_por_dia').style.display = 'block';
-        this.el.querySelector('.favorite').style.display = 'none';
-
-        this.showSlider(ev);
-    },
-    favoritos:function(ev){
-        this.$el.find('.tap-view > div').removeClass('active');
-        this.$el.find('.tap-view > hr').removeClass('active');
-        ev.target.classList.add("active");
-
-        this.el.querySelector('.favorite').style.display = 'block';
-        this.el.querySelector('.content_por_dia').style.display = 'none';
-    },
-    showSlider:function(ev){
-        if(this.slider == null){
-            this.slider = this.$el.find('ul.bxslider').bxSlider({
-                controls: false,
-                pager:false,
-                infiniteLoop:false,
-                touchEnabled:false
-            });
-        }
-    },
-    backSlider:function(){
-        this.slider.goToPrevSlide();
-    },
-    nextSlider:function(){
-        this.slider.goToNextSlide();
     }
 });
+    Solana.Views.Aviso = Backbone.View.extend({
+        template: _.template($('#aviso').html()),
+        model:Solana.Models.Menu,
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+            'tap .txt-item':'urlInterna'
+        },
+        urlInterna:function(ev){
+            ev.preventDefault();
+            console.log(this.model.toJSON());
+        }
+    });
 
-Solana.Views.Galerias = Backbone.View.extend({
-    template: _.template($('#galerias').html()),
-    menu: Solana.Views.Menu,
-    collection: Solana.Collections.Galerias,
+Solana.Views.Pagina = Backbone.View.extend({
+    template: _.template($('#pagina').html()),
+    model: null,
 
-    initialize:function(options){
-        this.menu = new Solana.Views.Menu(options);
-
-        this.collection = new Solana.Collections.Galerias();
-        this.collection.on('add',this.newModel,this);
+    initialize:function(){
     },
     render:function () {
         $(this.el).html(this.template());
-        this.$el.prepend(this.menu.render().el);
+        window.views.menu.model.set(this.model.toJSON());
+        this.$el.prepend(window.views.menu.render().el);
 
-        this.el.querySelector('ul.list').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
+        var $list = this.el.querySelectorAll('.content, .content-pagina');
+        $list[0].style.maxHeight = (window.innerHeight - heightHeader) + 'px';
+        $list[1].style.minHeight = ($list[0].style.maxHeight.replace('px','') - this.$el.find('.footer').getSize().height) + 'px';
+
+        this.model.unset('title');
+        this.model.unset('type');
+        this.parseJSON();
         return this;
     },
-    loadMoreView:function(){
+    loadView:function(){
         var self = this;
-        this.collection.loadMore(function(){
-            setStorage(app.lastHistoy(),self.toJSON());
+
+        var newCollection = this.model.clone();
+        newCollection.load(function(){
+            if(getStorage(newCollection.url,null) &&
+                JSON.stringify(getStorage(newCollection.url,null)) == JSON.stringify(newCollection.toJSON())){
+                return;
+            }
+            setStorage(newCollection.url,newCollection.toJSON());
+            self.parseJSON();
         });
     },
-    newModel:function(model){
-        var view = new Solana.Views.ItemGalery({model:model});
-        view.render();
+    newPagina1:function(){
+        var view = new Solana.Views.Pagina1({model:this.model});
+        this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
     },
-    toJSON:function(){
-        return {collection:this.collection.toJSON(), page:this.collection.attr('page')};
+    newPagina2:function(){
+        var view = new Solana.Views.Pagina2({model:this.model});
+        this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
     },
-    parseJSON:function(json){
-        this.collection.attr('page',json.page);
-        this.collection.set(json.collection);
+    newPagina3:function(){
+        var view = new Solana.Views.Pagina3({model:this.model});
+        this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
+    },
+    newPagina4:function(){
+        var view = new Solana.Views.Pagina4({model:this.model});
+        this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
+    },
+    newPromo:function(){
+        var view = new Solana.Views.Promo({model:this.model});
+        this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
+    },
+    parseJSON:function(){
+        this.$el.find('div.content-pagina').empty();
+        this.model.loadJSON();
     }
 });
-    Solana.Views.ItemGalery = Backbone.View.extend({
-        template: _.template($('#item_galery').html()),
-        model: Solana.Models.Galery,
-
+    Solana.Views.Pagina1 = Backbone.View.extend({
+        template: _.template($('#type1').html()),
         render:function () {
-            $(this.el).html(this.template(this.model.toJSON()));
-            document.querySelector('.content-galerias ul.list').appendChild(this.el)
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
         },
         events:{
-            'tap li.galerias-item': 'item_gallery'
+            'tap .txt-item':'urlInterna'
         },
-        item_gallery:function(ev){
-            this.model.set('title',this.model.get('titulo'));
-            setStorage('list_image/'+this.model.get('id'),this.model.toJSON());
-            app.navigate('#list_image/'+ this.model.get('id'),{trigger:true});
+        urlInterna:function(ev){
+            ev.preventDefault();
+            console.log(this.model.toJSON());
         }
     });
-    Solana.Views.GaleryImages = Backbone.View.extend({
-        template: _.template($('#item_galerias').html()),
-        menu:Solana.Views.Menu,
-        model: Solana.Models.Galery,
-
-        initialize:function(options){
-            options['type'] = 'back';
-            this.menu = new Solana.Views.Menu(options);
-            this.model = new Solana.Models.Type1(options);
-        },
+    Solana.Views.Pagina2 = Backbone.View.extend({
+        template: _.template($('#type2').html()),
         render:function () {
-            $(this.el).html(this.template(this.model.toJSON()));
-            this.$el.prepend(this.menu.render().el);
-
-            this.el.querySelector('ul.list').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
+            this.setElement(this.template(this.model.toJSON()));
             return this;
+        },
+        events:{
+            'tap .title_horario':'urlInterna'
+        },
+        urlInterna:function(ev){
+            ev.preventDefault();
+            console.log(this.model.toJSON());
         }
     });
-
-Solana.Views.DatosUtiles = Backbone.View.extend({
-    template: _.template($('#datos_utiles').html()),
-    menu:Solana.Views.Menu,
-
-    initialize:function(){
-        this.menu = new Solana.Views.Menu({title:'Datos útiles'})
-    },
+    Solana.Views.Pagina3 = Backbone.View.extend({
+        template: _.template($('#type3').html()),
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+            'tap .btn-interesa':'interesa'
+        },
+        interesa:function(ev){
+            ev.preventDefault();
+            console.log(this.model.toJSON());
+        }
+    });
+    Solana.Views.Pagina4 = Backbone.View.extend({
+        template: _.template($('#type4').html()),
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+            'tap .btn-reserva':'reserva'
+        },
+        reserva:function(ev){
+            ev.preventDefault();
+            console.log(this.model.toJSON());
+            var reserva = new Solana.Views.Reserva();
+            $('body').append(reserva.render().el);
+        }
+    });
+    Solana.Views.Promo = Backbone.View.extend({
+        template: _.template($('#promo').html()),
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+        }
+    });
+Solana.Views.Reserva = Backbone.View.extend({
+    template: _.template($('#reserva').html()),
     render:function () {
-        $(this.el).html(this.template());
-        this.$el.prepend(this.menu.render().el);
-
-        this.el.querySelector('ul.list').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
+        this.setElement(this.template());
         return this;
     },
     events:{
-        'tap ul.list li.item': 'view_item'
+        'tap .btn-reserva':'cancelar',
+        'tap .btn-cancelar':'cancelar'
     },
-    view_item:function(ev){
-        ev.preventDefault();
-    }
-});
-
-Solana.Views.Avisos = Backbone.View.extend({
-    template: _.template($('#avisos').html()),
-    menu:Solana.Views.Menu,
-
-    initialize:function(){
-        this.menu = new Solana.Views.Menu({title:'Avisos'})
-    },
-    render:function () {
-        $(this.el).html(this.template());
-        this.$el.prepend(this.menu.render().el);
-
-        this.el.querySelector('ul.list').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
-        return this;
-    },
-    events:{
-        'tap ul.list li.item': 'view_item'
-    },
-    view_item:function(ev){
-        ev.preventDefault();
+    cancelar:function(){
+        var self = this;
+        self.$el.fadeOut('250',function(){
+            self.$el.remove()
+        });
     }
 });

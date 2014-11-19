@@ -1,4 +1,5 @@
 var api_host = 'http://html5cooks.com/solana/ServiciosMobiles';
+//var api_host = 'http://test.solana.com/Hoteles-Solanas/ServiciosMobiles';
 
 $(document).on("mobileinit", function () {
     $.mobile.ajaxEnabled = false;
@@ -40,3 +41,18 @@ function formatDateYear (string) {
     }
     return ['','',''];
 }
+
+$.fn.getSize = function() {
+    var $wrap = $(this).clone().appendTo($("body"));
+    $wrap.css({
+        "position":   "absolute !important",
+        "visibility": "hidden !important",
+        "display":    "block !important"
+    });
+    var sizes = {
+        width: $wrap.width(),
+        height: $wrap.height()
+    };
+    $wrap.remove();
+    return sizes;
+};

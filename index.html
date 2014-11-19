@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />-->
 
-    <!--<meta name="apple-mobile-web-app-status-bar-style" content="#ececec" />-->
     <meta http-equiv="Content-type" content="text/htm1;charset=utf-8">
     <meta charset="utf-8">
 
@@ -36,38 +35,47 @@
 
                 <div class="fondo-menu"></div>
                 <ul class="menu-izq">
-                    <li><a href="#serv_horario" data-role="none">Servicios y horarios</a></li>
+                    <!--<li><a href="#serv_horario" data-role="none">Servicios y horarios</a></li>
                     <li><a href="#cron_das" data-role="none">Cronograma D.A.S.</a></li>
                     <li><a href="#kids" data-role="none">Solanas Kids</a></li>
                     <li><a href="#plano_complejo" data-role="none">Plano del complejo</a></li>
                     <li><a href="#gastronomia" data-role="none">Gastronomía</a></li>
                     <li><a href="#serv_horario" data-role="none">Acesoramiento e Inversiones</a></li>
                     <li><a href="#serv_horario" data-role="none">Solanas Aventuras</a></li>
-                    <!--<li><a href="#bethel_spa" data-role="none">Bethel Spa</a></li>-->
                     <li><a href="#convention_center" data-role="none">Solanas Convention Center</a></li>
-                    <li><a href="#datos_utiles" data-role="none">Datos útiles</a></li>
+                    <li><a href="#datos_utiles" data-role="none">Datos útiles</a></li>-->
+                </ul>
+            </div>
+
+            <div class="search"></div>
+            <div class="content-menu-der">
+                <div class="icon-der"></div>
+                <ul class="menu-der">
+                    <!--<li class="icon_promo"><a href="#promos" data-role="none">Promo</a></li>
+                    <li class="icon_galeria"><a href="#galerias" data-role="none">Galeria</a></li>
+                    <li class="icon_videos"><a href="#videos" data-role="none">Videos</a></li>
+                    <li class="icon_facebook"><a href="#facebook" data-role="none">Facebook</a></li>
+                    <li class="icon_avisos"><a href="#avisos" data-role="none">Avisos</a></li>-->
                 </ul>
             </div>
             <% } %>
 
             <% if( typeof(title) !== 'undefined' && title != '') {%>
-                <h1 class="title_header"><%= title %></h1>
+            <h1 class="title_header"><%= title %></h1>
             <% }else{%>
-                <h1 class="logo"></h1>
+            <h1 class="logo"></h1>
             <% }%>
-            <div class="search"></div>
-            <div class="content-menu-der">
-                <div class="icon-der"></div>
-                <ul class="menu-der">
-                    <li class="icon_promo"><a href="#promos" data-role="none">Promo</a></li>
-                    <li class="icon_galeria"><a href="#galerias" data-role="none">Galeria</a></li>
-                    <li class="icon_videos"><a href="#videos" data-role="none">Videos</a></li>
-                    <li class="icon_facebook"><a href="#facebook" data-role="none">Facebook</a></li>
-                    <li class="icon_avisos"><a href="#avisos" data-role="none">Avisos</a></li>
-                </ul>
-            </div>
         </div>
     </script>
+        <script type="text/template" id="item_menu">
+            <% if(tipo=='principal1'){ %>
+                <li>
+            <% }else{ %>
+                <li class="icon" style="background-image: url('<%= imagen %>')">
+            <% } %>
+                    <a href="#datos_utiles" data-role="none"><%= nombre %></a>
+                </li>
+        </script>
 
     <script type="text/template" id="index">
         <div data-role="content">
@@ -292,9 +300,13 @@
                     var res = urlexterna.split('watch?v=');
                     var date = formatDateYear(fecha);
                 %>
-                <iframe width="100%" height="184"
+                <!--<iframe width="100%" height="184"
                         src="http://www.youtube.com/embed/<%= res[1] %>?html5=1">
-                </iframe>
+                </iframe>-->
+                <embed src="http://www.youtube.com/v/<%= res[1] %>?&amp;hl=en&amp;fs=1"
+                       type="application/x-shockwave-flash"
+                       allowfullscreen="true"
+                       width="100%" height="184">
                 <div>
                     <span class="title-video"><%= titulo %></span>
                     <span class="subtitle-video"><%= descripcion %></span>
@@ -405,6 +417,160 @@
         </div>
     </script>
 
+    <!-- Nuevos Template-->
+    <script type="text/template" id="listSecundario">
+        <div data-role="content" class="content">
+            <ul class="list">
+            </ul>
+            <div class="footer">
+                <div class="footer-type1" ></div>
+            </div>
+        </div>
+    </script>
+
+        <script type="text/template" id="aviso">
+            <li class="item aviso">
+                <div class="icon-item" style="/*background-size: 50%;*/background-image: url(<%= icono %>);"></div>
+                <div class="txt-item">
+                    <span class="title-item"><%= titulo %></span>
+                    <% if(typeof(descripcion) !== 'undefined' && descripcion != ''){ %>
+                    <span class="subtitle-item"><%= descripcion %></span>
+                    <% } %>
+                </div>
+            </li>
+        </script>
+    <script type="text/template" id="pagina">
+        <div data-role="content" class="content">
+            <div class="content-pagina"></div>
+            <div class="footer">
+                <div class="footer-type1" ></div>
+            </div>
+        </div>
+    </script>
+        <script type="text/template" id="type1">
+            <div class="content-type1">
+                <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
+                <div class="image" style="background-image: url('<%= imagen1 %>')"></div>
+                <% } %>
+
+                <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
+                <span class="description"><%= contenido %></span>
+                <% } %>
+
+                <% if(typeof(descripcionhorario) !== 'undefined' && descripcionhorario != ''){ %>
+                <p class="title_horario">Horarios:</p>
+                <span class="description_horario"><%= descripcionhorario %></span>
+                <% } %>
+
+                <% if(typeof(urlinterna) !== 'undefined' && urlinterna != ''){ %>
+                <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
+                <% } %>
+            </div>
+        </script>
+        <script type="text/template" id="type2">
+            <div class="content-type2">
+                <img src="<%= imagen1 %>" alt="tipe3"/>
+                <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
+            </div>
+        </script>
+        <script type="text/template" id="type3">
+            <div class="content-type1">
+                <div class="datos">
+                    <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
+                    <div class="image" style="background-image: url('<%= imagen1 %>')"></div>
+                    <% } %>
+
+                    <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
+                    <span class="description"><%= contenido %></span>
+                    <% } %>
+
+                    <% if(typeof(descripcionhorario) !== 'undefined' && descripcionhorario != ''){ %>
+                    <p class="title_horario">Horarios:</p>
+                    <span class="description_horario"><%= descripcionhorario %></span>
+                    <% } %>
+
+                    <% if(typeof(urlinterna) !== 'undefined' && urlinterna != ''){ %>
+                    <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
+                    <% } %>
+                </div>
+                <div class="btn-interesa">
+                    Me interesa
+                </div>
+            </div>
+        </script>
+        <script type="text/template" id="type4">
+            <div class="content-type1">
+                <div class="datos">
+                    <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
+                    <div class="image" style="background-image: url('<%= imagen1 %>')"></div>
+                    <% } %>
+
+                    <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
+                    <span class="description"><%= contenido %></span>
+                    <% } %>
+
+                    <% if(typeof(descripcionhorario) !== 'undefined' && descripcionhorario != ''){ %>
+                    <p class="title_horario">Horarios:</p>
+                    <span class="description_horario"><%= descripcionhorario %></span>
+                    <% } %>
+
+                    <% if(typeof(urlinterna) !== 'undefined' && urlinterna != ''){ %>
+                    <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
+                    <% } %>
+                </div>
+                <div class="btn-reserva">
+                    Reserva
+                </div>
+            </div>
+        </script>
+        <script type="text/template" id="reserva">
+            <div class="content-form fade in">
+                <div class="fondo"></div>
+                <div class="formulario">
+                    <ul>
+                        <li>
+                            <div>
+                                <input type="text" placeholder="Nombre completo" data-role="none"/>
+                            </div>
+                            <hr/>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="email" placeholder="Email" data-role="none"/>
+                            </div>
+                            <hr/>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="tel" placeholder="Celular" data-role="none"/>
+                            </div>
+                            <hr/>
+                        </li>
+                    </ul>
+
+                    <div class="btn-reserva">
+                        Enviar
+                    </div>
+                    <div class="btn-cancelar">
+                        Cancelar
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/template" id="promo">
+            <div class="content-promo">
+                <div>
+                    <img src="<%= imagen1 %>" alt="tipe3"/>
+                </div>
+                <div>
+                    <img src="<%= imagen2 %>" alt="tipe3"/>
+                </div>
+                <div>
+                    <img src="<%= imagen3 %>" alt="tipe3"/>
+                </div>
+            </div>
+        </script>
+
     <script type="text/javascript" src="phonegap.js"></script>
 
     <!-- The Scripts -->
@@ -416,6 +582,7 @@
 
     <script src="js/Storage.js"></script>
     <script src="js/PushNotification.js"></script>
+    <script src="js/notifications.js"></script>
 
     <script src="js/jqm-config.js"></script>
     <script src="vendor/jquery.mobile-1.3.2.js"></script>

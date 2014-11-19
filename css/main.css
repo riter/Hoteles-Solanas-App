@@ -226,6 +226,11 @@ ul.menu-der{
         padding-left: 55px;
         color: #ffffff;
     }
+    ul.menu-der li.icon{
+        background-repeat: no-repeat;
+        background-position: 11px center;
+        background-size: 25px;
+    }
     ul.menu-der li.icon_promo{
         background-image: url(../assets/icon-promo.png);
         background-repeat: no-repeat;
@@ -341,12 +346,14 @@ ul.list li.item .subtitle-item, ul.list2 li .subtitle-item{
         position: absolute;
     }
 
-    .content-type1 {
-        margin-left: 27px;
-        margin-right: 16px;
-        margin-top: 10px;
+    .content-type1{
         overflow: hidden;
     }
+        .content-type1 .datos{
+            margin-left: 27px;
+            margin-right: 16px;
+            margin-top: 10px;
+        }
 
     .content-type1 .image{
         background-image: url("../img/img1.png");
@@ -381,8 +388,7 @@ ul.list li.item .subtitle-item, ul.list2 li .subtitle-item{
         display: block;
     }
 .footer{
-    height: 67px;
-    z-index: 1;
+    overflow: hidden;
 }
     .footer-type1{
         background-image: url("../assets/logo-footer.png");
@@ -391,6 +397,7 @@ ul.list li.item .subtitle-item, ul.list2 li .subtitle-item{
         background-repeat: no-repeat;
         width: 100%;
         height: 42px;
+        margin: 24px 0;
     }
 /* end header */
 
@@ -555,16 +562,10 @@ div.favorite .content-item {
 /* end Content Type 2*/
 
 /* start Content Type 3*/
-.content-type3{
-    /*background-image: url("../img/img3.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    height: 300px;*/
+.content-type2 img{
     border-bottom: 6px #3399cc solid;
 }
-/* end Content Type 2*/
+/* end Content Type 3*/
 
 /* start videos*/
 .content-videos{
@@ -657,3 +658,111 @@ li.galerias-item-view > div {
     padding-top: 100%;
 }
 /* end galerias */
+
+/* start aviso */
+ul.list li.item.aviso{
+     background-image: none;
+}
+/* end aviso */
+
+/* start promo */
+.content-promo div{
+    padding: 5px 7px;
+    border-bottom: 1px rgba(233, 232, 232, 0.51) solid;
+    overflow: hidden;
+}
+/* end promo */
+
+/* start type3 y type4 */
+.btn-interesa, .btn-reserva{
+    margin: 9px;
+    background-color: #3399cc;
+    border: 1px #6699cc solid;
+    height: 47px;
+    text-align: center;
+    line-height: 47px;
+    color: #ffffff;
+    font-family: 'ralewaymedium';
+    font-size: 20.74px;
+}
+/* end type3 y type4 */
+
+/* start formulario*/
+.content-form{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 1001;
+}
+.fondo{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #333333;
+    opacity: 0.96;
+}
+.formulario{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: 1002;
+}
+    .formulario ul{
+        overflow: hidden;
+    }
+    .formulario li {
+        margin-bottom: 15px;
+        margin-top: 10px;
+        display: inline-block;
+        width: 100%;
+    }
+    .formulario li > div{
+        margin: 0 55px 0 41px;
+        padding-left: 8px;
+    }
+    .formulario input{
+        color: white;
+        background-color: transparent;
+        width: 100%;
+        border: 0;
+        font-family: 'roboto_condensedlight';
+        font-size: 21.83px;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        outline: none;
+    }
+    .formulario input::-webkit-input-placeholder { /* WebKit browsers */
+        color:#ffffff;
+
+    }
+    .formulario input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color:#ffffff;
+        opacity:1;
+    }
+    .formulario input::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color:#ffffff;
+        opacity:1;
+    }
+    .formulario input:-ms-input-placeholder { /* Internet Explorer 10+ */
+        color:#ffffff;
+    }
+    .formulario hr{
+        margin: 0 49px 0 37px;
+        height: 5px;
+        border-top: none;
+        border-left: 1px #ffffff solid;
+        border-right: 1px #ffffff solid;
+        border-bottom: 1px #ffffff solid;
+    }
+    .btn-cancelar{
+        text-align: center;
+        font-family: 'ralewayregular';
+        font-size: 17.78px;
+        color: white;
+        line-height: 36px;
+    }
+/* end formulario*/

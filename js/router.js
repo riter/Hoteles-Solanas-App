@@ -4,10 +4,8 @@
 var AppRouter = Backbone.Router.extend({
     history: [],
     routes:{
-        //'(/:transition)': 'index',
-        'home(/:transition)': 'index',
 
-        'serv_horario(/:reverse)':'servicio_horario',
+        /*'serv_horario(/:reverse)':'servicio_horario',
         'item_type1/:id':'item_type1',
         'item_type3/:id':'item_type3',
 
@@ -23,7 +21,16 @@ var AppRouter = Backbone.Router.extend({
         'avisos(/:reverse)':'avisos',
 
         'kids':'kids',
-        'plano_complejo':'plano_complejo'
+        'plano_complejo':'plano_complejo',*/
+
+        //nuevos
+        'home/:transition(/:reverse)': 'index',
+        'pagina1':'pagina1',
+        'pagina2':'pagina2',
+        'pagina3':'pagina3',
+        'pagina4':'pagina4',
+        'promo':'promo',
+        'avisos(/:reverse)':'avisos'
     },
     pushHistory:function(fragment){
         var split='';
@@ -66,9 +73,66 @@ var AppRouter = Backbone.Router.extend({
         }
 
     },
-    index:function(transition){
-        app.changePage(new Solana.Views.Index(), transition?transition:'none');
+    index:function(transition,reverse){
+        app.pushHistory();
+        var index = new Solana.Views.Index();
+        app.changePage(index, transition?transition:'none');
     },
+    pagina1:function(){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:'Pagina1',id:'1',type:'back'});
+        view.model.on('clear',view.newPagina1,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
+    pagina2:function(){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:'Pagina2',id:'2',type:'back'});
+        view.model.on('clear',view.newPagina2,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
+    pagina3:function(){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:'Pagina3',id:'1',type:'back'});
+        view.model.on('clear',view.newPagina3,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
+    pagina4:function(){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:'Pagina4',id:'1',type:'back'});
+        view.model.on('clear',view.newPagina4,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
+    promo:function(){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:'Promo',id:'5',type:'back'});
+        view.model.on('clear',view.newPromo,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
+    avisos:function(){
+        app.pushHistory();
+        var view = new Solana.Views.Categorias({title:'Avisos'});
+        view.collection = new Solana.Collections.Avisos();
+        view.collection.on('add',view.newModelAviso,view);
+
+        app.changePage(view, 'fade');
+        view.loadMoreView();
+    },
+    /* end nuevos*/
     servicio_horario:function(reverse){
         app.pushHistory();
         var serv = new Solana.Views.ViewList({title: 'Servicios y horarios',item_type:'1'});
@@ -128,6 +192,9 @@ var AppRouter = Backbone.Router.extend({
         if(reverse){
             serv.parseJSON(getStorage(app.lastHistoy(),null));
         }else{
+            if(getStorage(app.lastHistoy(),null)){
+                serv.parseJSON(getStorage(app.lastHistoy(),null));
+            }
             serv.loadMoreView();
         }
     },
@@ -138,10 +205,6 @@ var AppRouter = Backbone.Router.extend({
     datos_utiles:function(){
         app.pushHistory();
         app.changePage(new Solana.Views.DatosUtiles(), 'fade');
-    },
-    avisos:function(){
-        app.pushHistory();
-        app.changePage(new Solana.Views.Avisos(), 'fade');
     },
     kids:function(){
         app.pushHistory();
