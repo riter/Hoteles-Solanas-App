@@ -22,68 +22,6 @@
         }
     </script>
 
-    <script type="text/template" id="menu">
-        <div class="header" data-role="header" data-position="fixed" data-id="header">
-            <% if(typeof(type) !== 'undefined' && type == 'back'){ %>
-            <div class="back"></div>
-            <% }else{ %>
-            <div class="content-menu-izq">
-                <div>
-                    <div class="icon-izq"></div>
-                    <div class="ave"></div>
-                </div>
-
-                <div class="fondo-menu"></div>
-                <ul class="menu-izq">
-                    <!--<li><a href="#serv_horario" data-role="none">Servicios y horarios</a></li>
-                    <li><a href="#cron_das" data-role="none">Cronograma D.A.S.</a></li>
-                    <li><a href="#kids" data-role="none">Solanas Kids</a></li>
-                    <li><a href="#plano_complejo" data-role="none">Plano del complejo</a></li>
-                    <li><a href="#gastronomia" data-role="none">Gastronomía</a></li>
-                    <li><a href="#serv_horario" data-role="none">Acesoramiento e Inversiones</a></li>
-                    <li><a href="#serv_horario" data-role="none">Solanas Aventuras</a></li>
-                    <li><a href="#convention_center" data-role="none">Solanas Convention Center</a></li>
-                    <li><a href="#datos_utiles" data-role="none">Datos útiles</a></li>-->
-                </ul>
-            </div>
-
-            <div class="search"></div>
-            <div class="content-menu-der">
-                <div class="icon-der"></div>
-                <ul class="menu-der">
-                    <!--<li class="icon_promo"><a href="#promos" data-role="none">Promo</a></li>
-                    <li class="icon_galeria"><a href="#galerias" data-role="none">Galeria</a></li>
-                    <li class="icon_videos"><a href="#videos" data-role="none">Videos</a></li>
-                    <li class="icon_facebook"><a href="#facebook" data-role="none">Facebook</a></li>
-                    <li class="icon_avisos"><a href="#avisos" data-role="none">Avisos</a></li>-->
-                </ul>
-            </div>
-            <% } %>
-
-            <% if( typeof(title) !== 'undefined' && title != '') {%>
-            <h1 class="title_header"><%= title %></h1>
-            <% }else{%>
-            <h1 class="logo"></h1>
-            <% }%>
-        </div>
-    </script>
-        <script type="text/template" id="item_menu">
-            <% if(tipo=='principal1'){ %>
-                <li>
-            <% }else{ %>
-                <li class="icon" style="background-image: url('<%= imagen %>')">
-            <% } %>
-                    <a href="#datos_utiles" data-role="none"><%= nombre %></a>
-                </li>
-        </script>
-
-    <script type="text/template" id="index">
-        <div data-role="content">
-            <div class="banner_home"></div>
-            <div class="img_home"></div>
-        </div>
-    </script>
-
     <script type="text/template" id="cronograma_das">
         <div data-role="content">
             <div style="border-bottom: 1px rgba(233, 232, 232, 0.51) solid; overflow: hidden;">
@@ -418,6 +356,54 @@
     </script>
 
     <!-- Nuevos Template-->
+    <script type="text/template" id="menu">
+        <div class="header" data-role="header" data-position="fixed" data-id="header">
+            <% if(typeof(type) !== 'undefined' && type == 'back'){ %>
+            <div class="back"></div>
+            <% }else{ %>
+            <div class="content-menu-izq">
+                <div>
+                    <div class="icon-izq"></div>
+                    <div class="ave"></div>
+                </div>
+
+                <div class="fondo-menu"></div>
+                <ul class="menu-izq">
+                </ul>
+            </div>
+
+            <div class="search"></div>
+            <div class="content-menu-der">
+                <div class="icon-der"></div>
+                <ul class="menu-der">
+                </ul>
+            </div>
+            <% } %>
+
+            <% if( typeof(title) !== 'undefined' && title != '') {%>
+            <h1 class="title_header"><%= title %></h1>
+            <% }else{%>
+            <h1 class="logo"></h1>
+            <% }%>
+        </div>
+    </script>
+        <script type="text/template" id="item_menu">
+        <% if(tipo=='principal1'){ %>
+        <li>
+        <% }else{ %>
+        <li class="icon" style="background-image: url('<%= imagen %>')">
+        <% } %>
+            <a href="#" data-role="none"><%= nombre %></a>
+        </li>
+    </script>
+
+    <script type="text/template" id="index">
+        <div data-role="content">
+            <div class="banner_home"></div>
+            <div class="img_home"></div>
+        </div>
+    </script>
+
     <script type="text/template" id="listSecundario">
         <div data-role="content" class="content">
             <ul class="list">
@@ -427,7 +413,63 @@
             </div>
         </div>
     </script>
+        <script type="text/template" id="secundario">
+            <li data-id="<%= id %>" class="item">
+                <div>
+                    <div class="icon-item" style="background-image: url('<%= imagen %>')"></div>
+                    <div class="txt-item">
+                        <span class="title-item"><%= nombre %></span>
 
+                        <% if(typeof(texto) !== 'undefined' && texto != ''){ %>
+                        <span class="subtitle-item"><%= texto %></span>
+                        <% } %>
+                    </div>
+                </div>
+            </li>
+        </script>
+        <script type="text/template" id="galeria">
+        <li class="galerias-item">
+            <div>
+                <%  var date = formatDateYear(fecha); %>
+                <div class="galeria-image" style="background-image: url(<%= imagen %>);"></div>
+                <span class="galeria-title"><%= nombre %></span>
+                <span class="galeria-date"><%= date[1] + ' ' +date[0] %></span>
+            </div>
+        </li>
+    </script>
+        <script type="text/template" id="subgaleria">
+        <div data-role="content">
+            <ul class="list list-item-gallery">
+                <% for(var i=0; i<15; i++){ %>
+                <li class="galerias-item galerias-item-view" >
+                    <div>
+                        <div class="galeria-image galeria-image-view" style="background-image: url('assets/img_home.png');"></div>
+                    </div>
+                </li>
+                <% } %>
+            </ul>
+        </div>
+    </script>
+        <script type="text/template" id="video">
+            <li  class="videos-item">
+                <%
+                var res = url.split('watch?v=');
+                var date = formatDateYear(fecha);
+                %>
+                <!--<iframe width="100%" height="184"
+                        src="http://www.youtube.com/embed/<%= res[1] %>?html5=1">
+                </iframe>-->
+                <embed src="http://www.youtube.com/v/<%= res[1] %>?&amp;hl=en&amp;fs=1"
+                       type="application/x-shockwave-flash"
+                       allowfullscreen="true"
+                       width="100%" height="184">
+                <div>
+                    <span class="title-video"><%= nombre %></span>
+                    <span class="subtitle-video"><%= texto %></span>
+                    <span class="date-video"><%= date[2]+' '+date[1]+', '+date[0] %></span>
+                </div>
+            </li>
+        </script>
         <script type="text/template" id="aviso">
             <li class="item aviso">
                 <div class="icon-item" style="/*background-size: 50%;*/background-image: url(<%= icono %>);"></div>
@@ -439,6 +481,7 @@
                 </div>
             </li>
         </script>
+
     <script type="text/template" id="pagina">
         <div data-role="content" class="content">
             <div class="content-pagina"></div>
@@ -530,19 +573,19 @@
                     <ul>
                         <li>
                             <div>
-                                <input type="text" placeholder="Nombre completo" data-role="none"/>
+                                <input type="text" placeholder="Nombre completo" data-role="none" name="nombre" value="<%= mobile.get('nombre')%>"/>
                             </div>
                             <hr/>
                         </li>
                         <li>
                             <div>
-                                <input type="email" placeholder="Email" data-role="none"/>
+                                <input type="email" placeholder="Email" data-role="none" name="email" value="<%= mobile.get('email')%>"/>
                             </div>
                             <hr/>
                         </li>
                         <li>
                             <div>
-                                <input type="tel" placeholder="Celular" data-role="none"/>
+                                <input type="tel" placeholder="Celular" data-role="none" name="celular" value="<%= mobile.get('celular')%>"/>
                             </div>
                             <hr/>
                         </li>

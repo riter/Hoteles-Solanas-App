@@ -12,7 +12,6 @@ var onNotificationGCM = function(e){
 
 var NotificationsPlugin = function(){
     var device_token = null;
-    this.device = null;
     this.notification = null;
 
     this.tokenHandler = function (result) {
@@ -20,39 +19,28 @@ var NotificationsPlugin = function(){
     };
     this.errorHandler = function (result) {
     };
+
+    this.getDeviceToken = function(){
+      return device_token;
+    };
+
     this.successHandler = function (result) {
     };
 
-    this.getDeviceToken = function(){
-        return device_token;
-    };
-    this.getDevice = function(){
-        return this.device;
-    };
-
-
-    this.initialize = function(callback){
+    this.initialize = function(){
         try{
-            this.device = window.device.platform;
             this.notification = window.plugins.pushNotification;
-
             var self = this;
             if (window.device.platform == 'android' || device.platform == 'Android') {
                 this.notification.register(
-                    function(result){
-                        self.successHandler(result);
-                        if(typeof callback == 'function') callback();
-                    },
+                    self.successHandler,
                     self.errorHandler, {
                         "senderID":"971027894286", // Project number from Google Developer Console
                         "ecb":"onNotificationGCM"
                     }
                 );
             }else{
-                this.notification.register(function(result){
-                    self.tokenHandler(result);
-                    if(typeof callback == 'function') callback();
-                }, self.errorHandler, {"badge":"true","sound":"true","alert":"true","ecb":"onNotificationAPN"});
+                this.notification.register(self.tokenHandler, self.errorHandler, {"badge":"true","sound":"true","alert":"true","ecb":"onNotificationAPN"});
             }
         }catch (e){ }
     };
@@ -68,8 +56,8 @@ var NotificationsPlugin = function(){
 
                 case 'message':
                     if (e.foreground){
-                        /*var my_media = new Media("/android_asset/www/"+e.soundname);
-                        my_media.play();*/
+                        //var my_media = new Media("/android_asset/www/"+e.soundname);
+                        //my_media.play();
                     }
                     break;
             }
@@ -88,5 +76,11 @@ var NotificationsPlugin = function(){
         }catch (er){
         }
     };
-   // this.initialize();
+    this.initialize();
 };
+
+var pushNotification = null;
+function onDeviceReady() {
+    pushNotification = new NotificationsPlugin();
+}
+document.addEventListener("deviceready", onDeviceReady, false);

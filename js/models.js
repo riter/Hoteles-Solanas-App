@@ -63,7 +63,37 @@ Backbone.Model.prototype.serialize = function() {
     return this.url + '?' + str.join("&");
 };
 
-//_.extend(Backbone.Model, Backbone.Events);
+Solana.Models.Mobile = Backbone.Model.extend({
+    url:api_host + '/registrarMobile',
+    load:function(callback){
+        this.set('modified', getDateTime());
+
+        this.fetch({data: this.attributes,
+            type:'POST',
+            success: function(model, response, options){
+                if(typeof callback == 'function')
+                    callback();
+            },error:function(){
+            }
+        });
+    },
+    sendReservaInteresa:function(callback){
+        this.url = api_host + '/enviarEmailReservaInteresa';
+        this.fetch({data: this.attributes,
+            type:'POST',
+            success: function(model, response, options){
+                var res = response.message != ''? true : null;
+                if(typeof callback == 'function')
+                    callback(res);
+            },error:function(){
+                if(typeof callback == 'function')
+                    callback(null);
+            }
+        });
+    },
+    parse:function(response){
+    }
+});
 
 Solana.Models.Datos = Backbone.Model.extend({});
 
@@ -73,7 +103,7 @@ Solana.Models.Menu= Backbone.Model.extend({
     }
 });
 
-Solana.Models.Aviso= Backbone.Model.extend({
+Solana.Models.Categoria= Backbone.Model.extend({
     parse:function(response){
         this.set(response[_.keys(response)[0]]);
     }
@@ -81,7 +111,7 @@ Solana.Models.Aviso= Backbone.Model.extend({
 
 Solana.Models.Pagina = Backbone.Model.extend({
     initialize:function(){
-        this.url = api_host + '/listarPagina?id=' + this.get('id');
+        this.url = api_host + '/listarPagina?id=' + this.get('id') + '&tabla=' + this.get('tabla');
     },
     load:function(callback){
 
@@ -101,5 +131,11 @@ Solana.Models.Pagina = Backbone.Model.extend({
             this.set(getStorage(this.url,null));
             this.trigger("clear", this);
         }
+    }
+});
+
+Solana.Models.Aviso= Backbone.Model.extend({
+    parse:function(response){
+        this.set(response[_.keys(response)[0]]);
     }
 });

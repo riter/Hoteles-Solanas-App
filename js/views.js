@@ -16,7 +16,6 @@ Solana.Views.Menu = Backbone.View.extend({
         this.collection.on('add',this.newModel,this);
     },
     render:function () {
-        console.log(this.model.toJSON());
         this.setElement(this.template(this.model.toJSON()));
         if( this.model.get('type') != 'back'){
             this.el.querySelector('ul.menu-izq').style.maxHeight = (window.innerHeight - heightHeader) + 'px';
@@ -100,7 +99,12 @@ Solana.Views.Menu = Backbone.View.extend({
         },
         submenu:function(ev){
             ev.preventDefault();
-            app.navigate('#pagina4',{trigger:true});
+            var hijos = JSON.parse(this.model.get('hijo'));
+            if(hijos.hijo == 'pagina'){
+                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/menu/'+this.model.get('nombre'),{trigger:true});
+            }else if(hijos.hijo == 'categoria'){
+                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/menu/'+this.model.get('nombre'),{trigger:true});
+            }
         }
     });
 
@@ -127,7 +131,6 @@ Solana.Views.Categorias = Backbone.View.extend({
     model: Solana.Models.Datos,
 
     initialize:function(options){
-        _.bindAll(this, 'render');
         this.model = new Solana.Models.Datos(options);
     },
     render:function () {
@@ -147,6 +150,7 @@ Solana.Views.Categorias = Backbone.View.extend({
 
         var newCollection = this.collection.clone();
         newCollection.reset();
+        newCollection.url = this.collection.url;
 
         newCollection.loadMore(function(){
             if(getStorage(newCollection.url,null) &&
@@ -157,7 +161,23 @@ Solana.Views.Categorias = Backbone.View.extend({
             self.parseJSON();
         });
     },
-    newModelAviso:function(model){
+    newSecundario:function(model){
+        var view = new Solana.Views.Secundario({model:model});
+        this.el.querySelector('ul.list').appendChild(view.render().el) ;
+    },
+    newGaleria:function(model){
+        var view = new Solana.Views.Galeria({model:model});
+        this.el.querySelector('ul.list').appendChild(view.render().el) ;
+    },
+    newSubGaleria:function(model){
+        var view = new Solana.Views.SubGaleria({model:model});
+        this.el.querySelector('ul.list').appendChild(view.render().el) ;
+    },
+    newVideo:function(model){
+        var view = new Solana.Views.Video({model:model});
+        this.el.querySelector('ul.list').appendChild(view.render().el) ;
+    },
+    newAviso:function(model){
         var view = new Solana.Views.Aviso({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
     },
@@ -168,9 +188,79 @@ Solana.Views.Categorias = Backbone.View.extend({
     events:{
     }
 });
+    Solana.Views.Secundario = Backbone.View.extend({
+        template: _.template($('#secundario').html()),
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+            'tap >div':'item'
+        },
+        item:function(ev){
+            ev.preventDefault();
+            var hijos = JSON.parse(this.model.get('hijo'));
+            if(hijos.hijo == 'pagina'){
+                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
+            }else if(hijos.hijo == 'categoria'){
+                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
+            }
+        }
+    });
+    Solana.Views.Galeria = Backbone.View.extend({
+        template: _.template($('#galeria').html()),
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+            'tap > div':'item'
+        },
+        item:function(ev){
+            ev.preventDefault();
+            var hijos = JSON.parse(this.model.get('hijo'));
+            if(hijos.hijo == 'pagina'){
+                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
+            }else if(hijos.hijo == 'categoria'){
+                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
+            }
+        }
+    });
+    Solana.Views.SubGaleria = Backbone.View.extend({
+        template: _.template($('#subgaleria').html()),
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+            'tap > div':'item'
+        },
+        item:function(ev){
+            ev.preventDefault();
+            var hijos = JSON.parse(this.model.get('hijo'));
+            if(hijos.hijo == 'pagina'){
+                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
+            }else if(hijos.hijo == 'categoria'){
+                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
+            }
+        }
+    });
+    Solana.Views.Video = Backbone.View.extend({
+        template: _.template($('#video').html()),
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+            //'tap .txt-item':'urlInterna'
+        },
+        urlInterna:function(ev){
+            ev.preventDefault();
+            console.log(this.model.toJSON());
+        }
+    });
     Solana.Views.Aviso = Backbone.View.extend({
         template: _.template($('#aviso').html()),
-        model:Solana.Models.Menu,
         render:function () {
             this.setElement(this.template(this.model.toJSON()));
             return this;
@@ -282,6 +372,8 @@ Solana.Views.Pagina = Backbone.View.extend({
         interesa:function(ev){
             ev.preventDefault();
             console.log(this.model.toJSON());
+            var reserva = new Solana.Views.Reserva({tipo:'Me Interesa',titulo:'Ejemplo Titulo'});
+            $('body').append(reserva.render().el);
         }
     });
     Solana.Views.Pagina4 = Backbone.View.extend({
@@ -296,7 +388,7 @@ Solana.Views.Pagina = Backbone.View.extend({
         reserva:function(ev){
             ev.preventDefault();
             console.log(this.model.toJSON());
-            var reserva = new Solana.Views.Reserva();
+            var reserva = new Solana.Views.Reserva({tipo:'Reserva',titulo:'Ejemplo Titulo'});
             $('body').append(reserva.render().el);
         }
     });
@@ -309,17 +401,41 @@ Solana.Views.Pagina = Backbone.View.extend({
         events:{
         }
     });
+
 Solana.Views.Reserva = Backbone.View.extend({
     template: _.template($('#reserva').html()),
+    model: Solana.Models.Mobile,
+    initialize:function(options){
+        this.model = new Solana.Models.Mobile(options);
+    },
     render:function () {
-        this.setElement(this.template());
+        this.setElement(this.template({mobile:window.models.mobile}));
         return this;
     },
     events:{
-        'tap .btn-reserva':'cancelar',
+        'tap .btn-reserva':'reserva',
         'tap .btn-cancelar':'cancelar'
     },
-    cancelar:function(){
+    reserva:function(ev){
+        var self = this;
+
+        var tipo = this.model.get('tipo');
+        var titulo = this.model.get('titulo');
+        var nombre = this.$el.find('input[name=nombre]').val();
+        var email = this.$el.find('input[name=email]').val();
+        var celular = this.$el.find('input[name=celular]').val();
+        self.model.set({nombre:nombre, email:email, celular:celular});
+
+        self.model.sendReservaInteresa(function(success){
+            if(success){
+                window.models.mobile.set(self.model.toJSON());
+                setStorage('mobile',window.models.mobile.toJSON());
+                self.cancelar(ev);
+            }else
+                alert('Ha ocurrido un Error vuelva a intentarlo');
+        });
+    },
+    cancelar:function(ev){
         var self = this;
         self.$el.fadeOut('250',function(){
             self.$el.remove()

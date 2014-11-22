@@ -25,11 +25,16 @@ var AppRouter = Backbone.Router.extend({
 
         //nuevos
         'home/:transition(/:reverse)': 'index',
-        'pagina1':'pagina1',
-        'pagina2':'pagina2',
-        'pagina3':'pagina3',
-        'pagina4':'pagina4',
-        'promo':'promo',
+        'tipo_1/:id/:tabla(/:titulo)':'pagina1',
+        'tipo_2/:id/:tabla(/:titulo)':'pagina2',
+        'tipo_3/:id/:tabla(/:titulo)':'pagina3',
+        'tipo_4/:id/:tabla(/:titulo)':'pagina4',
+        'tipo_promo/:id/:tabla(/:titulo)':'promo',
+
+        'secundario/:id/:tabla(/:titulo)(/:reverse)':'secundario',
+        'secundario_galeria/:id/:tabla(/:titulo)(/:reverse)':'galeria',
+        'secundario_galeria_nivel2/:id/:tabla(/:titulo)(/:reverse)':'subgaleria',
+        'secundario_videos/:id/:tabla(/:titulo)(/:reverse)':'video',
         'avisos(/:reverse)':'avisos'
     },
     pushHistory:function(fragment){
@@ -78,59 +83,97 @@ var AppRouter = Backbone.Router.extend({
         var index = new Solana.Views.Index();
         app.changePage(index, transition?transition:'none');
     },
-    pagina1:function(){
+    /* categorias */
+    secundario:function(id,tabla,titulo,reverse){
         app.pushHistory();
-        var view = new Solana.Views.Pagina();
-        view.model = new Solana.Models.Pagina({title:'Pagina1',id:'1',type:'back'});
-        view.model.on('clear',view.newPagina1,view);
+        var view = new Solana.Views.Categorias({title:titulo,type:'none'});
+        view.collection = new Solana.Collections.Categoria({id:id, tabla:tabla});
+        view.collection.on('add',view.newSecundario,view);
 
         app.changePage(view, 'fade');
-        view.loadView();
+        view.loadMoreView();
     },
-    pagina2:function(){
+    galeria:function(id,tabla,titulo,reverse){
         app.pushHistory();
-        var view = new Solana.Views.Pagina();
-        view.model = new Solana.Models.Pagina({title:'Pagina2',id:'2',type:'back'});
-        view.model.on('clear',view.newPagina2,view);
+        var view = new Solana.Views.Categorias({title:titulo,type:'none'});
+        view.collection = new Solana.Collections.Categoria({id:id, tabla:tabla});
+        view.collection.on('add',view.newGaleria,view);
 
         app.changePage(view, 'fade');
-        view.loadView();
+        view.loadMoreView();
     },
-    pagina3:function(){
+    subgaleria:function(id,tabla,titulo,reverse){
         app.pushHistory();
-        var view = new Solana.Views.Pagina();
-        view.model = new Solana.Models.Pagina({title:'Pagina3',id:'1',type:'back'});
-        view.model.on('clear',view.newPagina3,view);
+        var view = new Solana.Views.Categorias({title:titulo,type:'none'});
+        view.collection = new Solana.Collections.Categoria({id:id, tabla:tabla});
+        view.collection.on('add',view.newSubGaleria,view);
 
         app.changePage(view, 'fade');
-        view.loadView();
+        view.loadMoreView();
     },
-    pagina4:function(){
+    video:function(id,tabla,titulo,reverse){
         app.pushHistory();
-        var view = new Solana.Views.Pagina();
-        view.model = new Solana.Models.Pagina({title:'Pagina4',id:'1',type:'back'});
-        view.model.on('clear',view.newPagina4,view);
+        var view = new Solana.Views.Categorias({title:titulo});
+        view.collection = new Solana.Collections.Categoria({id:id, tabla:tabla});
+        view.collection.on('add',view.newVideo,view);
 
         app.changePage(view, 'fade');
-        view.loadView();
-    },
-    promo:function(){
-        app.pushHistory();
-        var view = new Solana.Views.Pagina();
-        view.model = new Solana.Models.Pagina({title:'Promo',id:'5',type:'back'});
-        view.model.on('clear',view.newPromo,view);
-
-        app.changePage(view, 'fade');
-        view.loadView();
+        view.loadMoreView();
     },
     avisos:function(){
         app.pushHistory();
         var view = new Solana.Views.Categorias({title:'Avisos'});
         view.collection = new Solana.Collections.Avisos();
-        view.collection.on('add',view.newModelAviso,view);
+        view.collection.on('add',view.newAviso,view);
 
         app.changePage(view, 'fade');
         view.loadMoreView();
+    },
+    /* paginas */
+    pagina1:function(id,tabla,titulo){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:titulo, id:id, tabla:tabla, type:'back'});
+        view.model.on('clear',view.newPagina1,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
+    pagina2:function(id,tabla,titulo){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:titulo, id:id, tabla:tabla, type:'back'});
+        view.model.on('clear',view.newPagina2,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
+    pagina3:function(id,tabla,titulo){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:titulo, id:id, tabla:tabla, type:'back'});
+        view.model.on('clear',view.newPagina3,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
+    pagina4:function(id,tabla,titulo){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:titulo, id:id, tabla:tabla, type:'back'});
+        view.model.on('clear',view.newPagina4,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
+    promo:function(id,tabla,titulo){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:titulo, id:id, tabla:tabla, type:'back'});
+        view.model.on('clear',view.newPromo,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
     },
     /* end nuevos*/
     servicio_horario:function(reverse){

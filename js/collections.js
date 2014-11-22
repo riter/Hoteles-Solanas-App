@@ -149,6 +149,38 @@ Solana.Collections.Menus = Backbone.Collection.extend({
     }
 });
 
+Solana.Collections.Categoria = Backbone.Collection.extend({
+    model: Solana.Models.Categoria,
+    loading:false,
+
+    initialize:function(options){
+        this.url = api_host + '/listarCategoria?id=' + options.id + '&tabla=' + options.tabla;
+    },
+    loadMore : function(callback){
+        var self = this;
+        if(!this.loading){
+            this.loading = true;
+            this.fetch({
+                success: function(model, response, options){
+                    self.loading = false;
+
+                    if(typeof callback == 'function')
+                        callback();
+                },error:function(){
+                    self.loading = false;
+                    self.loadJSON();
+                }
+            });
+        }
+    },
+    loadJSON:function(){
+        if(getStorage(this.url,null)){
+            this.reset();
+            this.set(getStorage(this.url,null));
+        }
+    }
+});
+
 Solana.Collections.Avisos = Backbone.Collection.extend({
     url: api_host + '/listarAvisosNotificados',
     model: Solana.Models.Aviso,
@@ -158,7 +190,7 @@ Solana.Collections.Avisos = Backbone.Collection.extend({
         var self = this;
         if(!this.loading){
             this.loading = true;
-            this.fetch({data: {udid:'APA91bE4iywO53LMFL2UGMG08wrKXPj402Y-ieLbZfvEuz9y2ZZr4sFclXhuZsfZ-5nOP_U9E-8G9jc6R-2q8TWr0ejhdi0dFpE8HLPFJ0X8V93JcJgspTi66lmtYmNGwM4qq-Kghm90'},
+            this.fetch({data: { udid: pushNotification.getDeviceToken() },
                 success: function(model, response, options){
                     self.loading = false;
 
