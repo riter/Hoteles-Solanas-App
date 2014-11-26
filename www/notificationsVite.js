@@ -79,8 +79,39 @@ var NotificationsPlugin = function(){
     this.initialize();
 };
 
+function dowloadImage(url){
+    try{
+
+        var downloadUrl = url;
+        var relativeFilePath = "download/banner.png";  // using an absolute path also does not work
+
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+            var fileTransfer = new FileTransfer();
+            fileTransfer.download(
+                downloadUrl,
+                fileSystem.root.toURL() + '/' + relativeFilePath,
+                function (entry) {
+                    $('#banner').attr('src',entry.toURI());
+
+                    alert("Success" + entry.toURI());
+                    localStorage['banner'] = JSON.stringify(entry.nativeURL);
+                    alert(JSON.parse(localStorage['banner']));
+                },
+                function (error) {
+                    alert("Error:" + + JSON.stringify(error));
+                }
+            );
+        });
+
+    }catch(e){
+        alert('Catch:' + JSON.stringify(e));
+    }
+}
 var pushNotification = null;
 function onDeviceReady() {
+
+    dowloadImage('HTTP://html5cooks.com/solana/app/webroot/uploads/categorias/271465234.82-map-route.png');
+
     pushNotification = new NotificationsPlugin();
 }
 document.addEventListener("deviceready", onDeviceReady, false);

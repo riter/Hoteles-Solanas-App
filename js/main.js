@@ -4,8 +4,8 @@
 
 /* Variables*/
     var pushNotification = null;
-    window.vars.favoritos = null;
-    window.views.menu = window.models.mobile = null;
+    window.views.menu = window.models.mobile = window.collections.favoritos = null;
+    window.models.banner = null;
 /* initialize Document y Phonegap */
 function onDeviceReady() {
     $.mobile.defaultHomeScroll = 0;
@@ -25,17 +25,20 @@ function onDeviceReady() {
     window.views.menu.loadMoreView();
 
     window.models.mobile = new Solana.Models.Mobile();
-    if(getStorage('mobile',null)){
-        window.models.mobile.set(getStorage('mobile',null));
-        window.models.mobile.load();
-    }else{
-        pushNotification.initialize(function(){
-            window.models.mobile.set({udid: pushNotification.getDeviceToken(), dispositivo: pushNotification.getDevice()});
-            window.models.mobile.load(function(){
-                setStorage('mobile',window.models.mobile.toJSON());
-            });
+    window.models.mobile.parseJSON();
+
+    pushNotification.initialize(function(){
+        window.models.mobile.set({udid: pushNotification.getDeviceToken(), dispositivo: pushNotification.getDevice()});
+        window.models.mobile.load(function(){
+            setStorage('mobile',window.models.mobile.toJSON());
         });
+    });
+
+    window.collections.favoritos = new Solana.Collections.DAS();
+    if(getStorage('favorites',null)){
+        window.collections.favoritos.set(getStorage('favorites',null));
     }
+
     app.navigate( '#home/fade' ,{trigger: true});
 }
 

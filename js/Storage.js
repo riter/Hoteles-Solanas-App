@@ -29,12 +29,12 @@ function getStorage(v,def){
         return def;
     }
 }
-
+function removeStorage(key){
+    localStorage.removeItem(key);
+}
 function clearStorage(){
     try{
-        var  splash = getStorage('splash',null);
         localStorage.clear();
-        setStorage('splash',splash);
     }catch(err) {
     }
 }

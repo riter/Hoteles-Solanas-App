@@ -4,26 +4,6 @@
 var AppRouter = Backbone.Router.extend({
     history: [],
     routes:{
-
-        /*'serv_horario(/:reverse)':'servicio_horario',
-        'item_type1/:id':'item_type1',
-        'item_type3/:id':'item_type3',
-
-        'cron_das':'cronograma_das',
-        'gastronomia(/:reverse)':'gastronomia',
-
-        'videos':'videos',
-
-        'galerias(/:reverse)':'galerias',
-        'list_image/:id':'list_image',
-
-        'datos_utiles(/:reverse)':'datos_utiles',
-        'avisos(/:reverse)':'avisos',
-
-        'kids':'kids',
-        'plano_complejo':'plano_complejo',*/
-
-        //nuevos
         'home/:transition(/:reverse)': 'index',
         'tipo_1/:id/:tabla(/:titulo)':'pagina1',
         'tipo_2/:id/:tabla(/:titulo)':'pagina2',
@@ -31,11 +11,13 @@ var AppRouter = Backbone.Router.extend({
         'tipo_4/:id/:tabla(/:titulo)':'pagina4',
         'tipo_promo/:id/:tabla(/:titulo)':'promo',
 
+        'tipo_das/:id/:tabla(/:titulo)(/:reverse)':'crono_das',
+
         'secundario/:id/:tabla(/:titulo)(/:reverse)':'secundario',
         'secundario_galeria/:id/:tabla(/:titulo)(/:reverse)':'galeria',
         'secundario_galeria_nivel2/:id/:tabla(/:titulo)(/:reverse)':'subgaleria',
         'secundario_videos/:id/:tabla(/:titulo)(/:reverse)':'video',
-        'avisos(/:reverse)':'avisos'
+        'avisos/:id/:tabla(/:titulo)(/:reverse)':'avisos'
     },
     pushHistory:function(fragment){
         var split='';
@@ -82,6 +64,7 @@ var AppRouter = Backbone.Router.extend({
         app.pushHistory();
         var index = new Solana.Views.Index();
         app.changePage(index, transition?transition:'none');
+        index.loadBanner();
     },
     /* categorias */
     secundario:function(id,tabla,titulo,reverse){
@@ -91,7 +74,8 @@ var AppRouter = Backbone.Router.extend({
         view.collection.on('add',view.newSecundario,view);
 
         app.changePage(view, 'fade');
-        view.loadMoreView();
+        if(! reverse)
+            view.loadMoreView();
     },
     galeria:function(id,tabla,titulo,reverse){
         app.pushHistory();
@@ -100,7 +84,8 @@ var AppRouter = Backbone.Router.extend({
         view.collection.on('add',view.newGaleria,view);
 
         app.changePage(view, 'fade');
-        view.loadMoreView();
+        if(! reverse)
+            view.loadMoreView();
     },
     subgaleria:function(id,tabla,titulo,reverse){
         app.pushHistory();
@@ -109,25 +94,28 @@ var AppRouter = Backbone.Router.extend({
         view.collection.on('add',view.newSubGaleria,view);
 
         app.changePage(view, 'fade');
-        view.loadMoreView();
+        if(! reverse)
+            view.loadMoreView();
     },
     video:function(id,tabla,titulo,reverse){
         app.pushHistory();
-        var view = new Solana.Views.Categorias({title:titulo});
+        var view = new Solana.Views.Categorias({title:titulo, type:'none'});
         view.collection = new Solana.Collections.Categoria({id:id, tabla:tabla});
         view.collection.on('add',view.newVideo,view);
 
         app.changePage(view, 'fade');
-        view.loadMoreView();
+        if(! reverse)
+            view.loadMoreView();
     },
-    avisos:function(){
+    avisos:function(id,tabla,titulo,reverse){
         app.pushHistory();
-        var view = new Solana.Views.Categorias({title:'Avisos'});
-        view.collection = new Solana.Collections.Avisos();
+        var view = new Solana.Views.Categorias({title:titulo, type:'none'});
+        view.collection = new Solana.Collections.Aviso();
         view.collection.on('add',view.newAviso,view);
 
         app.changePage(view, 'fade');
-        view.loadMoreView();
+        if(! reverse)
+            view.loadMoreView();
     },
     /* paginas */
     pagina1:function(id,tabla,titulo){
@@ -175,98 +163,15 @@ var AppRouter = Backbone.Router.extend({
         app.changePage(view, 'fade');
         view.loadView();
     },
-    /* end nuevos*/
-    servicio_horario:function(reverse){
+    crono_das:function(id,tabla,titulo,reverse){
         app.pushHistory();
-        var serv = new Solana.Views.ViewList({title: 'Servicios y horarios',item_type:'1'});
-        app.changePage(serv, 'fade');
-        serv.collection.url = api_host + '/listarServiciosYHorarios';
+        var view = new Solana.Views.CronogramaDas({title:titulo, type:'none'});
+        window.collections.favoritos.off('add remove').on('add remove',view.newFavorite,view);
 
-        if(reverse){
-            serv.parseJSON(getStorage(app.lastHistoy(),null));
-        }else{
-            serv.loadMoreView();
-        }
-    },
-    item_type1:function(id){
-        app.pushHistory();
-
-        var model = new Solana.Models.Type1(getStorage(app.lastHistoy(),null));
-        app.changePage(new Solana.Views.Type1(model.toJSON()), 'fade');
-    },
-    cronograma_das:function(){
-        var crono = new Solana.Views.CronogramaDas();
-        app.changePage(crono, 'fade',null,function(){
-            crono.showSlider();
+        app.changePage(view, 'fade',null,function(){
+            view.newFavorite(null);
+            view.showSlider(0);
         });
-    },
-    gastronomia:function(reverse){
-        app.pushHistory();
-        var serv = new Solana.Views.ViewList({title: 'Gastronomia',item_type:'3'});
-        app.changePage(serv, 'fade');
-        serv.collection.url = api_host + '/listarGastronomias';
-
-        if(reverse){
-            serv.parseJSON(getStorage(app.lastHistoy(),null));
-        }else{
-            serv.loadMoreView();
-        }
-    },
-    item_type3:function(id){
-        app.pushHistory();
-
-        var type = new Solana.Views.Type3(getStorage('item_type3/'+id,null));
-
-        var serv = new Solana.Views.ViewList({title: type.model.get('title'),type:'back'});
-        app.changePage(serv, 'fade');
-
-        type.render(serv);
-    },
-    videos:function(){
-        var videos = new Solana.Views.Videos();
-        app.changePage(videos, 'fade');
-        videos.collection.loadMore();
-    },
-    galerias:function(reverse){
-        app.pushHistory();
-        var serv = new Solana.Views.Galerias({title: 'Galeria de fotos'});
-        app.changePage(serv, 'fade');
-
-        if(reverse){
-            serv.parseJSON(getStorage(app.lastHistoy(),null));
-        }else{
-            if(getStorage(app.lastHistoy(),null)){
-                serv.parseJSON(getStorage(app.lastHistoy(),null));
-            }
-            serv.loadMoreView();
-        }
-    },
-    list_image:function(id){
-        app.pushHistory();
-        app.changePage(new Solana.Views.GaleryImages(getStorage('list_image/'+id,null)), 'fade');
-    },
-    datos_utiles:function(){
-        app.pushHistory();
-        app.changePage(new Solana.Views.DatosUtiles(), 'fade');
-    },
-    kids:function(){
-        app.pushHistory();
-        var serv = new Solana.Views.ViewList({title: 'Solana kids'});
-        app.changePage(serv, 'fade');
-
-        var type = new Solana.Views.Type3();
-        type.model.url = api_host + '/listarSolanasKids';
-        type.loadModel(serv);
-
-    },
-    plano_complejo:function(){
-        app.pushHistory();
-        var serv = new Solana.Views.ViewList({title: 'Solana kids'});
-        app.changePage(serv, 'fade');
-
-        var type = new Solana.Views.Type3();
-        type.model.url = api_host + '/listarPlanos';
-        type.loadModel(serv);
-
+        view.loadPorDiaRight(new Date().getTime());
     }
 });

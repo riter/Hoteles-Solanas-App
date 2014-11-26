@@ -11,12 +11,12 @@ var onNotificationGCM = function(e){
 };
 
 var NotificationsPlugin = function(){
-    var device_token = null;
+    this.device_token = null;
     this.device = null;
     this.notification = null;
 
     this.tokenHandler = function (result) {
-        device_token = result;
+        this.device_token = result;
     };
     this.errorHandler = function (result) {
     };
@@ -24,12 +24,11 @@ var NotificationsPlugin = function(){
     };
 
     this.getDeviceToken = function(){
-        return device_token;
+        return this.device_token;
     };
     this.getDevice = function(){
         return this.device;
     };
-
 
     this.initialize = function(callback){
         try{

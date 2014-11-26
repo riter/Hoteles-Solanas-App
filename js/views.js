@@ -49,7 +49,7 @@ Solana.Views.Menu = Backbone.View.extend({
     newModel:function(model){
         var view = new Solana.Views.ItemMenu({model:model});
 
-        if(model.get('tipo') == 'principal1'){
+        if(model.get('tipo') == 'principal_1'){
             this.el.querySelector('ul.menu-izq').appendChild(view.render().el) ;
         }else{
             this.el.querySelector('ul.menu-der').appendChild(view.render().el) ;
@@ -99,11 +99,12 @@ Solana.Views.Menu = Backbone.View.extend({
         },
         submenu:function(ev){
             ev.preventDefault();
-            var hijos = JSON.parse(this.model.get('hijo'));
-            if(hijos.hijo == 'pagina'){
-                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/menu/'+this.model.get('nombre'),{trigger:true});
-            }else if(hijos.hijo == 'categoria'){
-                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/menu/'+this.model.get('nombre'),{trigger:true});
+            if(this.model.get('nombre') == 'Cronograma D.A.S'){
+                app.navigate('#tipo_das/'+this.model.get('id')+'/menu/'+this.model.get('nombre'),{trigger:true});
+                return;
+            }
+            if(this.model.get('hijo')){
+                app.navigate('#'+this.model.get('hijo').tipo+'/'+this.model.get('id')+'/menu/'+this.model.get('nombre'),{trigger:true});
             }
         }
     });
@@ -119,14 +120,43 @@ Solana.Views.Index = Backbone.View.extend({
         var banner = $(window).height() * 0.6150;
         this.el.querySelector('.banner_home').style.height = banner + 'px';
         this.el.querySelector('.img_home').style.height = ($(window).height() - banner - heightHeader - 3) + 'px';
-
         return this;
+    },
+    loadBanner:function(){
+        var self = this;
+        if(window.models.banner == null){
+            window.models.banner = new Solana.Models.Banner();
+
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+                if(getStorage(window.models.banner.url)){
+                    var uri = fileSystem.root.toURL() + '/banner.png';
+                    self.$el.find('.banner_home').css('background-image','url('+ uri +'?time='+(new Date()).getTime() +')');
+                    setStorage('urlBanner',uri);
+                }
+                self.load();
+            });
+        }else{
+            this.$el.find('.banner_home').css('background-image','url('+ getStorage('urlBanner',null)+'?time='+(new Date()).getTime() +')');
+        }
+    },
+    load:function(){
+        var self = this;
+        window.models.banner.load(function(){
+            if(getStorage(window.models.banner.url,null) &&
+                JSON.stringify(getStorage(window.models.banner.url,null)) == JSON.stringify(window.models.banner.toJSON())){
+                return;
+            }
+            dowloadImage(window.models.banner.get('urlBanner'),'banner.png',function(uri){
+                setStorage(window.models.banner.url,window.models.banner.toJSON());
+                setStorage('urlBanner',uri);
+                self.$el.find('.banner_home').css('background-image','url('+ uri+'?time='+(new Date()).getTime() +')');
+            });
+        });
     }
 });
 
 Solana.Views.Categorias = Backbone.View.extend({
     template: _.template($('#listSecundario').html()),
-
     collection:null,
     model: Solana.Models.Datos,
 
@@ -199,11 +229,9 @@ Solana.Views.Categorias = Backbone.View.extend({
         },
         item:function(ev){
             ev.preventDefault();
-            var hijos = JSON.parse(this.model.get('hijo'));
-            if(hijos.hijo == 'pagina'){
-                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
-            }else if(hijos.hijo == 'categoria'){
-                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
+            console.log(this.model.toJSON());
+            if(this.model.get('hijo')){
+                app.navigate('#'+this.model.get('hijo').tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
             }
         }
     });
@@ -218,11 +246,9 @@ Solana.Views.Categorias = Backbone.View.extend({
         },
         item:function(ev){
             ev.preventDefault();
-            var hijos = JSON.parse(this.model.get('hijo'));
-            if(hijos.hijo == 'pagina'){
-                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
-            }else if(hijos.hijo == 'categoria'){
-                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
+            console.log(this.model.toJSON());
+            if(this.model.get('hijo')){
+                app.navigate('#'+this.model.get('hijo').tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
             }
         }
     });
@@ -233,15 +259,13 @@ Solana.Views.Categorias = Backbone.View.extend({
             return this;
         },
         events:{
-            'tap > div':'item'
+            //'tap > div':'item'
         },
         item:function(ev){
             ev.preventDefault();
-            var hijos = JSON.parse(this.model.get('hijo'));
-            if(hijos.hijo == 'pagina'){
-                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
-            }else if(hijos.hijo == 'categoria'){
-                app.navigate('#'+hijos.tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
+            console.log(this.model.toJSON());
+            if(this.model.get('hijo')){
+                app.navigate('#'+this.model.get('hijo').tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
             }
         }
     });
@@ -298,6 +322,9 @@ Solana.Views.Pagina = Backbone.View.extend({
         var self = this;
 
         var newCollection = this.model.clone();
+        newCollection.clear();
+        newCollection.url = this.model.url;
+
         newCollection.load(function(){
             if(getStorage(newCollection.url,null) &&
                 JSON.stringify(getStorage(newCollection.url,null)) == JSON.stringify(newCollection.toJSON())){
@@ -442,3 +469,191 @@ Solana.Views.Reserva = Backbone.View.extend({
         });
     }
 });
+
+/*  prueba de DAS*/
+Solana.Views.CronogramaDas = Backbone.View.extend({
+    template: _.template($('#cronograma_das').html()),
+    model:null,
+    slider:null,
+
+    initialize:function(options){
+        this.model = new Solana.Models.Datos(options);
+    },
+    render:function () {
+        $(this.el).html(this.template());
+        window.views.menu.model.set(this.model.toJSON());
+        this.$el.prepend(window.views.menu.render().el);
+
+        this.model.unset('title');
+        this.model.unset('type');
+        return this;
+    },
+    events:{
+        'tap div.por_dia':'por_dia',
+        'tap div.favoritos':'favoritos'
+    },
+    newFavorite:function(model){
+        var $favorite = this.$el.find('.favorite > ul');
+        $favorite.empty();
+
+        var order = window.collections.favoritos.ordenar();
+        var groupOrder = new Solana.Collections.DAS(order).agrupar();
+        for (var i = 0; i < Object.keys(groupOrder).length; i++) {
+            var $tmp =  $(_.template($('#item_favorite').html(),{fecha:new Date(Object.keys(groupOrder)[i]).getTime()}));
+            $favorite.append($tmp);
+
+            var grupo = groupOrder[Object.keys(groupOrder)[i]];
+            for (var c = 0; c < grupo.length; c++) {
+                var view = new Solana.Views.Favorite({model:grupo[c]});
+                view.view_parent = this;
+                $tmp.find('.list2').append(view.render().el);
+            }
+        }
+        setStorage('favorites',window.collections.favoritos.toJSON());
+    },
+    loadPorDiaLeft:function(fecha){
+        var dia = new Solana.Views.ItemSlider({fecha:fecha});
+        dia.view_parent = this;
+        dia.collection = new Solana.Collections.DAS({ /* parametros para fin collection */});
+        dia.collection.on('add',dia.newPorDia,dia);
+
+        this.$el.find('.bxslider').prepend(dia.render().el);
+        dia.loadMoreView();
+    },
+    loadPorDiaRight:function(fecha){
+        var dia = new Solana.Views.ItemSlider({fecha:fecha});
+        dia.view_parent = this;
+        dia.collection = new Solana.Collections.DAS({ /* parametros para fin collection */});
+        dia.collection.on('add',dia.newPorDia,dia);
+
+        this.$el.find('.bxslider').append(dia.render().el);
+        dia.loadMoreView();
+    },
+    por_dia:function(ev){
+        this.$el.find('.tap-view > div').removeClass('active');
+        this.$el.find('.tap-view > hr').addClass('active');
+        ev.target.classList.add("active");
+
+        this.el.querySelector('.content_por_dia').style.display = 'block';
+        this.el.querySelector('.favorite').style.display = 'none';
+    },
+    favoritos:function(ev){
+        this.$el.find('.tap-view > div').removeClass('active');
+        this.$el.find('.tap-view > hr').removeClass('active');
+        ev.target.classList.add("active");
+
+        this.el.querySelector('.favorite').style.display = 'block';
+        this.el.querySelector('.content_por_dia').style.display = 'none';
+    },
+
+    showSlider:function(index){
+        var options = {
+            controls: false,
+            pager:false,
+            infiniteLoop:false,
+            touchEnabled:false,
+            startSlide : index != null ? index:0
+        };
+
+        if(this.slider == null){
+            this.slider = this.$el.find('ul.bxslider').bxSlider(options);
+        }else{
+            options['startSlide'] = this.slider.getCurrentSlide();
+            this.slider.reloadSlider(options);
+        }
+    },
+    backSlider:function(fecha){
+        var current =  this.slider.getCurrentSlide();
+        if(current == 0){
+            this.loadPorDiaLeft(DayAnterior(fecha));
+            this.showSlider(1);
+        }
+        this.slider.goToPrevSlide();
+    },
+    nextSlider:function(fecha){
+        var current =  this.slider.getCurrentSlide();
+        if(current + 1  == this.slider.getSlideCount()){
+            this.loadPorDiaRight(DaySiguiente(fecha));
+            this.showSlider(current);
+        }
+        this.slider.goToNextSlide();
+    }
+});
+    Solana.Views.ItemSlider = Backbone.View.extend({
+        template: _.template($('#item_slider').html()),
+        collection:Solana.Collections.DAS,
+        view_parent: null,
+        model:Solana.Models.Datos,
+
+        initialize:function(options){
+            this.model = new Solana.Models.Datos(options);
+        },
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+
+            this.parseJSON();
+            return this;
+        },
+        events:{
+            'tap div.slider_left':'backSlider',
+            'tap div.slider_right':'nextSlider'
+        },
+        loadMoreView:function(){
+            var self = this;
+
+            var newCollection = this.collection.clone();
+            newCollection.reset();
+            newCollection.url = this.collection.url;
+
+            newCollection.loadMore(function(){
+                if(getStorage(newCollection.url,null) &&
+                    JSON.stringify(getStorage(newCollection.url,null)) == JSON.stringify(newCollection.toJSON())){
+                    return;
+                }
+                setStorage(newCollection.url,newCollection.toJSON());
+                self.parseJSON();
+                self.view_parent.showSlider();
+            });
+        },
+        parseJSON:function(){
+            this.$el.find('.list2').empty();
+            this.collection.loadJSON();
+        },
+        newPorDia:function(model){
+            var view = new Solana.Views.Favorite({model:model});
+            view.view_parent = this;
+            this.$el.find('.list2').append(view.render().el);
+        },
+        backSlider:function(ev){
+            this.view_parent.backSlider(this.model.get('fecha'));
+        },
+        nextSlider:function(ev){
+            this.view_parent.nextSlider(this.model.get('fecha'));
+        }
+    });
+    Solana.Views.Favorite = Backbone.View.extend({
+        template: _.template($('#favorite').html()),
+        view_parent: null,
+
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+            'touchstart .favorite-item':'favorite'
+        },
+        favorite:function(ev){
+            var id = this.model.get('id');
+            if(this.$el.parents('.favorite').length>0){
+                window.collections.favoritos.remove(this.model);
+                $('.bxslider ul li[data-id='+id+'] span.favorite-item').removeClass('active');
+            }else{
+                if($(ev.target).hasClass('active')){
+                    window.collections.favoritos.remove(this.model);
+                }else{
+                    window.collections.favoritos.add(this.model);
+                }
+            }
+            $(ev.target).toggleClass('active');
+        }
+    });

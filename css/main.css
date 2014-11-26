@@ -294,7 +294,7 @@ ul.list li.item .txt-item{
 ul.list li.item .icon-item{
     width: 71px;
     height: 64px;
-    background: url(../img/icon-servicios.png) no-repeat center;
+    /*background: url(../img/icon-servicios.png) no-repeat center;*/
     background-size: cover;
     border-left: 3px #3399cc solid;
     margin-top: 4px;
@@ -356,7 +356,7 @@ ul.list li.item .subtitle-item, ul.list2 li .subtitle-item{
         }
 
     .content-type1 .image{
-        background-image: url("../img/img1.png");
+        /*background-image: url("../img/img1.png");*/
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -403,7 +403,7 @@ ul.list li.item .subtitle-item, ul.list2 li .subtitle-item{
 
 /* start Index*/
 .banner_home{
-    background-image: url("../img/home.png");
+    background-image: url("../assets/img_loading.gif");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -539,9 +539,14 @@ ul.list2 div.time{
         margin-top: 4px;
         display: block;
     }
-    ul.list2 li .favorite-item.active{
+    ul.list2 li .favorite-item:after{
+        content: "Agregar a Favoritos";
+    }
+    ul.list2 li .favorite-item.active, div.favorite ul.list2 li .favorite-item{
         background-image: url("../assets/on_favorito.png");
-
+    }
+    ul.list2 li .favorite-item.active:after, div.favorite ul.list2 li .favorite-item:after{
+        content: "Eliminar de Favoritos";
     }
 .title-favorite{
     margin-top: 4px;
@@ -559,6 +564,7 @@ div.favorite div.time {
 div.favorite .content-item {
     padding-left: 88px;
 }
+
 /* end Content Type 2*/
 
 /* start Content Type 3*/
@@ -606,14 +612,13 @@ div.favorite .content-item {
 /* end videos*/
 
 /* start galerias */
-.content-galerias{
-    margin-top: 2px;
+li.galerias-item:first-child, li.galerias-item:nth-child(2){
+    margin-top: 4px;
 }
 li.galerias-item {
     float: left;
     width: 50%;
 }
-
 li.galerias-item > div {
     border: 1px #999999 solid;
     margin: 2px;
@@ -646,9 +651,10 @@ span.galeria-date {
     margin-bottom: 6px;
 }
 
-ul.list-item-gallery{
+/*ul.list-item-gallery{
     margin: 3px;
-}
+}*/
+
 li.galerias-item-view > div {
     margin: 1px 1px 9px;
     padding: 2px;

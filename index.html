@@ -31,257 +31,50 @@
                     <div class="favoritos">Favoritos</div>
                 </div>
             </div>
+
             <div class="content_por_dia">
                 <ul class="bxslider">
-                    <li class="type2">
-                        <div class="title">
-                            <div class="slider_left"></div>
-                            <h2>Sabado</h2>
-                            <div class="slider_right"></div>
-                        </div>
-                        <div class="content-type2">
-                            <ul class="list2">
-                                <% for(var i=0; i<30; i++){ %>
-                                <li>
-                                    <div class="time">
-                                        10:00 hs
-                                    </div>
-                                    <div class="content-item">
-                                        <span class="title-item">Nombre de Actividad</span>
-                                        <span class="subtitle-item">Tipo de actividad</span>
-                                        <span class="subtitle-item">Lugar de actividad</span>
-                                        <span class="favorite-item">Agregar a Favoritos</span>
-                                    </div>
-                                </li>
-                                <% } %>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="type2">
-                        <div class="title">
-                            <div class="slider_left"></div>
-                            <h2>Hoy</h2>
-                            <div class="slider_right"></div>
-                        </div>
-                        <div class="content-type2">
-                            <ul class="list2">
-                                <% for(var i=0; i<30; i++){ %>
-                                <li>
-                                    <div class="time">
-                                        10:00 hs
-                                    </div>
-                                    <div class="content-item">
-                                        <span class="title-item">Nombre de Actividad</span>
-                                        <span class="subtitle-item">Tipo de actividad</span>
-                                        <span class="subtitle-item">Lugar de actividad</span>
-                                        <span class="favorite-item">Agregar a Favoritos</span>
-                                    </div>
-                                </li>
-                                <% } %>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="type2">
-                        <div class="title">
-                            <div class="slider_left"></div>
-                            <h2>Lunes</h2>
-                            <div class="slider_right"></div>
-                        </div>
-                        <div class="content-type2">
-                            <ul class="list2">
-                                <% for(var i=0; i<30; i++){ %>
-                                <li>
-                                    <div class="time">
-                                        10:00 hs
-                                    </div>
-                                    <div class="content-item">
-                                        <span class="title-item">Nombre de Actividad</span>
-                                        <span class="subtitle-item">Tipo de actividad</span>
-                                        <span class="subtitle-item">Lugar de actividad</span>
-                                        <span class="favorite-item">Agregar a Favoritos</span>
-                                    </div>
-                                </li>
-                                <% } %>
-                            </ul>
-                        </div>
-                    </li>
                 </ul>
             </div>
             <div class="favorite" style="display: none">
                 <ul>
-                    <li>
-                        <div class="title-favorite">Lunes 6 de Octubre</div>
-                        <ul class="list2">
-                            <% for(var i=0; i<2; i++){ %>
-                            <li>
-                                <div class="time">
-                                    10:00 hs
-                                </div>
-                                <div class="content-item">
-                                    <span class="title-item">Nombre de Actividad</span>
-                                    <span class="subtitle-item">Tipo de actividad</span>
-                                    <span class="subtitle-item">Lugar de actividad</span>
-                                    <span class="favorite-item">Agregar a Favoritos</span>
-                                </div>
-                            </li>
-                            <% } %>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="title-favorite">Martes 7 de Octubre</div>
-                        <ul class="list2">
-                            <% for(var i=0; i<2; i++){ %>
-                            <li>
-                                <div class="time">
-                                    10:00 hs
-                                </div>
-                                <div class="content-item">
-                                    <span class="title-item">Nombre de Actividad</span>
-                                    <span class="subtitle-item">Tipo de actividad</span>
-                                    <span class="subtitle-item">Lugar de actividad</span>
-                                    <span class="favorite-item active">Eliminar de Favoritos</span>
-                                </div>
-                            </li>
-                            <% } %>
-                        </ul>
-                    </li>
-                </ul>
-
-            </div>
-        </div>
-    </script>
-
-    <script type="text/template" id="view_list">
-        <div data-role="content" class="content">
-            <ul class="list">
-            </ul>
-        </div>
-    </script>
-        <script type="text/template" id="item_list">
-            <li data-id="<%= id %>" class="item">
-                <div class="icon-item" style="background-image: url('<%= typeof(icono) !== 'undefined'? icono : imagen %>')"></div>
-                <div class="txt-item">
-                    <span class="title-item"><%= titulo %></span>
-
-                    <% if(typeof(horario) !== 'undefined' && horario != ''){ %>
-                    <span class="subtitle-item"><%= horario %></span>
-                    <% } %>
-                </div>
-            </li>
-        </script>
-            <script type="text/template" id="type1_list_view">
-
-                <div data-role="content">
-                    <div class="content-type1">
-                        <% if(typeof(imagen) !== 'undefined' && imagen != ''){ %>
-                        <div class="image" style="background-image: url('<%= imagen %>')"></div>
-                        <% } %>
-
-                        <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
-                        <span class="description"><%= contenido %></span>
-                        <% } %>
-
-                        <% if(typeof(horariosescritos) !== 'undefined' && horariosescritos != ''){ %>
-                        <p class="title_horario">Horarios:</p>
-                        <span class="description_horario"><%= horariosescritos %></span>
-                        <% } %>
-
-                        <% if(typeof(urlinterna) !== 'undefined' && urlinterna != ''){ %>
-                        <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
-                        <% } %>
-                    </div>
-                </div>
-                <div class="footer" data-role="footer" data-position="fixed" data-id="footer">
-                    <div class="footer-type1" ></div>
-                </div>
-            </script>
-
-    <script type="text/template" id="gastronomia">
-        <div data-role="content">
-            <ul class="list">
-                <% for(var i=0; i<30; i++){ %>
-                <li data-id="<%= i %>" class="item">
-                    <div class="icon-item" style="background-image: url(img/img3.png);"></div>
-                    <div class="txt-item">
-                        <span class="title-item">Kaluha <%= i %></span>
-                    </div>
-                </li>
-                <% } %>
-            </ul>
-        </div>
-    </script>
-        <script type="text/template" id="item_gastronomia">
-            <div class="header" data-role="header" data-position="fixed" data-id="header">
-                <div class="back"></div>
-                <h2 class="title_header"><%= title %></h2>
-            </div>
-
-            <div data-role="content">
-                <div class="content-type3">
-                    <img src="img/img3.png" alt="tipe3"/>
-                </div>
-            </div>
-            <div class="footer" data-role="footer" data-position="fixed" data-id="footer">
-                <div class="footer-type1" ></div>
-            </div>
-        </script>
-
-    <script type="text/template" id="videos">
-        <div data-role="content" class="content-videos">
-            <ul class="list">
-            </ul>
-        </div>
-    </script>
-        <script type="text/template" id="video_list">
-            <li  class="videos-item">
-                <%
-                    var res = urlexterna.split('watch?v=');
-                    var date = formatDateYear(fecha);
-                %>
-                <!--<iframe width="100%" height="184"
-                        src="http://www.youtube.com/embed/<%= res[1] %>?html5=1">
-                </iframe>-->
-                <embed src="http://www.youtube.com/v/<%= res[1] %>?&amp;hl=en&amp;fs=1"
-                       type="application/x-shockwave-flash"
-                       allowfullscreen="true"
-                       width="100%" height="184">
-                <div>
-                    <span class="title-video"><%= titulo %></span>
-                    <span class="subtitle-video"><%= descripcion %></span>
-                    <span class="date-video"><%= date[2]+' '+date[1]+', '+date[0] %></span>
-                </div>
-            </li>
-        </script>
-
-    <script type="text/template" id="galerias">
-        <div data-role="content" class="content-galerias">
-            <ul class="list">
-            </ul>
-        </div>
-    </script>
-        <script type="text/template" id="item_galery">
-            <li class="galerias-item">
-                <div>
-                    <%  var date = formatDateYear(fecha); %>
-                    <div class="galeria-image" style="background-image: url(<%= imagen %>);"></div>
-                    <span class="galeria-title"><%= titulo %></span>
-                    <span class="galeria-date"><%= date[1] + ' ' +date[0] %></span>
-                </div>
-            </li>
-        </script>
-
-        <script type="text/template" id="item_galerias">
-            <div data-role="content">
-                <ul class="list list-item-gallery">
-                    <% for(var i=0; i<15; i++){ %>
-                    <li class="galerias-item galerias-item-view" >
-                        <div>
-                            <div class="galeria-image galeria-image-view" style="background-image: url('assets/img_home.png');"></div>
-                        </div>
-                    </li>
-                    <% } %>
                 </ul>
             </div>
+
+        </div>
+    </script>
+        <script type="text/template" id="item_favorite">
+            <li>
+                <div class="title-favorite"><%= formatDateLiteral(fecha) %></div>
+                <ul class="list2">
+                </ul>
+            </li>
+        </script>
+        <script type="text/template" id="item_slider">
+            <li class="type2">
+                <div class="title">
+                    <div class="slider_left"></div>
+                    <h2><%= formatDayDate(fecha) %></h2>
+                    <div class="slider_right"></div>
+                </div>
+                <div class="content-type2">
+                    <ul class="list2">
+                    </ul>
+                </div>
+            </li>
+        </script>
+        <script type="text/template" id="favorite">
+            <li data-id="<%= id %>">
+                <div class="time">
+                    10:00 hs
+                </div>
+                <div class="content-item">
+                    <span class="title-item">Nombre de <%= id %></span>
+                    <span class="subtitle-item">Tipo de actividad</span>
+                    <span class="subtitle-item">Lugar de actividad</span>
+                    <span class="favorite-item"></span>
+                </div>
+            </li>
         </script>
 
     <script type="text/template" id="datos_utiles">
@@ -322,39 +115,6 @@
         </div>
     </script>
 
-    <script type="text/template" id="avisos">
-        <div data-role="content">
-            <ul class="list">
-                <% for(var i=0; i<5; i++){ %>
-                <li class="item">
-                    <div class="icon-item" style="background-size: 50%;background-image: url(img/campana.png);"></div>
-                    <div class="txt-item">
-                        <span class="title-item">Notificación <%= i %></span>
-                        <span class="subtitle-item">Lorem ipsum dolor sit amet,
-                            consectetur adipiscing elit.
-                            Nam placerat eu sem a interdum.</span>
-                    </div>
-                </li>
-                <% } %>
-            </ul>
-        </div>
-        <div class="footer" data-role="footer" data-position="fixed" data-id="footer">
-            <div class="footer-type1" ></div>
-        </div>
-    </script>
-
-    <script type="text/template" id="type3_list_view">
-        <div data-role="content">
-            <div class="content-type3">
-                <img src="<%= imagen %>" alt="tipe3"/>
-            </div>
-            <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
-        </div>
-        <div class="footer" data-role="footer" data-position="fixed" data-id="footer">
-            <div class="footer-type1" ></div>
-        </div>
-    </script>
-
     <!-- Nuevos Template-->
     <script type="text/template" id="menu">
         <div class="header" data-role="header" data-position="fixed" data-id="header">
@@ -388,7 +148,7 @@
         </div>
     </script>
         <script type="text/template" id="item_menu">
-        <% if(tipo=='principal1'){ %>
+        <% if(tipo=='principal_1'){ %>
         <li>
         <% }else{ %>
         <li class="icon" style="background-image: url('<%= imagen %>')">
@@ -414,7 +174,7 @@
         </div>
     </script>
         <script type="text/template" id="secundario">
-            <li data-id="<%= id %>" class="item">
+            <li data-id="<%= id %>" class="item fade in">
                 <div>
                     <div class="icon-item" style="background-image: url('<%= imagen %>')"></div>
                     <div class="txt-item">
@@ -428,28 +188,22 @@
             </li>
         </script>
         <script type="text/template" id="galeria">
-        <li class="galerias-item">
-            <div>
-                <%  var date = formatDateYear(fecha); %>
-                <div class="galeria-image" style="background-image: url(<%= imagen %>);"></div>
-                <span class="galeria-title"><%= nombre %></span>
-                <span class="galeria-date"><%= date[1] + ' ' +date[0] %></span>
-            </div>
-        </li>
-    </script>
+            <li class="galerias-item">
+                <div>
+                    <%  var date = formatDateYear(fecha); %>
+                    <div class="galeria-image" style="background-image: url(<%= imagen %>);"></div>
+                    <span class="galeria-title"><%= nombre %></span>
+                    <span class="galeria-date"><%= date[1] + ' ' +date[0] %></span>
+                </div>
+            </li>
+        </script>
         <script type="text/template" id="subgaleria">
-        <div data-role="content">
-            <ul class="list list-item-gallery">
-                <% for(var i=0; i<15; i++){ %>
-                <li class="galerias-item galerias-item-view" >
-                    <div>
-                        <div class="galeria-image galeria-image-view" style="background-image: url('assets/img_home.png');"></div>
-                    </div>
-                </li>
-                <% } %>
-            </ul>
-        </div>
-    </script>
+            <li class="galerias-item galerias-item-view" >
+                <div>
+                    <div class="galeria-image galeria-image-view" style="background-image: url(<%= imagen %>);"></div>
+                </div>
+            </li>
+        </script>
         <script type="text/template" id="video">
             <li  class="videos-item">
                 <%
@@ -471,8 +225,8 @@
             </li>
         </script>
         <script type="text/template" id="aviso">
-            <li class="item aviso">
-                <div class="icon-item" style="/*background-size: 50%;*/background-image: url(<%= icono %>);"></div>
+            <li class="item aviso fade in">
+                <div class="icon-item" style="background-image: url(<%= icono %>);"></div>
                 <div class="txt-item">
                     <span class="title-item"><%= titulo %></span>
                     <% if(typeof(descripcion) !== 'undefined' && descripcion != ''){ %>
@@ -602,15 +356,21 @@
         </script>
         <script type="text/template" id="promo">
             <div class="content-promo">
+                <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
                 <div>
                     <img src="<%= imagen1 %>" alt="tipe3"/>
                 </div>
+                <% } %>
+                <% if(typeof(imagen2) !== 'undefined' && imagen2 != ''){ %>
                 <div>
                     <img src="<%= imagen2 %>" alt="tipe3"/>
                 </div>
+                <% } %>
+                <% if(typeof(imagen3) !== 'undefined' && imagen3 != ''){ %>
                 <div>
                     <img src="<%= imagen3 %>" alt="tipe3"/>
                 </div>
+                <% } %>
             </div>
         </script>
 
