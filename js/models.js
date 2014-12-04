@@ -12,14 +12,14 @@ Backbone.Model.prototype.serialize = function() {
 };
 
 Solana.Models.DAS = Backbone.Model.extend({
-    defaults:{
-        nombre:'Nombre Actividad',
-        tipo:'Tipo de Actividad',
-        lugar:'Lugar de Actividad',
-        horario:'8:30'
-    },
     parse:function(response){
-        this.set(response.Menu);
+        if(Object.keys(response.Categorias).length > 0){
+            this.set('hijo',response.Categorias[0])
+        }else{
+            if(Object.keys(response.Pagina).length > 0)
+                this.set('hijo',response.Pagina[0]);
+        }
+        this.set(response.Categoria);
     }
 });
 

@@ -12,12 +12,6 @@ function onDeviceReady() {
 
     pushNotification = new NotificationsPlugin();
 
-    setTimeout(function() {
-        try{
-            navigator.splashscreen.hide();
-        }catch(err){}
-    }, 100);
-
     window.app = new AppRouter();
     Backbone.history.start();
 
@@ -40,6 +34,13 @@ function onDeviceReady() {
     }
 
     app.navigate( '#home/fade' ,{trigger: true});
+
+    setTimeout(function() {
+        try{
+            navigator.splashscreen.hide();
+            screen.lockOrientation('portrait');
+        }catch(err){}
+    }, 100);
 }
 
 document.addEventListener("deviceready", onDeviceReady, false);

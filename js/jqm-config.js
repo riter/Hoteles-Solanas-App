@@ -1,5 +1,5 @@
-var api_host = 'http://html5cooks.com/solana/ServiciosMobiles';
-//var api_host = 'http://test.solana.com/Hoteles-Solanas/ServiciosMobiles';
+var api_host = 'http://solana.html5cooks.com/ServiciosMobiles';
+//var api_host = 'http://localhost/Hoteles-Solanas/Hoteles-Solanas/ServiciosMobiles';
 
 $(document).on("mobileinit", function () {
     $.mobile.ajaxEnabled = false;
@@ -43,12 +43,14 @@ function formatDateYear (string) {
 }
 
 $.fn.getSize = function() {
-    var $wrap = $(this).clone().appendTo($("body"));
+    var $wrap = this.clone();
+    $wrap.appendTo("body");
     $wrap.css({
-        "position":   "absolute !important",
-        "visibility": "hidden !important",
-        "display":    "block !important"
+        position:   "absolute",
+        visibility: "hidden",
+        display:    "block"
     });
+
     var sizes = {
         width: $wrap.width(),
         height: $wrap.height()
@@ -126,6 +128,26 @@ Date.prototype.ddmm = function() {
 
     return (dd[1]?dd:"0"+dd[0]) + separator + (mm[1]?mm:"0"+mm[0]);
 };
+Date.prototype.hhmm = function() {
+    var hour    = this.getHours();
+    var minute  = this.getMinutes();
+    return (hour[1]?hour:"0"+hour[0]) + ':' + (minute[1]?minute:"0"+minute[0]);
+};
+
+String.prototype.hhmm = function() {
+    var self = this;
+    var separatorLocal = new Date().toLocaleDateString().indexOf('/')>-1?'/':'-';
+    self = self.replace(/-/gi,separatorLocal);
+
+    try{
+        var date = new Date(self);
+        var hour    = date.getHours().toString();
+        var minute  = date.getMinutes().toString();
+        return (hour[1]?hour:"0"+hour[0]) + ':' + (minute[1]?minute:"0"+minute[0]);
+    }catch (e){
+        return '';
+    }
+};
 
 function formatDayDate(time){ // Date().getTime();
     if(time != '' && time != null){
@@ -165,4 +187,40 @@ function DayAnterior(time){
 function DaySiguiente(time){
     var dateaafter = new Date(time + (1000 * 60 * 60 * 24));
     return dateaafter.getTime();
+}
+
+function getYouTubeLink(url) {
+    /*var isYouTube = RegExp(/\.youtube\.com.+v=([\w_\-]+)/i);
+    var r = isYouTube.exec(url);
+    if (r && r[1]) {
+        var video = 'http://www.youtube.com/v/' + r[1] + '&hl=en&fs=1&';
+        var youtube =  '<embed src="' + video + '" type="application/x-shockwave-flash"' +
+            ' allowscriptaccess="always"' +
+            ' allowfullscreen="true" width="100%" height="184"></embed>';
+
+        console.log(youtube);
+        return youtube;
+    }*/
+    var videoid= url.substring(url.lastIndexOf('=')+1);
+    if(videoid == url){
+        videoid= url.substring(url.lastIndexOf('/')+1);
+    }
+    if(url != ""){
+        return '<iframe type="text/html" width="100%" height="180" src="http://www.youtube.com/embed/'+videoid+'?wmode=transparent" frameborder="0" allowfullscreen allowscriptaccess="always"></iframe>';
+    }
+    else{
+        return '';
+    }
+}
+
+function center(self){
+    $(self).parent().css('margin-top','-'+parseInt($(self).parent().height() / 2) +'px')
+}
+
+/* el event load de un img llama a esta funcion he inserta la imagen como backgroun al elemento siguiente
+*   ej: <img src="urlimagen">
+*       <div><div/> este elemento estara con background de la imagen
+* */
+function loadImg(self){
+    $(self).next().css('background-image',"url('"+$(self).attr('src')+"')");
 }

@@ -15,6 +15,7 @@
 
     <link rel="stylesheet" href="css/handler.css"/>
     <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/responsive.css"/>
 
     <script>
         window.onerror = function(message, url, lineNumber) {
@@ -66,54 +67,16 @@
         <script type="text/template" id="favorite">
             <li data-id="<%= id %>">
                 <div class="time">
-                    10:00 hs
+                    <%= fechahora.hhmm() %> hs
                 </div>
                 <div class="content-item">
-                    <span class="title-item">Nombre de <%= id %></span>
-                    <span class="subtitle-item">Tipo de actividad</span>
-                    <span class="subtitle-item">Lugar de actividad</span>
+                    <span class="title-item"><%= nombreactividad + id %></span>
+                    <span class="subtitle-item"><%= tipoactividad %></span>
+                    <span class="subtitle-item"><%= lugar %></span>
                     <span class="favorite-item"></span>
                 </div>
             </li>
         </script>
-
-    <script type="text/template" id="datos_utiles">
-        <div data-role="content">
-            <ul class="list">
-                <li class="item">
-                    <div class="icon-item" style="background-size: 50%;background-image: url(assets/clima.png);"></div>
-                    <div class="txt-item">
-                        <span class="title-item">Clima</span>
-                        <span class="subtitle-item">Ver pronóstico del tiempo</span>
-                    </div>
-                </li>
-                <li class="item">
-                    <div class="icon-item" style="background-size: 50%;background-image: url(assets/map.png);"></div>
-                    <div class="txt-item">
-                        <span class="title-item">Puntos de Interés</span>
-                        <span class="subtitle-item">Lugares en Punta del Este</span>
-                    </div>
-                </li>
-                <li class="item">
-                    <div class="icon-item" style="background-size: 50%;background-image: url(assets/map-route.png);"></div>
-                    <div class="txt-item">
-                        <span class="title-item">Cómo llegar</span>
-                        <span class="subtitle-item">Direcciones desde y hasta</span>
-                    </div>
-                </li>
-                <li class="item">
-                    <div class="icon-item" style="background-size: 50%;background-image: url(assets/transporte.png);"></div>
-                    <div class="txt-item">
-                        <span class="title-item">Transporte local</span>
-                        <span class="subtitle-item">Horarios de ómnibus</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="footer" data-role="footer" data-position="fixed" data-id="footer">
-            <div class="footer-type1" ></div>
-        </div>
-    </script>
 
     <!-- Nuevos Template-->
     <script type="text/template" id="menu">
@@ -151,7 +114,7 @@
         <% if(tipo=='principal_1'){ %>
         <li>
         <% }else{ %>
-        <li class="icon" style="background-image: url('<%= imagen %>')">
+        <li class="icon icon_avisos" style="<%= imagen != ''? "background-image: url('"+ imagen+"')":'' %>">
         <% } %>
             <a href="#" data-role="none"><%= nombre %></a>
         </li>
@@ -164,12 +127,14 @@
         </div>
     </script>
 
-    <script type="text/template" id="listSecundario">
-        <div data-role="content" class="content">
-            <ul class="list">
-            </ul>
-            <div class="footer">
-                <div class="footer-type1" ></div>
+    <script type="text/template" id="listCategorias">
+        <div data-role="content" >
+            <div class="content scrolling">
+                <ul class="list">
+                </ul>
+                <div class="footer">
+                    <div class="footer-logo" ></div>
+                </div>
             </div>
         </div>
     </script>
@@ -188,45 +153,47 @@
             </li>
         </script>
         <script type="text/template" id="galeria">
-            <li class="galerias-item">
+            <li class="galerias-item fade in">
                 <div>
                     <%  var date = formatDateYear(fecha); %>
-                    <div class="galeria-image" style="background-image: url(<%= imagen %>);"></div>
+                    <img src="<%= imagen %>" alt="img" style="display: none" onload="loadImg(this);"/>
+                    <div class="galeria-image loading"></div>
                     <span class="galeria-title"><%= nombre %></span>
                     <span class="galeria-date"><%= date[1] + ' ' +date[0] %></span>
                 </div>
             </li>
         </script>
         <script type="text/template" id="subgaleria">
-            <li class="galerias-item galerias-item-view" >
+            <li class="galerias-item galerias-item-view fade in" >
                 <div>
-                    <div class="galeria-image galeria-image-view" style="background-image: url(<%= imagen %>);"></div>
+                    <img src="<%= imagen %>" alt="img" style="display: none" onload="loadImg(this);"/>
+                    <div class="galeria-image galeria-image-view loading"></div>
                 </div>
             </li>
         </script>
         <script type="text/template" id="video">
+
             <li  class="videos-item">
                 <%
-                var res = url.split('watch?v=');
                 var date = formatDateYear(fecha);
+                var embed = url.split('watch?v=');
+                var thumb = "http://img.youtube.com/vi/"+embed[1]+"/0.jpg";
                 %>
-                <!--<iframe width="100%" height="184"
-                        src="http://www.youtube.com/embed/<%= res[1] %>?html5=1">
-                </iframe>-->
-                <embed src="http://www.youtube.com/v/<%= res[1] %>?&amp;hl=en&amp;fs=1"
-                       type="application/x-shockwave-flash"
-                       allowfullscreen="true"
-                       width="100%" height="184">
-                <div>
+                <div class="embed-video">
+                    <!---<embed  wmode="opaque" salign="tl" allowscriptaccess="never" allowfullscreen="true" scale="scale" quality="high" bgcolor="#FFFFFF" src="https://www.youtube.com/v/<%= embed[1] %>?version=3&autohide=1&wmode=transparent&hl=en&fs=1&showinfo=0&modestbranding=1" type="application/x-shockwave-flash">-->
+                    <iframe width="312" height="180" src="//www.youtube.com/embed/<%= embed[1] %>?version=3&rel=0&html5=True&autohide=1&wmode=transparent&hl=en&fs=1&showinfo=0&modestbranding=1" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="text-video">
                     <span class="title-video"><%= nombre %></span>
                     <span class="subtitle-video"><%= texto %></span>
                     <span class="date-video"><%= date[2]+' '+date[1]+', '+date[0] %></span>
                 </div>
             </li>
+
         </script>
         <script type="text/template" id="aviso">
             <li class="item aviso fade in">
-                <div class="icon-item" style="background-image: url(<%= icono %>);"></div>
+                <div class="icon-item" style="background-image: url('<%= icono %>');"></div>
                 <div class="txt-item">
                     <span class="title-item"><%= titulo %></span>
                     <% if(typeof(descripcion) !== 'undefined' && descripcion != ''){ %>
@@ -237,44 +204,49 @@
         </script>
 
     <script type="text/template" id="pagina">
-        <div data-role="content" class="content">
+        <div data-role="content" class="content scrolling">
             <div class="content-pagina"></div>
             <div class="footer">
-                <div class="footer-type1" ></div>
+                <div class="footer-logo" ></div>
             </div>
         </div>
     </script>
         <script type="text/template" id="type1">
             <div class="content-type1">
-                <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
-                <div class="image" style="background-image: url('<%= imagen1 %>')"></div>
-                <% } %>
+                <div class="datos">
+                    <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
+                    <!--<div class="image" style="background-image: url('<%= imagen1 %>')"></div>-->
+                    <img src="<%= imagen1 %>" alt="imagen_principal"/>
+                    <% } %>
 
-                <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
-                <span class="description"><%= contenido %></span>
-                <% } %>
+                    <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
+                    <span class="description"><%= contenido %></span>
+                    <% } %>
 
-                <% if(typeof(descripcionhorario) !== 'undefined' && descripcionhorario != ''){ %>
-                <p class="title_horario">Horarios:</p>
-                <span class="description_horario"><%= descripcionhorario %></span>
-                <% } %>
+                    <% if(typeof(descripcionhorario) !== 'undefined' && descripcionhorario != ''){ %>
+                    <p class="title_horario">Horarios:</p>
+                    <span class="description_horario"><%= descripcionhorario %></span>
+                    <% } %>
 
-                <% if(typeof(urlinterna) !== 'undefined' && urlinterna != ''){ %>
-                <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
-                <% } %>
+                    <% if(typeof(urlinterna) !== 'undefined' && urlinterna != ''){ %>
+                    <p class="title_horario" ><a href="<%= urlinterna %>" class="url-interna">Ir a Pagina</a></p>
+                    <% } %>
+                </div>
             </div>
         </script>
         <script type="text/template" id="type2">
             <div class="content-type2">
                 <img src="<%= imagen1 %>" alt="tipe3"/>
+                <% if(typeof(urlinterna) !== 'undefined' && urlinterna != ''){ %>
                 <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
+                <% } %>
             </div>
         </script>
         <script type="text/template" id="type3">
             <div class="content-type1">
                 <div class="datos">
                     <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
-                    <div class="image" style="background-image: url('<%= imagen1 %>')"></div>
+                    <img src="<%= imagen1 %>" alt=""/>
                     <% } %>
 
                     <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
@@ -299,7 +271,7 @@
             <div class="content-type1">
                 <div class="datos">
                     <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
-                    <div class="image" style="background-image: url('<%= imagen1 %>')"></div>
+                    <img src="<%= imagen1 %>" alt=""/>
                     <% } %>
 
                     <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
@@ -321,9 +293,8 @@
             </div>
         </script>
         <script type="text/template" id="reserva">
-            <div class="content-form fade in">
-                <div class="fondo"></div>
-                <div class="formulario">
+            <div class="content-form ui-popup-screen ui-overlay-a fade in">
+                <div class="formulario ui-popup-container pop in ui-popup-active">
                     <ul>
                         <li>
                             <div>
@@ -373,6 +344,29 @@
                 <% } %>
             </div>
         </script>
+        <script type="text/template" id="embed">
+            <div class="content-embed" style="width: 100%; height: 300px">
+               <iframe style="width: 100%; height: 300px" src="http://www.google.com.uy/maps/place/Bethel+Spa/@-34.914291,-56.153466,17z/data=!3m1!4b1!4m2!3m1!1s0x959f8174a6c8eb9d:0x91d579909c1196fc?hl=en" frameborder="0"></iframe>
+            </div>
+        </script>
+        <script type="text/template" id="fullView">
+            <div class="fullview ui-popup-screen ui-overlay-a fade in" >
+                <ul class="bxslider" >
+                    <%  var i = 1;
+                    _.each(collection,function(item){ %>
+                    <li>
+                        <div class="item-fullview">
+                            <img src="<%= item.imagen %>" alt="image" onload="//center(this);"/>
+
+                            <span class="nombre-image"><%= item.nombre %></span>
+                            <span class="index-image"><%= i + '/' + collection.length %></span>
+
+                        </div>
+                    </li>
+                    <% i++; }); %>
+                </ul>
+            </div>
+        </script>
 
     <script type="text/javascript" src="phonegap.js"></script>
 
@@ -380,6 +374,7 @@
     <script src="vendor/jquery-2.0.3.min.js"></script>
 
     <!-- The Scripts -->
+    <script src="vendor/bxslider/iscroll-zoom.js"></script>
     <script src="vendor/bxslider/jquery.bxslider.min.js"></script>
     <link rel="stylesheet" href="vendor/bxslider/jquery.bxslider.css"/>
 

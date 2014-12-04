@@ -10,12 +10,13 @@ var AppRouter = Backbone.Router.extend({
         'tipo_3/:id/:tabla(/:titulo)':'pagina3',
         'tipo_4/:id/:tabla(/:titulo)':'pagina4',
         'tipo_promo/:id/:tabla(/:titulo)':'promo',
+        'embed/:id/:tabla(/:titulo)(/:reverse)':'embed',
 
-        'tipo_das/:id/:tabla(/:titulo)(/:reverse)':'crono_das',
+        'tipo_especial/:id/:tabla(/:titulo)(/:reverse)':'crono_das',
 
         'secundario/:id/:tabla(/:titulo)(/:reverse)':'secundario',
         'secundario_galeria/:id/:tabla(/:titulo)(/:reverse)':'galeria',
-        'secundario_galeria_nivel2/:id/:tabla(/:titulo)(/:reverse)':'subgaleria',
+        'secundario_galeria_nivel_2/:id/:tabla(/:titulo)(/:reverse)':'subgaleria',
         'secundario_videos/:id/:tabla(/:titulo)(/:reverse)':'video',
         'avisos/:id/:tabla(/:titulo)(/:reverse)':'avisos'
     },
@@ -163,15 +164,25 @@ var AppRouter = Backbone.Router.extend({
         app.changePage(view, 'fade');
         view.loadView();
     },
+    embed:function(id,tabla,titulo){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:titulo, id:id, tabla:tabla, type:'back'});
+        view.model.on('clear',view.newEmbed,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
     crono_das:function(id,tabla,titulo,reverse){
         app.pushHistory();
-        var view = new Solana.Views.CronogramaDas({title:titulo, type:'none'});
-        window.collections.favoritos.off('add remove').on('add remove',view.newFavorite,view);
+        var view = new Solana.Views.CronogramaDas({title:titulo, type:'none',id:id,tabla:tabla});
+        window.collections.favoritos.off('add change remove').on('add change remove',view.newFavorite,view);
 
         app.changePage(view, 'fade',null,function(){
             view.newFavorite(null);
             view.showSlider(0);
         });
         view.loadPorDiaRight(new Date().getTime());
+        view.showSlider(0);
     }
 });

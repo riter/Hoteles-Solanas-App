@@ -1,0 +1,31 @@
+@media only screen and (min-width: 321px), only screen and (max-device-width: 768px) {
+    /* menus */
+    ul.menu-der{
+        max-width: 250px;
+    }
+    ul.menu-der li.icon{
+        min-height: 55px;
+        background-position: 11px 13px;
+    }
+    ul.menu-der li a{
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+    /* paginas */
+    .description{
+        margin-top: 15px;
+    }
+    .content-type1 .datos{
+        margin: 3.5%;
+        margin-bottom: 0;
+    }
+    /* promo */
+    .content-promo{
+        margin: 2.4%;
+    }
+    .content-promo div{
+        padding-bottom: 1.8%;
+        margin-bottom: 1.8%;
+    }
+    /* videos*/
+}
