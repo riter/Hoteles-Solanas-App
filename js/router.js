@@ -9,6 +9,7 @@ var AppRouter = Backbone.Router.extend({
         'tipo_2/:id/:tabla(/:titulo)':'pagina2',
         'tipo_3/:id/:tabla(/:titulo)':'pagina3',
         'tipo_4/:id/:tabla(/:titulo)':'pagina4',
+        'tipo_galeria_nivel_2/:id/:tabla(/:titulo)':'subgaleria',
         'tipo_promo/:id/:tabla(/:titulo)':'promo',
         'embed/:id/:tabla(/:titulo)(/:reverse)':'embed',
 
@@ -16,7 +17,6 @@ var AppRouter = Backbone.Router.extend({
 
         'secundario/:id/:tabla(/:titulo)(/:reverse)':'secundario',
         'secundario_galeria/:id/:tabla(/:titulo)(/:reverse)':'galeria',
-        'secundario_galeria_nivel_2/:id/:tabla(/:titulo)(/:reverse)':'subgaleria',
         'secundario_videos/:id/:tabla(/:titulo)(/:reverse)':'video',
         'avisos/:id/:tabla(/:titulo)(/:reverse)':'avisos'
     },
@@ -88,16 +88,6 @@ var AppRouter = Backbone.Router.extend({
         if(! reverse)
             view.loadMoreView();
     },
-    subgaleria:function(id,tabla,titulo,reverse){
-        app.pushHistory();
-        var view = new Solana.Views.Categorias({title:titulo,type:'none'});
-        view.collection = new Solana.Collections.Categoria({id:id, tabla:tabla});
-        view.collection.on('add',view.newSubGaleria,view);
-
-        app.changePage(view, 'fade');
-        if(! reverse)
-            view.loadMoreView();
-    },
     video:function(id,tabla,titulo,reverse){
         app.pushHistory();
         var view = new Solana.Views.Categorias({title:titulo, type:'none'});
@@ -160,6 +150,15 @@ var AppRouter = Backbone.Router.extend({
         var view = new Solana.Views.Pagina();
         view.model = new Solana.Models.Pagina({title:titulo, id:id, tabla:tabla, type:'back'});
         view.model.on('clear',view.newPromo,view);
+
+        app.changePage(view, 'fade');
+        view.loadView();
+    },
+    subgaleria:function(id,tabla,titulo){
+        app.pushHistory();
+        var view = new Solana.Views.Pagina();
+        view.model = new Solana.Models.Pagina({title:titulo, id:id, tabla:tabla, type:'back'});
+        view.model.on('clear',view.newSubGaleria,view);
 
         app.changePage(view, 'fade');
         view.loadView();

@@ -205,11 +205,11 @@ Solana.Views.Categorias = Backbone.View.extend({
         var view = new Solana.Views.Galeria({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
     },
-    newSubGaleria:function(model){
+    /*newSubGaleria:function(model){
         var view = new Solana.Views.SubGaleria({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
         view.collection = this.collection;
-    },
+    },*/
     newVideo:function(model){
         var view = new Solana.Views.Video({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
@@ -263,7 +263,7 @@ Solana.Views.Categorias = Backbone.View.extend({
             }
         }
     });
-    Solana.Views.SubGaleria = Backbone.View.extend({
+    /*Solana.Views.SubGaleria = Backbone.View.extend({
         template: _.template($('#subgaleria').html()),
         collection:null,
 
@@ -289,7 +289,7 @@ Solana.Views.Categorias = Backbone.View.extend({
                 //fullimg.zoom();
             }
         }
-    });
+    });*/
     Solana.Views.Video = Backbone.View.extend({
         template: _.template($('#video').html()),
         render:function () {
@@ -377,13 +377,20 @@ Solana.Views.Pagina = Backbone.View.extend({
         var view = new Solana.Views.Promo({model:this.model});
         this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
     },
+    newSubGaleria:function(){
+        var view = new Solana.Views.SubGaleria({model:this.model});
+        this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
+    },
     newEmbed:function(){
         var view = new Solana.Views.Embed({model:this.model});
         this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
     },
     parseJSON:function(){
-        this.$el.find('div.content-pagina').empty();
-        this.model.loadJSON();
+        var self = this;
+        this.$el.find('div.content-pagina').fadeOut(function(){
+           $(this).empty().show();
+            self.model.loadJSON();
+        });
     }
 });
     Solana.Views.Pagina1 = Backbone.View.extend({
@@ -471,6 +478,28 @@ Solana.Views.Pagina = Backbone.View.extend({
         events:{
         }
     });
+    Solana.Views.SubGaleria = Backbone.View.extend({
+        template: _.template($('#subgaleria').html()),
+
+        render:function () {
+            this.setElement(this.template(this.model.toJSON()));
+            return this;
+        },
+        events:{
+            'tap .galeria-image':'item'
+        },
+        item:function(ev){
+            ev.preventDefault();
+            try{
+                screen.unlockOrientation();
+            }catch (e){}
+
+            var fullimg =  new Solana.Views.FullView({model:this.model});
+            $('#pageActive').append(fullimg.render().el);
+            fullimg.showSlider($(ev.target).attr('data-index'));
+            //fullimg.zoom();
+        }
+    });
     Solana.Views.Embed = Backbone.View.extend({
         template: _.template($('#embed').html()),
         render:function () {
@@ -523,15 +552,9 @@ Solana.Views.Reserva = Backbone.View.extend({
 });
 Solana.Views.FullView = Backbone.View.extend({
     template: _.template($('#fullView').html()),
-    model: Solana.Models.Datos,
-    collection:null,
 
-    initialize:function(options){
-        this.model = new Solana.Models.Datos();
-        if(options) this.model.set(options);
-    },
     render:function () {
-        this.setElement(this.template({collection:this.collection.toJSON()}));
+        this.setElement(this.template(this.model.toJSON()));
         this.$el.find('li').css('height', window.innerHeight + 'px');
 
         var self = this;

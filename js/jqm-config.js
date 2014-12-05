@@ -213,10 +213,6 @@ function getYouTubeLink(url) {
     }
 }
 
-function center(self){
-    $(self).parent().css('margin-top','-'+parseInt($(self).parent().height() / 2) +'px')
-}
-
 /* el event load de un img llama a esta funcion he inserta la imagen como backgroun al elemento siguiente
 *   ej: <img src="urlimagen">
 *       <div><div/> este elemento estara con background de la imagen

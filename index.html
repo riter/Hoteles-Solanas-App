@@ -163,14 +163,6 @@
                 </div>
             </li>
         </script>
-        <script type="text/template" id="subgaleria">
-            <li class="galerias-item galerias-item-view fade in" >
-                <div>
-                    <img src="<%= imagen %>" alt="img" style="display: none" onload="loadImg(this);"/>
-                    <div class="galeria-image galeria-image-view loading"></div>
-                </div>
-            </li>
-        </script>
         <script type="text/template" id="video">
 
             <li  class="videos-item">
@@ -212,7 +204,7 @@
         </div>
     </script>
         <script type="text/template" id="type1">
-            <div class="content-type1">
+            <div class="content-type1 fade in">
                 <div class="datos">
                     <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
                     <!--<div class="image" style="background-image: url('<%= imagen1 %>')"></div>-->
@@ -235,7 +227,7 @@
             </div>
         </script>
         <script type="text/template" id="type2">
-            <div class="content-type2">
+            <div class="content-type2 fade in">
                 <img src="<%= imagen1 %>" alt="tipe3"/>
                 <% if(typeof(urlinterna) !== 'undefined' && urlinterna != ''){ %>
                 <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
@@ -243,7 +235,7 @@
             </div>
         </script>
         <script type="text/template" id="type3">
-            <div class="content-type1">
+            <div class="content-type1 fade in">
                 <div class="datos">
                     <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
                     <img src="<%= imagen1 %>" alt=""/>
@@ -268,10 +260,10 @@
             </div>
         </script>
         <script type="text/template" id="type4">
-            <div class="content-type1">
+            <div class="content-type1 fade in">
                 <div class="datos">
                     <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
-                    <img src="<%= imagen1 %>" alt=""/>
+                    <img src="<%= imagen1 %>" alt="" style="min-height: 190px"/>
                     <% } %>
 
                     <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
@@ -344,6 +336,18 @@
                 <% } %>
             </div>
         </script>
+        <script type="text/template" id="subgaleria">
+            <ul class="list">
+                <% for(var i=0; i < imgs.length; i++){ %>
+                <li class="galerias-item galerias-item-view fade in" >
+                    <div>
+                        <img src="<%= imgs[i].image %>" alt="img" style="display: none" onload="loadImg(this);"/>
+                        <div class="galeria-image galeria-image-view loading" data-index="<%= i %>"></div>
+                    </div>
+                </li>
+                <% } %>
+            </ul>
+        </script>
         <script type="text/template" id="embed">
             <div class="content-embed" style="width: 100%; height: 300px">
                <iframe style="width: 100%; height: 300px" src="http://www.google.com.uy/maps/place/Bethel+Spa/@-34.914291,-56.153466,17z/data=!3m1!4b1!4m2!3m1!1s0x959f8174a6c8eb9d:0x91d579909c1196fc?hl=en" frameborder="0"></iframe>
@@ -352,18 +356,17 @@
         <script type="text/template" id="fullView">
             <div class="fullview ui-popup-screen ui-overlay-a fade in" >
                 <ul class="bxslider" >
-                    <%  var i = 1;
-                    _.each(collection,function(item){ %>
+                    <% for(var i=0; i < imgs.length; i++){ %>
                     <li>
                         <div class="item-fullview">
-                            <img src="<%= item.imagen %>" alt="image" onload="//center(this);"/>
+                            <img src="<%= imgs[i].image %>" alt="image"/>
 
-                            <span class="nombre-image"><%= item.nombre %></span>
-                            <span class="index-image"><%= i + '/' + collection.length %></span>
+                            <span class="nombre-image"><%= imgs[i].name %></span>
+                            <span class="index-image"><%= (i+1) + '/' + imgs.length %></span>
 
                         </div>
                     </li>
-                    <% i++; }); %>
+                    <% } %>
                 </ul>
             </div>
         </script>
