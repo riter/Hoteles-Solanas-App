@@ -25,12 +25,12 @@ Solana.Views.Menu = Backbone.View.extend({
         return this;
     },
     events:{
-        'tap div.icon-izq':'toggleMenuIzq',
-        'tap div.ave':'logo',
-        'tap div.icon-der':'toggleMenuDer',
-        'tap h1.logo':'hideMenu',
+        'touchstart div.icon-izq':'toggleMenuIzq',
+        'touchstart div.ave':'logo',
+        'touchstart div.icon-der':'toggleMenuDer',
+        'touchstart h1.logo':'hideMenu',
         'touchstart h1.title_header':'back',
-        'tap .fondo-menu':'hideMenu',
+        'touchstart .fondo-menu':'hideMenu',
         'touchmove .fondo-menu':'touch',
         'touchstart div.back': 'back'
     },
@@ -69,26 +69,26 @@ Solana.Views.Menu = Backbone.View.extend({
     },
     hideMenu:function(ev){
         var ele = this.el.querySelectorAll('.fondo-menu, .menu-izq, .menu-der');
-        $(ele).fadeOut('fast');
+        $(ele).fadeOut('slow');
     },
     toggleMenuIzq:function(ev){
         var ele = this.el.querySelectorAll('.fondo-menu, .menu-izq, .menu-der');
 
         if(ele[1].style.display == 'block'){
-            $(ele).fadeOut('fast');
+            $(ele).fadeOut('slow');
         }else{
-            $(ele[2]).fadeOut('fast');
-            $([ele[1],ele[0]]).fadeIn('fast');
+            $(ele[2]).fadeOut('slow');
+            $([ele[1],ele[0]]).fadeIn('slow');
         }
     },
     toggleMenuDer:function(ev){
         var ele = this.el.querySelectorAll('.fondo-menu, .menu-izq, .menu-der');
 
         if(ele[2].style.display == 'block'){
-            $(ele).fadeOut('fast');
+            $(ele).fadeOut('slow');
         }else{
-            $(ele[1]).fadeOut('fast');
-            $([ele[2],ele[0]]).fadeIn('fast');
+            $(ele[1]).fadeOut('slow');
+            $([ele[2],ele[0]]).fadeIn('slow');
         }
     },
     back:function(ev){
@@ -123,8 +123,8 @@ Solana.Views.Index = Backbone.View.extend({
         this.$el.prepend(window.views.menu.render().el);
 
         var banner = $(window).height() * 0.6150;
-        this.el.querySelector('.banner_home').style.height = banner + 'px';
-        this.el.querySelector('.img_home').style.height = ($(window).height() - banner - heightHeader - 3) + 'px';
+        this.el.querySelector('.banner_promo').style.height = banner + 'px';
+        this.el.querySelector('.banner_home').style.height = ($(window).height() - banner - heightHeader - 3) + 'px';
 
         return this;
     },
@@ -135,14 +135,24 @@ Solana.Views.Index = Backbone.View.extend({
 
             window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
                 if(getStorage(window.models.banner.url,null)){
-                    var uri = fileSystem.root.toURL() + '/banner.png';
-                    self.$el.find('.banner_home').css('background-image','url('+ uri +'?time='+(new Date()).getTime() +')');
-                    setStorage('urlBanner',uri);
+                    var uriPromo = fileSystem.root.toURL() + '/promo.jpg';
+                    var uriBanner = fileSystem.root.toURL() + '/banner.jpg';
+
+                    self.$el.find('.loading').addClass('loading-notransition');
+                    //self.$el.find('.banner_home').css('background-image','url('+ uri +'?time='+(new Date()).getTime() +')');
+                    self.$el.find('.banner_promo').attr('data-url',uriPromo +'?time='+(new Date()).getTime());
+                    self.$el.find('.banner_home').attr('data-url',uriBanner +'?time='+(new Date()).getTime());
+                    backgroundLoading(self.el);
+                    setStorage('urlPromo',uriPromo);
+                    setStorage('urlBanner',uriBanner);
                 }
                 self.load();
             });
         }else{
-            this.$el.find('.banner_home').css('background-image','url('+ getStorage('urlBanner',null)+'?time='+(new Date()).getTime() +')');
+            self.$el.find('.loading').addClass('loading-notransition');
+            self.$el.find('.banner_promo').attr('data-url',getStorage('urlPromo',null));
+            self.$el.find('.banner_home').attr('data-url',getStorage('urlBanner',null));
+            backgroundLoading(self.el);
         }
     },
     load:function(){
@@ -152,10 +162,19 @@ Solana.Views.Index = Backbone.View.extend({
                 JSON.stringify(getStorage(window.models.banner.url,null)) == JSON.stringify(window.models.banner.toJSON())){
                 return;
             }
-            dowloadImage(window.models.banner.get('urlBanner'),'banner.png',function(uri){
+
+            dowloadImage(encodeURI(window.models.banner.get('Promo').urlPromo),'promo.jpg',function(uri){
+                setStorage(window.models.banner.url,window.models.banner.toJSON());
+                setStorage('urlPromo',uri);
+                self.$el.find('.banner_promo').attr('data-url',uri +'?time='+(new Date()).getTime());
+                backgroundLoading(self.el);
+            });
+
+            dowloadImage(encodeURI(window.models.banner.get('Banner').urlBanner),'banner.jpg',function(uri){
                 setStorage(window.models.banner.url,window.models.banner.toJSON());
                 setStorage('urlBanner',uri);
-                self.$el.find('.banner_home').css('background-image','url('+ uri+'?time='+(new Date()).getTime() +')');
+                self.$el.find('.banner_home').attr('data-url',uri +'?time='+(new Date()).getTime());
+                backgroundLoading(self.el);
             });
         });
     }
@@ -200,16 +219,13 @@ Solana.Views.Categorias = Backbone.View.extend({
     newSecundario:function(model){
         var view = new Solana.Views.Secundario({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
+        backgroundLoading(view.el);
     },
     newGaleria:function(model){
         var view = new Solana.Views.Galeria({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
+        backgroundLoading(view.el);
     },
-    /*newSubGaleria:function(model){
-        var view = new Solana.Views.SubGaleria({model:model});
-        this.el.querySelector('ul.list').appendChild(view.render().el) ;
-        view.collection = this.collection;
-    },*/
     newVideo:function(model){
         var view = new Solana.Views.Video({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
@@ -217,6 +233,7 @@ Solana.Views.Categorias = Backbone.View.extend({
     newAviso:function(model){
         var view = new Solana.Views.Aviso({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
+        backgroundLoading(view.el);
     },
     parseJSON:function(){
         this.$el.find('ul.list').empty();
@@ -263,33 +280,7 @@ Solana.Views.Categorias = Backbone.View.extend({
             }
         }
     });
-    /*Solana.Views.SubGaleria = Backbone.View.extend({
-        template: _.template($('#subgaleria').html()),
-        collection:null,
 
-        render:function () {
-            this.setElement(this.template(this.model.toJSON()));
-            return this;
-        },
-        events:{
-            'tap > div':'item'
-        },
-        item:function(ev){
-            ev.preventDefault();
-            if(this.model.get('hijo')){
-                app.navigate('#'+this.model.get('hijo').tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
-            }else{
-                try{
-                    screen.unlockOrientation();
-                }catch (e){}
-                var fullimg =  new Solana.Views.FullView();
-                fullimg.collection = this.collection;
-                $('#pageActive').append(fullimg.render().el);
-                fullimg.showSlider(this.collection.indexOf(this.model));
-                //fullimg.zoom();
-            }
-        }
-    });*/
     Solana.Views.Video = Backbone.View.extend({
         template: _.template($('#video').html()),
         render:function () {
@@ -322,6 +313,7 @@ Solana.Views.Categorias = Backbone.View.extend({
 Solana.Views.Pagina = Backbone.View.extend({
     template: _.template($('#pagina').html()),
     model: null,
+    swiper:null,
 
     initialize:function(){
     },
@@ -330,14 +322,30 @@ Solana.Views.Pagina = Backbone.View.extend({
         window.views.menu.model.set(this.model.toJSON());
         this.$el.prepend(window.views.menu.render().el);
 
-        var $list = this.el.querySelectorAll('.content, .content-pagina');
-        $list[0].style.maxHeight = (window.innerHeight - heightHeader) + 'px';
-        $list[1].style.minHeight = ($list[0].style.maxHeight.replace('px','') - this.$el.find('.footer').getSize().height) + 'px';
+        var $list = this.el.querySelectorAll('.swiper-container, .content-pagina');
+        $list[0].style.height = (window.innerHeight - heightHeader) + 'px';
+        $list[1].style.minHeight = ($list[0].style.height.replace('px','') - this.$el.find('.footer').getSize().height) + 'px';
 
         this.model.unset('title');
         this.model.unset('type');
         this.parseJSON();
         return this;
+    },
+    scrolling:function(){
+        if(this.swiper == null){
+            var self =this;
+            setTimeout(function(){
+                self.swiper = new Swiper(self.el.querySelector('.swiper-container'),{
+                scrollContainer: true,
+                mode: 'vertical',
+                scrollbar: {
+                    container: '.swiper-scrollbar'
+                }
+            });
+            },500);
+        }else{
+            this.swiper.reInit();
+        }
     },
     loadView:function(){
         var self = this;
@@ -354,32 +362,38 @@ Solana.Views.Pagina = Backbone.View.extend({
             setStorage(newCollection.url,newCollection.toJSON());
             self.parseJSON();
         });
+
     },
     newPagina1:function(){
         var view = new Solana.Views.Pagina1({model:this.model});
         this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
+        this.scrolling();
     },
     newPagina2:function(){
         var view = new Solana.Views.Pagina2({model:this.model});
         this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
+        this.scrolling();
     },
     newPagina3:function(){
         var view = new Solana.Views.Pagina3({model:this.model});
         this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
-        this.el.querySelector('div.content').classList.remove('scrolling');
+        this.scrolling();
     },
     newPagina4:function(){
         var view = new Solana.Views.Pagina4({model:this.model});
         this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
-        this.el.querySelector('div.content').classList.remove('scrolling');
+        this.scrolling();
     },
     newPromo:function(){
         var view = new Solana.Views.Promo({model:this.model});
         this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
+        this.scrolling();
     },
     newSubGaleria:function(){
         var view = new Solana.Views.SubGaleria({model:this.model});
         this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
+        backgroundLoading(view.el);
+        this.scrolling();
     },
     newEmbed:function(){
         var view = new Solana.Views.Embed({model:this.model});
@@ -443,7 +457,7 @@ Solana.Views.Pagina = Backbone.View.extend({
             console.log(this.model.toJSON());
             var reserva = new Solana.Views.Reserva({tipo:'Me Interesa',titulo:window.views.menu.model.get('title')});
             $('#pageActive').append(reserva.render().el);
-            reserva.$el.find('input').first().focus();
+            //reserva.$el.find('input').first().focus();
         }
     });
     Solana.Views.Pagina4 = Backbone.View.extend({
@@ -466,7 +480,7 @@ Solana.Views.Pagina = Backbone.View.extend({
             console.log(this.model.toJSON());
             var reserva = new Solana.Views.Reserva({tipo:'Reserva',titulo:window.views.menu.model.get('title')});
             $('#pageActive').append(reserva.render().el);
-            reserva.$el.find('input').first().focus();
+            //reserva.$el.find('input').first().focus();
         }
     });
     Solana.Views.Promo = Backbone.View.extend({
@@ -493,11 +507,12 @@ Solana.Views.Pagina = Backbone.View.extend({
             try{
                 screen.unlockOrientation();
             }catch (e){}
-
             var fullimg =  new Solana.Views.FullView({model:this.model});
-            $('#pageActive').append(fullimg.render().el);
-            fullimg.showSlider($(ev.target).attr('data-index'));
-            //fullimg.zoom();
+
+            setTimeout(function(){
+                $('body').append(fullimg.render().el);
+                fullimg.showSlider($(ev.target).attr('data-index'));
+            },50);
         }
     });
     Solana.Views.Embed = Backbone.View.extend({
@@ -552,74 +567,30 @@ Solana.Views.Reserva = Backbone.View.extend({
 });
 Solana.Views.FullView = Backbone.View.extend({
     template: _.template($('#fullView').html()),
+    slider:null,
 
     render:function () {
         this.setElement(this.template(this.model.toJSON()));
-        this.$el.find('li').css('height', window.innerHeight + 'px');
-
-        var self = this;
-        $(window).on('resize',{self:self},function(ev){
-            ev.data.self.$el.find('li').css('height', window.innerHeight + 'px');
-        });
         return this;
     },
     events:{
-        'tap li':'cancelar'
+        'tap .swiper-slide > div':'cancelar'
     },
     showSlider:function(index){
-        var options = {
-            controls: false,
-            pager:false,
-            infiniteLoop:false,
-            touchEnabled:true,
-            responsive:true,
-            startSlide :index
-        };
-
-        if(this.slider == null){
-            this.slider = this.$el.find('ul.bxslider').bxSlider(options);
-        }else{
-            this.slider.reloadSlider(options);
-        }
-    },
-    zoom:function(){
-        var self = this;
-        var items = this.$el.find('ul.bxslider li .item-fullview');
-        for(var i=0; i< items.length;i++){
-            var zoom = new IScroll(items[i], {
-                scrollX: true,
-                scrollY: true,
-                mouseWheel: true,
-                wheelAction: 'zoom',
-                hideScrollbar: true,
-                zoom: true
-            });
-            zoom.on('zoomEnd', function(e){
-                var options = {
-                    controls: false,
-                    pager:false,
-                    infiniteLoop:false,
-                    responsive:true,
-                    startSlide : self.slider.getCurrentSlide()
-                };
-                if(this.scale == 1) {
-                    options['touchEnabled']= true;
-                    self.slider.reloadSlider(options);
-                } else {
-                    options['touchEnabled']= false;
-                    self.slider.reloadSlider(options);
-                }
-                self.$el.find('li').css('height', window.innerHeight + 'px');
-            });
-        }
+        this.slider = new Swiper(this.el.querySelector('.swiper-container'),{
+            noSwiping:true,
+            noSwipingClass:'no-swipe',
+            initialSlide:index
+        });
     },
     cancelar:function(ev){
         if(ev.target.tagName != 'IMG'){
             var self = this;
+            try{
+                screen.lockOrientation('portrait');
+            }catch (e){}
+
             self.$el.fadeOut('250',function(){
-                try{
-                    screen.lockOrientation('portrait');
-                }catch (e){}
                 self.$el.remove();
             });
         }
@@ -693,16 +664,20 @@ Solana.Views.CronogramaDas = Backbone.View.extend({
         this.$el.find('.tap-view > hr').addClass('active');
         ev.target.classList.add("active");
 
-        this.el.querySelector('.content_por_dia').style.display = 'block';
-        this.el.querySelector('.favorite').style.display = 'none';
+        var self = this;
+        $(self.el.querySelector('.favorite')).fadeOut('fast',function(){
+            $(self.el.querySelector('.content_por_dia')).fadeIn('slow');
+        });
     },
     favoritos:function(ev){
         this.$el.find('.tap-view > div').removeClass('active');
         this.$el.find('.tap-view > hr').removeClass('active');
         ev.target.classList.add("active");
 
-        this.el.querySelector('.favorite').style.display = 'block';
-        this.el.querySelector('.content_por_dia').style.display = 'none';
+        var self = this;
+        $(self.el.querySelector('.content_por_dia')).fadeOut('fast',function(){
+            $(self.el.querySelector('.favorite')).fadeIn('slow');
+        });
     },
 
     showSlider:function(index){

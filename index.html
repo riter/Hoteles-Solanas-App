@@ -4,7 +4,7 @@
     <title>Hoteles Solana</title>
 
     <!--<meta name="viewport" content="user-scalable=0, initial-scale=1.0">-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta id="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, user-scalable=no" />
     <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />-->
 
     <meta http-equiv="Content-type" content="text/htm1;charset=utf-8">
@@ -65,12 +65,12 @@
             </li>
         </script>
         <script type="text/template" id="favorite">
-            <li data-id="<%= id %>">
+            <li data-id="<%= id %>" class="fade in">
                 <div class="time">
                     <%= fechahora.hhmm() %> hs
                 </div>
                 <div class="content-item">
-                    <span class="title-item"><%= nombreactividad + id %></span>
+                    <span class="title-item"><%= nombreactividad %></span>
                     <span class="subtitle-item"><%= tipoactividad %></span>
                     <span class="subtitle-item"><%= lugar %></span>
                     <span class="favorite-item"></span>
@@ -122,8 +122,8 @@
 
     <script type="text/template" id="index">
         <div data-role="content">
-            <div class="banner_home"></div>
-            <div class="img_home"></div>
+            <div class="banner_promo loading"></div>
+            <div class="banner_home loading"></div>
         </div>
     </script>
 
@@ -141,7 +141,7 @@
         <script type="text/template" id="secundario">
             <li data-id="<%= id %>" class="item fade in">
                 <div>
-                    <div class="icon-item" style="background-image: url('<%= imagen %>')"></div>
+                    <div class="icon-item loading" data-url="<%= imagen %>"></div>
                     <div class="txt-item">
                         <span class="title-item"><%= nombre %></span>
 
@@ -156,8 +156,7 @@
             <li class="galerias-item fade in">
                 <div>
                     <%  var date = formatDateYear(fecha); %>
-                    <img src="<%= imagen %>" alt="img" style="display: none" onload="loadImg(this);"/>
-                    <div class="galeria-image loading"></div>
+                    <div class="galeria-image loading" data-url="<%= imagen %>"></div>
                     <span class="galeria-title"><%= nombre %></span>
                     <span class="galeria-date"><%= date[1] + ' ' +date[0] %></span>
                 </div>
@@ -172,8 +171,12 @@
                 var thumb = "http://img.youtube.com/vi/"+embed[1]+"/0.jpg";
                 %>
                 <div class="embed-video">
-                    <!---<embed  wmode="opaque" salign="tl" allowscriptaccess="never" allowfullscreen="true" scale="scale" quality="high" bgcolor="#FFFFFF" src="https://www.youtube.com/v/<%= embed[1] %>?version=3&autohide=1&wmode=transparent&hl=en&fs=1&showinfo=0&modestbranding=1" type="application/x-shockwave-flash">-->
-                    <iframe width="312" height="180" src="//www.youtube.com/embed/<%= embed[1] %>?version=3&rel=0&html5=True&autohide=1&wmode=transparent&hl=en&fs=1&showinfo=0&modestbranding=1" frameborder="0" allowfullscreen></iframe>
+                    <object width="640" height="360">
+                        <param name="movie" value="http://www.youtube.com/embed/<%= embed[1] %>?html5=1&amp;rel=0&amp;hl=en_US&amp;version=3"/>
+                        <param name="allowFullScreen" value="true"/>
+                        <param name="allowscriptaccess" value="always"/>
+                        <embed width="640" height="360" src="http://www.youtube.com/embed/<%= embed[1] %>?html5=1&amp;rel=0&amp;hl=en_US&amp;version=3" class="youtube-player" type="text/html" allowscriptaccess="always" allowfullscreen="true"/>
+                    </object>
                 </div>
                 <div class="text-video">
                     <span class="title-video"><%= nombre %></span>
@@ -185,7 +188,7 @@
         </script>
         <script type="text/template" id="aviso">
             <li class="item aviso fade in">
-                <div class="icon-item" style="background-image: url('<%= icono %>');"></div>
+                <div class="icon-item loading" data-url="<%= icono %>"></div>
                 <div class="txt-item">
                     <span class="title-item"><%= titulo %></span>
                     <% if(typeof(descripcion) !== 'undefined' && descripcion != ''){ %>
@@ -196,10 +199,17 @@
         </script>
 
     <script type="text/template" id="pagina">
-        <div data-role="content" class="content scrolling">
-            <div class="content-pagina"></div>
-            <div class="footer">
-                <div class="footer-logo" ></div>
+        <div data-role="content" class="content">
+            <div class="swiper-container">
+                <div class="swiper-scrollbar"></div>
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" style="width: 100%">
+                        <div class="content-pagina"></div>
+                        <div class="footer">
+                            <div class="footer-logo" ></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </script>
@@ -207,7 +217,6 @@
             <div class="content-type1 fade in">
                 <div class="datos">
                     <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
-                    <!--<div class="image" style="background-image: url('<%= imagen1 %>')"></div>-->
                     <img src="<%= imagen1 %>" alt="imagen_principal"/>
                     <% } %>
 
@@ -290,7 +299,7 @@
                     <ul>
                         <li>
                             <div>
-                                <input type="text" placeholder="Nombre completo" data-role="none" name="nombre" value="<%= mobile.get('nombre')%>"/>
+                                <input type="text" placeholder="Nombre completo" data-role="none" name="nombre" value="<%= mobile.get('nombre')%>" autofocus/>
                             </div>
                             <hr/>
                         </li>
@@ -341,8 +350,7 @@
                 <% for(var i=0; i < imgs.length; i++){ %>
                 <li class="galerias-item galerias-item-view fade in" >
                     <div>
-                        <img src="<%= imgs[i].image %>" alt="img" style="display: none" onload="loadImg(this);"/>
-                        <div class="galeria-image galeria-image-view loading" data-index="<%= i %>"></div>
+                        <div class="galeria-image galeria-image-view loading" data-url="<%= imgs[i].image %>" data-index="<%= i %>"></div>
                     </div>
                 </li>
                 <% } %>
@@ -355,19 +363,19 @@
         </script>
         <script type="text/template" id="fullView">
             <div class="fullview ui-popup-screen ui-overlay-a fade in" >
-                <ul class="bxslider" >
-                    <% for(var i=0; i < imgs.length; i++){ %>
-                    <li>
-                        <div class="item-fullview">
-                            <img src="<%= imgs[i].image %>" alt="image"/>
-
-                            <span class="nombre-image"><%= imgs[i].name %></span>
-                            <span class="index-image"><%= (i+1) + '/' + imgs.length %></span>
-
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <% for(var i=0; i < imgs.length; i++){ %>
+                        <div class="swiper-slide item-fullview">
+                            <div>
+                                <img src="<%= imgs[i].image %>" alt=""/>
+                                <span class="nombre-image"><%= imgs[i].name %></span>
+                                <span class="index-image"><%= (i+1) + '/' + imgs.length %></span>
+                            </div>
                         </div>
-                    </li>
-                    <% } %>
-                </ul>
+                        <% } %>
+                    </div>
+                </div>
             </div>
         </script>
 
@@ -377,9 +385,12 @@
     <script src="vendor/jquery-2.0.3.min.js"></script>
 
     <!-- The Scripts -->
-    <script src="vendor/bxslider/iscroll-zoom.js"></script>
     <script src="vendor/bxslider/jquery.bxslider.min.js"></script>
     <link rel="stylesheet" href="vendor/bxslider/jquery.bxslider.css"/>
+    <script src="vendor/swiper/idangerous.swiper.min.js"></script>
+    <link rel="stylesheet" href="vendor/swiper/idangerous.swiper.css"/>
+    <link rel="stylesheet" href="vendor/swiper/idangerous.swiper.scrollbar-2.1.js"/>
+    <link rel="stylesheet" href="vendor/swiper/idangerous.swiper.scrollbar.css"/>
 
     <script src="js/Storage.js"></script>
     <script src="js/PushNotification.js"></script>

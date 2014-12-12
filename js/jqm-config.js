@@ -1,5 +1,5 @@
-var api_host = 'http://solana.html5cooks.com/ServiciosMobiles';
-//var api_host = 'http://localhost/Hoteles-Solanas/Hoteles-Solanas/ServiciosMobiles';
+//var api_host = 'http://solana.html5cooks.com/ServiciosMobiles';
+var api_host = 'http://localhost/Hoteles-Solanas/Hoteles-Solanas/ServiciosMobiles';
 
 $(document).on("mobileinit", function () {
     $.mobile.ajaxEnabled = false;
@@ -15,7 +15,6 @@ $(document).on("mobileinit", function () {
     $(document).on('pagehide',function (event) {
        $(event.target).remove();
     });
-
 });
 
 window.Solana={};
@@ -100,13 +99,13 @@ function dowloadImage(url,nameFile,callback){
                     if(typeof callback == 'function') callback(entry.toURI());
                 },
                 function (error) {
-                    alert("Error:" + + JSON.stringify(error));
+                    //alert("Error:" + JSON.stringify(error));
                 }
             );
         });
 
     }catch(e){
-        alert('Catch:' + JSON.stringify(e));
+        //alert('Catch:' + JSON.stringify(e));
     }
 }
 
@@ -213,10 +212,26 @@ function getYouTubeLink(url) {
     }
 }
 
-/* el event load de un img llama a esta funcion he inserta la imagen como backgroun al elemento siguiente
-*   ej: <img src="urlimagen">
-*       <div><div/> este elemento estara con background de la imagen
-* */
-function loadImg(self){
-    $(self).next().css('background-image',"url('"+$(self).attr('src')+"')");
+function zoomDisable(){
+    $('head meta[name=viewport]').remove();
+    $('<meta>', {name: 'viewport',content: 'width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=2.0, user-scalable=no'}).appendTo('head');
+}
+function zoomEnable(){
+    $('head meta[name=viewport]').remove();
+    $('<meta>', {name: 'viewport',content: 'width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=2.0, user-scalable=yes'}).appendTo('head');
+}
+
+function backgroundLoading(self){
+    var elems = self.querySelectorAll('.loading');
+    for(var i=0; i<elems.length; i++){
+
+        setTimeout(function(item){
+            var newImg = new Image();
+            newImg.src = item.getAttribute('data-url');
+            newImg.onload = function() {
+                $(item).css('background-image',"url('"+this.src+"')");
+            };
+        }, 100, elems[i]);
+
+    }
 }

@@ -29,3 +29,14 @@
     }
     /* videos*/
 }
+
+@media only screen
+and (orientation : landscape) {
+    .fullview div.item-fullview .nombre-image{
+        position: absolute;
+        bottom: 5px;
+    }
+    .fullview div.item-fullview  .index-image{
+        display: none;
+    }
+}

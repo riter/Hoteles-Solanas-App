@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo</title>
+  <link rel="stylesheet" href="dist/idangerous.swiper.css">
+  <link rel="stylesheet" href="css/idangerous.swiper.scrollbar.css">
+  <style>
+/* Demo Styles */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.swiper-container {
+  width: 100%;
+  height: 300px;
+  text-align: center;
+}
+.swiper-slide {
+  padding: 20px;
+  background: #fff;
+}
+
+.swiper-scrollbar {
+  width: 4px;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 5px;
+  z-index: 1;
+}
+  </style>
+</head>
+<body>
+    <div id="more">More Row</div>
+  <div class="swiper-container">
+    <div class="swiper-scrollbar"></div>
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <div class="red-slide" style="font-size:25px; line-height:30px; text-align:center">
+          <p style="color:#fff; font-weight:bold; font-style:italic;">Your dreams come true:) That is a simple single scrollable area! No slides, no nothing, just pure area!</p>
+        </div>
+        <div style="width:300px; margin-left:20px">
+          <p>Here goes some text</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dictum ipsum auctor nulla consectetur sed porta nunc placerat.</p>
+          <p>Nulla dui augue, sollicitudin egestas consequat a, consequat quis neque. Sed at mauris nunc. Donec rutrum leo id risus congue convallis. Maecenas ultrices condimentum velit, nec tincidunt lorem convallis consequat. Nulla elementum consequat quam eu euismod</p>
+        </div>
+        <div style="margin-left:20px">
+          <p>Here goes wide image</p>
+          <p><img src="img/bb.jpg"></p>
+        </div>
+          <div style="margin-left:20px">
+              <p>Here goes wide image</p>
+              <p><img src="img/bb.jpg"></p>
+          </div>
+          <div style="margin-left:20px">
+              <p>Here goes wide image</p>
+              <p><img src="img/bb.jpg"></p>
+          </div>
+
+      </div>
+    </div>
+  </div>
+  <script src="js/jquery-1.10.1.min.js"></script>
+  <script src="dist/idangerous.swiper.min.js"></script>
+  <script src="js/idangerous.swiper.scrollbar-2.1.js"></script>
+  <script>
+      /*var mySwiper = new Swiper('.swiper-container',{
+            scrollContainer: true,
+          mode: 'vertical',
+        scrollbar: {
+          container: '.swiper-scrollbar'
+        }
+      });
+
+      document.getElementById('more').addEventListener('click',function(){
+          var x = "<div style='margin-left:20px'><p>Here goes wide image</p><p><img src='img/bb.jpg'></p></div>";
+          document.querySelector('.swiper-slide').appendChild($(x)[0]);
+          mySwiper.reInit();
+      });*/
+  </script>
+</body>
+</html>

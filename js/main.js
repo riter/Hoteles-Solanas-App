@@ -33,7 +33,7 @@ function onDeviceReady() {
         window.collections.favoritos.set(getStorage('favorites',null));
     }
 
-    app.navigate( '#home/fade' ,{trigger: true});
+    app.navigate( '#home/none' ,{trigger: true});
 
     setTimeout(function() {
         try{
