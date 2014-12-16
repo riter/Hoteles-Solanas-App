@@ -1,5 +1,5 @@
-//var api_host = 'http://solana.html5cooks.com/ServiciosMobiles';
-var api_host = 'http://localhost/Hoteles-Solanas/Hoteles-Solanas/ServiciosMobiles';
+var api_host = 'http://solana.html5cooks.com/ServiciosMobiles';
+//var api_host = 'http://localhost/Hoteles-Solanas/Hoteles-Solanas/ServiciosMobiles';
 
 $(document).on("mobileinit", function () {
     $.mobile.ajaxEnabled = false;
@@ -10,7 +10,7 @@ $(document).on("mobileinit", function () {
     $.mobile.changePage.defaults.allowSamePageTransition = true;
     $.support.cors = true;
     $.mobile.allowCrossDomainPages=true;
-    $.mobile.touchOverflowEnabled = true;
+    //$.mobile.touchOverflowEnabled = true;
 
     $(document).on('pagehide',function (event) {
        $(event.target).remove();
@@ -85,11 +85,7 @@ function getDateTime() {
 }
 function dowloadImage(url,nameFile,callback){
     try{
-        /* parece q este codigo es para andriod y iphone
-        window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-         */
-
+        /*window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
             var fileTransfer = new FileTransfer();
             fileTransfer.download(
@@ -99,11 +95,25 @@ function dowloadImage(url,nameFile,callback){
                     if(typeof callback == 'function') callback(entry.toURI());
                 },
                 function (error) {
-                    //alert("Error:" + JSON.stringify(error));
+                    alert("Error:" + JSON.stringify(error));
+                }
+            );
+        });*/
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+            var directoryEntry = fileSystem.root; // to get root path to directory
+            directoryEntry.getDirectory("images", {create: true, exclusive: false}, null, null);
+            var fp = fileSystem.root.toURI();
+            fp = fp+"/images/"+nameFile;
+            var fileTransfer = new FileTransfer();
+            fileTransfer.download(url,fp,
+                function(entry) {
+                    if(typeof callback == 'function') callback(entry.toURI());
+                },
+                function(error) {
+                    /*alert("Error:" + JSON.stringify(error));*/
                 }
             );
         });
-
     }catch(e){
         //alert('Catch:' + JSON.stringify(e));
     }

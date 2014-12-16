@@ -10,13 +10,156 @@
         <script type="text/javascript" charset="utf-8" src="jquery_1.5.2.min.js"></script>
         <script type="text/javascript" src="PushNotification.js"></script>
         <script src="notificationsVite.js"></script>
-        
 
+        <style>
+            ul{
+                padding:0 ;
+                margin: 0;
+                overflow: scroll;
+                height: 550px;
+            }
+            ul li {
+                list-style: none;
+                line-height: normal;
+                margin-bottom: 20px;
+                overflow: hidden;
+
+            }
+            .embed-video{
+                height: 200px;
+                position: relative;
+                width: 100%;
+                overflow: hidden !important;
+                -webkit-backface-visibility: hidden;
+                -webkit-transform: translateZ(0);
+            }
+            iframe,
+            object,
+            embed,
+            video{
+                overflow: hidden !important;
+                position: absolute;
+                border-top: 0;
+                width: 100%;
+                height: 100%;
+                -webkit-backface-visibility: hidden;
+                -webkit-transform: translateZ(0);
+            }
+            .div_iframe{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: red;
+                opacity: 0.5;
+                overflow: hidden
+            }
+            .no-touch{
+                pointer-events: none;
+            }
+            .capa{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                z-index: 99999999;
+                overflow: hidden;
+            }
+        </style>
+        <script>
+            $(document).ready(function(){
+                $('.text-video').click(function(){
+                    if($('.capa').length > 0)
+                        $('.capa').remove();
+                    else
+                        $('.embed-video').append('<div class="capa"></div>');
+                });
+
+                var swiper = new Swiper(self.el.querySelector('.swiper-container'),{
+                    scrollContainer: true,
+                    mode: 'vertical',
+                    scrollbar: {
+                        container: '.swiper-scrollbar'
+                    }});
+            });
+            document.addEventListener("deviceready", function(){
+                alert('device');
+                window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, fileSystemSuccess, fileSystemFail);
+            }, false);
+            function fileSystemSuccess(fileSystem) {
+                var directoryEntry = fileSystem.root; // to get root path to directory
+                directoryEntry.getDirectory("images", {create: true, exclusive: false}, onDirectorySuccess, onDirectoryFail);
+                //var rootdir = fileSystem.root;
+                var fp = fileSystem.root.toURI();
+                fp = fp+"/images/test.jpg";
+                var fileTransfer = new FileTransfer();
+                fileTransfer.download("http://solana.html5cooks.com/app/webroot/uploads/categorias/780957752.352-cuarto.jpg",fp,
+                        function(entry) {
+                            alert("download complete: " + entry.fullPath);
+                        },
+                        function(error) {
+                            alert("download error source " + error.source);
+                            alert("download error target " + error.target);
+                            alert("upload error code" + error.code);
+                        }
+                );
+            }
+            function onDirectorySuccess(parent) {
+                console.log(parent);
+            }
+
+            function onDirectoryFail(error) {
+                alert("Unable to create new directory: " + error.code);
+            }
+
+            function fileSystemFail(evt) {
+                console.log(evt.target.error.code);
+            }
+
+        </script>
 		<div id="home">
-            <img id="banner" src="download/banner.png" alt="banner" style="width: 100%; height: 100px"/>
 			<div id="app-status-div">
 				<ul id="app-status-ul">
-					<li>Cordova PushNotification Plugin Demo</li>
+                    <li  class="videos-item">
+                        <div class="test"></div>
+                        <div class="embed-video">
+                            <embed scrolling="no"  width="100%" height="100%" name="plugin" src="https://www.youtube.com/v/lzQgAR_J1PI??wmode=transparent&autoplay=1&version=3&amp;f=videos&amp;app=youtube_gdata" type="application/x-shockwave-flash">
+                            <!--<div class="capa"></div>-->
+                        </div>
+                        <div class="text-video" style="height: 30px">
+                            <span class="title-video">Agriturismo Sa Crannaccia Hotel - Solanas - Italy</span>
+                            <span class="subtitle-video">e property. Cagliari Elmas Airport is a 90-minute drive away.</span>
+                            <span class="date-video">03 Diciembre, 2014</span>
+                        </div>
+                    </li>
+                    <li  class="videos-item">
+                        <div class="embed-video">
+                            <embed scrolling="no"  width="100%" height="100%" name="plugin" src="https://www.youtube.com/v/lzQgAR_J1PI?version=3&amp;f=videos&amp;app=youtube_gdata" type="application/x-shockwave-flash">
+                        </div>
+                        <div class="text-video" style="height: 30px">
+                            <span class="title-video">Agriturismo Sa Crannaccia Hotel - Solanas - Italy</span>
+                            <span class="subtitle-video">e property. Cagliari Elmas Airport is a 90-minute drive away.</span>
+                            <span class="date-video">03 Diciembre, 2014</span>
+                        </div>
+                    </li>
+                    <li  class="videos-item">
+                        <div class="embed-video">
+                            <embed scrolling="no"  width="100%" height="100%" name="plugin" src="https://www.youtube.com/v/lzQgAR_J1PI?version=3&amp;f=videos&amp;app=youtube_gdata" type="application/x-shockwave-flash">
+                        </div>
+                        <div class="text-video" style="height: 30px">
+                            <span class="title-video">Agriturismo Sa Crannaccia Hotel - Solanas - Italy</span>
+                            <span class="subtitle-video">e property. Cagliari Elmas Airport is a 90-minute drive away.</span>
+                            <span class="date-video">03 Diciembre, 2014</span>
+                        </div>
+                    </li>
+                    <li  class="videos-item">
+                        <div class="embed-video">
+                            <embed scrolling="no"  width="100%" height="100%" name="plugin" src="https://www.youtube.com/v/lzQgAR_J1PI?version=3&amp;f=videos&amp;app=youtube_gdata" type="application/x-shockwave-flash">
+                        </div>
+                        <div class="text-video" style="height: 30px">
+                            <span class="title-video">Agriturismo Sa Crannaccia Hotel - Solanas - Italy</span>
+                            <span class="subtitle-video">e property. Cagliari Elmas Airport is a 90-minute drive away.</span>
+                            <span class="date-video">03 Diciembre, 2014</span>
+                        </div>
+                    </li>
 				</ul>
 			</div>
 		</div>

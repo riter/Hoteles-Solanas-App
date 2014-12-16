@@ -69,26 +69,26 @@ Solana.Views.Menu = Backbone.View.extend({
     },
     hideMenu:function(ev){
         var ele = this.el.querySelectorAll('.fondo-menu, .menu-izq, .menu-der');
-        $(ele).fadeOut('slow');
+        $(ele).fadeOut('400');
     },
     toggleMenuIzq:function(ev){
         var ele = this.el.querySelectorAll('.fondo-menu, .menu-izq, .menu-der');
 
         if(ele[1].style.display == 'block'){
-            $(ele).fadeOut('slow');
+            $(ele).fadeOut('400');
         }else{
-            $(ele[2]).fadeOut('slow');
-            $([ele[1],ele[0]]).fadeIn('slow');
+            $(ele[2]).fadeOut('400');
+            $([ele[1],ele[0]]).fadeIn('400');
         }
     },
     toggleMenuDer:function(ev){
         var ele = this.el.querySelectorAll('.fondo-menu, .menu-izq, .menu-der');
 
         if(ele[2].style.display == 'block'){
-            $(ele).fadeOut('slow');
+            $(ele).fadeOut('400');
         }else{
-            $(ele[1]).fadeOut('slow');
-            $([ele[2],ele[0]]).fadeIn('slow');
+            $(ele[1]).fadeOut('400');
+            $([ele[2],ele[0]]).fadeIn('400');
         }
     },
     back:function(ev){
@@ -135,11 +135,10 @@ Solana.Views.Index = Backbone.View.extend({
 
             window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
                 if(getStorage(window.models.banner.url,null)){
-                    var uriPromo = fileSystem.root.toURL() + '/promo.jpg';
-                    var uriBanner = fileSystem.root.toURL() + '/banner.jpg';
+                    var uriPromo = fileSystem.root.toURL() + '/images/promo.jpg';
+                    var uriBanner = fileSystem.root.toURL() + '/images/banner.jpg';
 
                     self.$el.find('.loading').addClass('loading-notransition');
-                    //self.$el.find('.banner_home').css('background-image','url('+ uri +'?time='+(new Date()).getTime() +')');
                     self.$el.find('.banner_promo').attr('data-url',uriPromo +'?time='+(new Date()).getTime());
                     self.$el.find('.banner_home').attr('data-url',uriBanner +'?time='+(new Date()).getTime());
                     backgroundLoading(self.el);
@@ -166,14 +165,14 @@ Solana.Views.Index = Backbone.View.extend({
             dowloadImage(encodeURI(window.models.banner.get('Promo').urlPromo),'promo.jpg',function(uri){
                 setStorage(window.models.banner.url,window.models.banner.toJSON());
                 setStorage('urlPromo',uri);
-                self.$el.find('.banner_promo').attr('data-url',uri +'?time='+(new Date()).getTime());
+                self.$el.find('.banner_promo').attr('data-url',uri +'?time='+(new Date()).getTime()).removeClass('loading-notransition');
                 backgroundLoading(self.el);
             });
 
             dowloadImage(encodeURI(window.models.banner.get('Banner').urlBanner),'banner.jpg',function(uri){
                 setStorage(window.models.banner.url,window.models.banner.toJSON());
                 setStorage('urlBanner',uri);
-                self.$el.find('.banner_home').attr('data-url',uri +'?time='+(new Date()).getTime());
+                self.$el.find('.banner_home').attr('data-url',uri +'?time='+(new Date()).getTime()).removeClass('loading-notransition');
                 backgroundLoading(self.el);
             });
         });
@@ -184,6 +183,7 @@ Solana.Views.Categorias = Backbone.View.extend({
     template: _.template($('#listCategorias').html()),
     collection:null,
     model: Solana.Models.Datos,
+    swiper:null,
 
     initialize:function(options){
         this.model = new Solana.Models.Datos(options);
@@ -197,8 +197,28 @@ Solana.Views.Categorias = Backbone.View.extend({
         $list[0].style.maxHeight = (window.innerHeight - heightHeader) + 'px';
         $list[1].style.minHeight = ($list[0].style.maxHeight.replace('px','') - this.$el.find('.footer').getSize().height) + 'px';
 
+        /*var $list = this.el.querySelectorAll('.swiper-container, .list');
+        $list[0].style.height = (window.innerHeight - heightHeader) + 'px';
+        $list[1].style.minHeight = ($list[0].style.height.replace('px','') - this.$el.find('.footer').getSize().height) + 'px';*/
+
         this.parseJSON();
         return this;
+    },
+    scrolling:function(){
+        if(this.swiper == null){
+            var self =this;
+            setTimeout(function(){
+                self.swiper = new Swiper(self.el.querySelector('.swiper-container'),{
+                    scrollContainer: true,
+                    mode: 'vertical',
+                    scrollbar: {
+                        container: '.swiper-scrollbar'
+                    }
+                });
+            },500);
+        }else{
+            this.swiper.reInit();
+        }
     },
     loadMoreView:function(){
         var self = this;
@@ -220,26 +240,28 @@ Solana.Views.Categorias = Backbone.View.extend({
         var view = new Solana.Views.Secundario({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
         backgroundLoading(view.el);
+        //this.scrolling();
     },
     newGaleria:function(model){
         var view = new Solana.Views.Galeria({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
         backgroundLoading(view.el);
+       //this.scrolling();
     },
     newVideo:function(model){
         var view = new Solana.Views.Video({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
+        //this.scrolling();
     },
     newAviso:function(model){
         var view = new Solana.Views.Aviso({model:model});
         this.el.querySelector('ul.list').appendChild(view.render().el) ;
         backgroundLoading(view.el);
+        //this.scrolling();
     },
     parseJSON:function(){
         this.$el.find('ul.list').empty();
         this.collection.loadJSON();
-    },
-    events:{
     }
 });
     Solana.Views.Secundario = Backbone.View.extend({
@@ -280,7 +302,6 @@ Solana.Views.Categorias = Backbone.View.extend({
             }
         }
     });
-
     Solana.Views.Video = Backbone.View.extend({
         template: _.template($('#video').html()),
         render:function () {
@@ -288,6 +309,10 @@ Solana.Views.Categorias = Backbone.View.extend({
             return this;
         },
         events:{
+            'tap iframe':'iframe'
+        },
+        iframe:function(){
+            alert();
         }
     });
     Solana.Views.Aviso = Backbone.View.extend({
@@ -325,6 +350,8 @@ Solana.Views.Pagina = Backbone.View.extend({
         var $list = this.el.querySelectorAll('.swiper-container, .content-pagina');
         $list[0].style.height = (window.innerHeight - heightHeader) + 'px';
         $list[1].style.minHeight = ($list[0].style.height.replace('px','') - this.$el.find('.footer').getSize().height) + 'px';
+        console.log(this.$el.find('.footer').getSize().height);
+        console.log($list[0].style.height);
 
         this.model.unset('title');
         this.model.unset('type');
@@ -394,6 +421,7 @@ Solana.Views.Pagina = Backbone.View.extend({
         this.el.querySelector('div.content-pagina').appendChild(view.render().el) ;
         backgroundLoading(view.el);
         this.scrolling();
+        view.view_parent = this;
     },
     newEmbed:function(){
         var view = new Solana.Views.Embed({model:this.model});
@@ -494,6 +522,7 @@ Solana.Views.Pagina = Backbone.View.extend({
     });
     Solana.Views.SubGaleria = Backbone.View.extend({
         template: _.template($('#subgaleria').html()),
+        view_parent:null,
 
         render:function () {
             this.setElement(this.template(this.model.toJSON()));
@@ -507,9 +536,12 @@ Solana.Views.Pagina = Backbone.View.extend({
             try{
                 screen.unlockOrientation();
             }catch (e){}
+
             var fullimg =  new Solana.Views.FullView({model:this.model});
+            fullimg.view_parent = this.view_parent;
 
             setTimeout(function(){
+                fullimg.view_parent.scrolling();
                 $('body').append(fullimg.render().el);
                 fullimg.showSlider($(ev.target).attr('data-index'));
             },50);
@@ -568,6 +600,7 @@ Solana.Views.Reserva = Backbone.View.extend({
 Solana.Views.FullView = Backbone.View.extend({
     template: _.template($('#fullView').html()),
     slider:null,
+    view_parent:null,
 
     render:function () {
         this.setElement(this.template(this.model.toJSON()));
@@ -589,6 +622,10 @@ Solana.Views.FullView = Backbone.View.extend({
             try{
                 screen.lockOrientation('portrait');
             }catch (e){}
+
+            setTimeout(function() {
+                self.view_parent.scrolling();
+            }, 50);
 
             self.$el.fadeOut('250',function(){
                 self.$el.remove();
@@ -666,7 +703,7 @@ Solana.Views.CronogramaDas = Backbone.View.extend({
 
         var self = this;
         $(self.el.querySelector('.favorite')).fadeOut('fast',function(){
-            $(self.el.querySelector('.content_por_dia')).fadeIn('slow');
+            $(self.el.querySelector('.content_por_dia')).fadeIn('300');
         });
     },
     favoritos:function(ev){
@@ -676,7 +713,7 @@ Solana.Views.CronogramaDas = Backbone.View.extend({
 
         var self = this;
         $(self.el.querySelector('.content_por_dia')).fadeOut('fast',function(){
-            $(self.el.querySelector('.favorite')).fadeIn('slow');
+            $(self.el.querySelector('.favorite')).fadeIn('300');
         });
     },
 

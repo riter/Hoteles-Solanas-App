@@ -128,14 +128,21 @@
     </script>
 
     <script type="text/template" id="listCategorias">
-        <div data-role="content" >
-            <div class="content scrolling">
-                <ul class="list">
-                </ul>
-                <div class="footer">
-                    <div class="footer-logo" ></div>
+        <div data-role="content">
+            <!--<div class="swiper-container">
+                <div class="swiper-scrollbar"></div>
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" style="width: 100%">-->
+                        <div class="content scrolling">
+                            <ul class="list">
+                            </ul>
+                            <div class="footer">
+                                <div class="footer-logo" ></div>
+                            </div>
+                        </div>
+                    <!--</div>
                 </div>
-            </div>
+            </div>-->
         </div>
     </script>
         <script type="text/template" id="secundario">
@@ -175,7 +182,7 @@
                         <param name="movie" value="http://www.youtube.com/embed/<%= embed[1] %>?html5=1&amp;rel=0&amp;hl=en_US&amp;version=3"/>
                         <param name="allowFullScreen" value="true"/>
                         <param name="allowscriptaccess" value="always"/>
-                        <embed width="640" height="360" src="http://www.youtube.com/embed/<%= embed[1] %>?html5=1&amp;rel=0&amp;hl=en_US&amp;version=3" class="youtube-player" type="text/html" allowscriptaccess="always" allowfullscreen="true"/>
+                        <embed width="640" height="360" src="http://www.youtube.com/embed/<%= embed[1] %>?html5=1&amp;rel=0&amp;hl=en_US&amp;version=3" class="youtube-player" type="text/html" allowscriptaccess="always" allowfullscreen="true" scrolling="no"/>
                     </object>
                 </div>
                 <div class="text-video">
@@ -203,7 +210,7 @@
             <div class="swiper-container">
                 <div class="swiper-scrollbar"></div>
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide" style="width: 100%">
+                    <div class="swiper-slide" style="width: inherit">
                         <div class="content-pagina"></div>
                         <div class="footer">
                             <div class="footer-logo" ></div>

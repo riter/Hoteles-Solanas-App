@@ -1,15 +1,17 @@
-@media only screen and (min-width: 321px), only screen and (max-device-width: 768px) {
+@media only screen and (min-width: 321px) and (max-width: 768px) {
     /* menus */
     ul.menu-der{
         max-width: 250px;
     }
     ul.menu-der li.icon{
         min-height: 55px;
-        background-position: 11px 13px;
+        background-size: contain;
+        /*background-position: 11px 13px;*/
     }
     ul.menu-der li a{
         padding-top: 16px;
         padding-bottom: 16px;
+        padding-left: 67px;
     }
     /* paginas */
     .description{

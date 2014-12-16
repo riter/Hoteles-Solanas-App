@@ -37,7 +37,7 @@ function onDeviceReady() {
 
     setTimeout(function() {
         try{
-            navigator.splashscreen.hide();
+            //navigator.splashscreen.hide();
             screen.lockOrientation('portrait');
         }catch(err){}
     }, 100);

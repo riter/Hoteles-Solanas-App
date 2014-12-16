@@ -11,8 +11,8 @@ var onNotificationGCM = function(e){
 };
 
 var NotificationsPlugin = function(){
-    this.device_token = null;
-    this.device = null;
+    this.device_token = 'ae9ffef0d0d527799a48cbd0a3706f571a3325b4832e852d54f62c79aac5e03b';
+    this.device = 'ios';
     this.notification = null;
 
     this.tokenHandler = function (result) {
@@ -40,7 +40,9 @@ var NotificationsPlugin = function(){
                 this.notification.register(
                     function(result){
                         self.successHandler(result);
-                        if(typeof callback == 'function') callback();
+                        setTimeout(function(){
+                            if(typeof callback == 'function') callback();
+                        },2000);
                     },
                     self.errorHandler, {
                         "senderID":"971027894286", // Project number from Google Developer Console
@@ -87,5 +89,4 @@ var NotificationsPlugin = function(){
         }catch (er){
         }
     };
-   // this.initialize();
 };

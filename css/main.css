@@ -287,7 +287,8 @@ ul.list li.item .txt-item{
 ul.list li.item .icon-item{
     width: 71px;
     height: 64px;
-    background-size: contain;
+    /*background-size: contain;*/
+    background-size: 100% auto;
     border-left: 3px #3399cc solid;
     margin-top: 4px;
     margin-bottom: 4px;
@@ -356,12 +357,13 @@ ul.list li.item .subtitle-item, ul.list2 li .subtitle-item{
         overflow: hidden;
     }
         .content-type1 .datos{
-            /*margin-left: 27px;
-            margin-right: 16px;*/
             margin-left: 11px;
             margin-right: 11px;
             margin-top: 10px;
         }
+            .content-type1 .datos img{
+                max-height: 100%;
+            }
 
     .content-type1 .image{
         /*background-image: url("../img/img1.png");*/
@@ -709,7 +711,7 @@ ul.list li.item.aviso{
 
 /* start promo */
 .content-promo{
-    margin: 7px;
+    padding: 7px;
 }
 .content-promo div{
     border-bottom: 1px rgba(233, 232, 232, 0.51) solid;

@@ -15,14 +15,20 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
+    /*margin-top: -50px;*/
+}
+*{
+   /*overflow: hidden !important;*/
 }
 .swiper-container {
   width: 100%;
-  height: 300px;
+  height: 500px;
   text-align: center;
+    overflow: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 .swiper-slide {
-  padding: 20px;
   background: #fff;
 }
 
@@ -34,6 +40,57 @@ body {
   top: 5px;
   z-index: 1;
 }
+
+ul{
+    padding:0 ;
+    margin: 0;
+    /*overflow: hidden;*/
+
+
+   /* height: 550px;*/
+}
+ul li {
+    list-style: none;
+    line-height: normal;
+    margin-bottom: 20px;
+    overflow: hidden;
+
+}
+.embed-video{
+    position: relative;
+    padding-bottom: 55%;
+    padding-top: 15px;
+    height: 0;
+    overflow: hidden;
+}
+iframe,
+object,
+embed,
+video{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.div_iframe{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: red;
+    opacity: 0.5;
+    overflow: hidden
+}
+.no-touch{
+    pointer-events: none;
+}
+.capa{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 99999999;
+    overflow: hidden;
+}
   </style>
 </head>
 <body>
@@ -42,27 +99,48 @@ body {
     <div class="swiper-scrollbar"></div>
     <div class="swiper-wrapper">
       <div class="swiper-slide">
-        <div class="red-slide" style="font-size:25px; line-height:30px; text-align:center">
-          <p style="color:#fff; font-weight:bold; font-style:italic;">Your dreams come true:) That is a simple single scrollable area! No slides, no nothing, just pure area!</p>
-        </div>
-        <div style="width:300px; margin-left:20px">
-          <p>Here goes some text</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dictum ipsum auctor nulla consectetur sed porta nunc placerat.</p>
-          <p>Nulla dui augue, sollicitudin egestas consequat a, consequat quis neque. Sed at mauris nunc. Donec rutrum leo id risus congue convallis. Maecenas ultrices condimentum velit, nec tincidunt lorem convallis consequat. Nulla elementum consequat quam eu euismod</p>
-        </div>
-        <div style="margin-left:20px">
-          <p>Here goes wide image</p>
-          <p><img src="img/bb.jpg"></p>
-        </div>
-          <div style="margin-left:20px">
-              <p>Here goes wide image</p>
-              <p><img src="img/bb.jpg"></p>
-          </div>
-          <div style="margin-left:20px">
-              <p>Here goes wide image</p>
-              <p><img src="img/bb.jpg"></p>
-          </div>
-
+        <ul>
+            <li  class="videos-item">
+                <div class="embed-video" style="z-index:999;">
+                    <iframe width="940" height="529" src="http://www.youtube.com/embed/M0_5K4LOClQ" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="text-video" style="height: 30px">
+                    <span class="title-video">Agriturismo Sa Crannaccia Hotel - Solanas - Italy</span>
+                    <span class="subtitle-video">e property. Cagliari Elmas Airport is a 90-minute drive away.</span>
+                    <span class="date-video">03 Diciembre, 2014</span>
+                </div>
+            </li>
+            <li  class="videos-item">
+                <div class="embed-video">
+                    <embed scrolling="no"  width="100%" height="100%" name="plugin" src="https://www.youtube.com/v/lzQgAR_J1PI?version=3&amp;f=videos&amp;app=youtube_gdata" type="application/x-shockwave-flash">
+                </div>
+                <div class="text-video" style="height: 30px">
+                    <span class="title-video">Agriturismo Sa Crannaccia Hotel - Solanas - Italy</span>
+                    <span class="subtitle-video">e property. Cagliari Elmas Airport is a 90-minute drive away.</span>
+                    <span class="date-video">03 Diciembre, 2014</span>
+                </div>
+            </li>
+            <li  class="videos-item">
+                <div class="embed-video">
+                    <embed scrolling="no"  width="100%" height="100%" name="plugin" src="https://www.youtube.com/v/lzQgAR_J1PI?version=3&amp;f=videos&amp;app=youtube_gdata" type="application/x-shockwave-flash">
+                </div>
+                <div class="text-video" style="height: 30px">
+                    <span class="title-video">Agriturismo Sa Crannaccia Hotel - Solanas - Italy</span>
+                    <span class="subtitle-video">e property. Cagliari Elmas Airport is a 90-minute drive away.</span>
+                    <span class="date-video">03 Diciembre, 2014</span>
+                </div>
+            </li>
+            <li  class="videos-item">
+                <div class="embed-video">
+                    <embed scrolling="no"  width="100%" height="100%" name="plugin" src="https://www.youtube.com/v/lzQgAR_J1PI?version=3&amp;f=videos&amp;app=youtube_gdata" type="application/x-shockwave-flash">
+                </div>
+                <div class="text-video" style="height: 30px">
+                    <span class="title-video">Agriturismo Sa Crannaccia Hotel - Solanas - Italy</span>
+                    <span class="subtitle-video">e property. Cagliari Elmas Airport is a 90-minute drive away.</span>
+                    <span class="date-video">03 Diciembre, 2014</span>
+                </div>
+            </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -70,19 +148,21 @@ body {
   <script src="dist/idangerous.swiper.min.js"></script>
   <script src="js/idangerous.swiper.scrollbar-2.1.js"></script>
   <script>
-      /*var mySwiper = new Swiper('.swiper-container',{
-            scrollContainer: true,
-          mode: 'vertical',
-        scrollbar: {
-          container: '.swiper-scrollbar'
-        }
-      });
+      $(document).ready(function(){
+          /*var mySwiper = new Swiper('.swiper-container',{
+                scrollContainer: true,
+              mode: 'vertical',
+            scrollbar: {
+              container: '.swiper-scrollbar'
+            }
+          });
 
-      document.getElementById('more').addEventListener('click',function(){
-          var x = "<div style='margin-left:20px'><p>Here goes wide image</p><p><img src='img/bb.jpg'></p></div>";
-          document.querySelector('.swiper-slide').appendChild($(x)[0]);
-          mySwiper.reInit();
-      });*/
+          document.getElementById('more').addEventListener('click',function(){
+              var x = "<div><p>Here goes wide image</p><p><img src='img/bb.jpg'></p></div>";
+              document.querySelector('.swiper-slide').appendChild($(x)[0]);
+              mySwiper.reInit();
+          });*/
+      });
   </script>
 </body>
 </html>
