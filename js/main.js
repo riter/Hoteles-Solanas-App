@@ -3,12 +3,19 @@
 */
 
 /* Variables*/
+    var version = '0.1.2';
     var pushNotification = null;
     window.views.menu = window.models.mobile = window.collections.favoritos = null;
     window.models.banner = null;
 /* initialize Document y Phonegap */
 function onDeviceReady() {
     $.mobile.defaultHomeScroll = 0;
+
+    if(getStorage('version',null) == null || getStorage('version',null) == version){
+        setStorage('version',version);
+    }else{
+        clearStorage();
+    }
 
     pushNotification = new NotificationsPlugin();
 

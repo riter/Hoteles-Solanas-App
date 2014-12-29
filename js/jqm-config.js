@@ -10,7 +10,7 @@ $(document).on("mobileinit", function () {
     $.mobile.changePage.defaults.allowSamePageTransition = true;
     $.support.cors = true;
     $.mobile.allowCrossDomainPages=true;
-    //$.mobile.touchOverflowEnabled = true;
+    $.mobile.touchOverflowEnabled = true;
 
     $(document).on('pagehide',function (event) {
        $(event.target).remove();
@@ -85,25 +85,11 @@ function getDateTime() {
 }
 function dowloadImage(url,nameFile,callback){
     try{
-        /*window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
-            var fileTransfer = new FileTransfer();
-            fileTransfer.download(
-                url,
-                fileSystem.root.toURL() + '/'+nameFile,
-                function (entry) {
-                    if(typeof callback == 'function') callback(entry.toURI());
-                },
-                function (error) {
-                    alert("Error:" + JSON.stringify(error));
-                }
-            );
-        });*/
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
             var directoryEntry = fileSystem.root; // to get root path to directory
-            directoryEntry.getDirectory("images", {create: true, exclusive: false}, null, null);
+            directoryEntry.getDirectory("solanas", {create: true, exclusive: false}, null, null);
             var fp = fileSystem.root.toURI();
-            fp = fp+"/images/"+nameFile;
+            fp = fp+"/solanas/"+nameFile;
             var fileTransfer = new FileTransfer();
             fileTransfer.download(url,fp,
                 function(entry) {
@@ -145,71 +131,61 @@ Date.prototype.hhmm = function() {
 
 String.prototype.hhmm = function() {
     var self = this;
-    var separatorLocal = new Date().toLocaleDateString().indexOf('/')>-1?'/':'-';
-    self = self.replace(/-/gi,separatorLocal);
 
     try{
-        var date = new Date(self);
+        var arr = self.valueOf().split(/[- :]/);
+        var date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4], arr[5]);
         var hour    = date.getHours().toString();
         var minute  = date.getMinutes().toString();
-        return (hour[1]?hour:"0"+hour[0]) + ':' + (minute[1]?minute:"0"+minute[0]);
+        return hour + ':' + (minute>9?minute:"0"+minute);
     }catch (e){
         return '';
     }
 };
 
+String.prototype.toDate = function() {
+    var m = this;
+    var arr = m.indexOf('/')>-1? m.split(/[/ :]/):m.split(/[- :]/);
+    if(arr.length>3)
+        return new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4], arr[5]);
+    else
+        return new Date(arr[0], arr[1]-1, arr[2], '00', '00', '00');
+}
+
 function formatDayDate(time){ // Date().getTime();
-    if(time != '' && time != null){
-        var pos_date = new Date(time),
-            date = new Date();
+    try{
+        if(time != '' && time != null){
+            var pos_date = new Date(time),
+                date = new Date();
 
-        if(pos_date.yyyymmdd() == date.yyyymmdd()){
-            return 'Hoy ' + pos_date.ddmm();
-        }else{
-            var days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-            return days[pos_date.getDay()] + ' ' + pos_date.ddmm();
+            if(pos_date.yyyymmdd() == date.yyyymmdd()){
+                return 'Hoy ' + pos_date.ddmm();
+            }else{
+                var days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+                return days[pos_date.getDay()] + ' ' + pos_date.ddmm();
+            }
         }
+    }catch (e){
+        return '';
     }
-    return '';
 }
-function formatDateLiteral(time){ // Date().getTime();
-    if(time != '' && time != null){
-        var pos_date = new Date(time);
+Date.prototype.formatDateLiteral = function(){ // Date().getTime();
+    try{
 
-        var months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-        var days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-        return days[pos_date.getDay()] + ' ' + pos_date.getDate() + ' de ' + months[pos_date.getMonth()];
+        //if(time != '' && time != null){
+            var pos_date = this;
 
+            var months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+            var days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+
+            return days[pos_date.getDay()] + ' ' + pos_date.getDate() + ' de ' + months[pos_date.getMonth()];
+
+        //}
+    }catch (e){
+        return '';
     }
-    return '';
 }
-/**
- * @return {number}
- */
-function DayAnterior(time){
-    var dateafter = new Date(time - (1000 * 60 * 60 * 24));
-    return dateafter.getTime();
-}
-/**
- * @return {number}
- */
-function DaySiguiente(time){
-    var dateaafter = new Date(time + (1000 * 60 * 60 * 24));
-    return dateaafter.getTime();
-}
-
 function getYouTubeLink(url) {
-    /*var isYouTube = RegExp(/\.youtube\.com.+v=([\w_\-]+)/i);
-    var r = isYouTube.exec(url);
-    if (r && r[1]) {
-        var video = 'http://www.youtube.com/v/' + r[1] + '&hl=en&fs=1&';
-        var youtube =  '<embed src="' + video + '" type="application/x-shockwave-flash"' +
-            ' allowscriptaccess="always"' +
-            ' allowfullscreen="true" width="100%" height="184"></embed>';
-
-        console.log(youtube);
-        return youtube;
-    }*/
     var videoid= url.substring(url.lastIndexOf('=')+1);
     if(videoid == url){
         videoid= url.substring(url.lastIndexOf('/')+1);
@@ -224,7 +200,7 @@ function getYouTubeLink(url) {
 
 function zoomDisable(){
     $('head meta[name=viewport]').remove();
-    $('<meta>', {name: 'viewport',content: 'width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=2.0, user-scalable=no'}).appendTo('head');
+    $('<meta>', {name: 'viewport',content: 'width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no'}).appendTo('head');
 }
 function zoomEnable(){
     $('head meta[name=viewport]').remove();

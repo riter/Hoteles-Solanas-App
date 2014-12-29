@@ -1,0 +1,17 @@
+h2{
+	text-align:center;
+	color:#060;
+}
+
+img{
+	width:100%;
+}
+
+.thumbnail{
+	padding:5px;
+	height:150px;
+}
+
+#gallery img{
+	height:100%;
+}

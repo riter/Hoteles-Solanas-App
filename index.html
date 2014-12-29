@@ -45,8 +45,8 @@
         </div>
     </script>
         <script type="text/template" id="item_favorite">
-            <li>
-                <div class="title-favorite"><%= formatDateLiteral(fecha) %></div>
+            <li class="fade in">
+                <div class="title-favorite"><%= fecha%></div>
                 <ul class="list2">
                 </ul>
             </li>
@@ -67,7 +67,7 @@
         <script type="text/template" id="favorite">
             <li data-id="<%= id %>" class="fade in">
                 <div class="time">
-                    <%= fechahora.hhmm() %> hs
+                    <%= hora.substr(0,5) %> hs
                 </div>
                 <div class="content-item">
                     <span class="title-item"><%= nombreactividad %></span>
@@ -114,7 +114,7 @@
         <% if(tipo=='principal_1'){ %>
         <li>
         <% }else{ %>
-        <li class="icon icon_avisos" style="<%= imagen != ''? "background-image: url('"+ imagen+"')":'' %>">
+        <li class="icon icon_avisos" style="<%= imagen != ''? " background-image: url('"+ imagen+"')":'' %>">
         <% } %>
             <a href="#" data-role="none"><%= nombre %></a>
         </li>
@@ -223,8 +223,9 @@
         <script type="text/template" id="type1">
             <div class="content-type1 fade in">
                 <div class="datos">
+                    <% var cont = 0; %>
                     <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
-                    <img src="<%= imagen1 %>" alt="imagen_principal"/>
+                    <img src="<%= imagen1 %>" alt="imagen_principal" data-index="<%= cont++ %>" />
                     <% } %>
 
                     <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
@@ -240,11 +241,20 @@
                     <p class="title_horario" ><a href="<%= urlinterna %>" class="url-interna">Ir a Pagina</a></p>
                     <% } %>
                 </div>
+                <ul class="list">
+                    <% for(var i=0; i < imgs.length; i++){ %>
+                    <li class="galerias-item galerias-item-view fade in" >
+                        <div>
+                            <div class="galeria-image galeria-image-view loading" data-url="<%= imgs[i].image %>" data-index="<%= i+cont %>"></div>
+                        </div>
+                    </li>
+                    <% } %>
+                </ul>
             </div>
         </script>
         <script type="text/template" id="type2">
             <div class="content-type2 fade in">
-                <img src="<%= imagen1 %>" alt="tipe3"/>
+                <img src="<%= imagen1 %>" alt="tipe3" data-index="<%= 1 %>"/>
                 <% if(typeof(urlinterna) !== 'undefined' && urlinterna != ''){ %>
                 <p class="title_horario" ><a href="<%= urlinterna %>">Ir a Pagina</a></p>
                 <% } %>
@@ -254,7 +264,7 @@
             <div class="content-type1 fade in">
                 <div class="datos">
                     <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
-                    <img src="<%= imagen1 %>" alt=""/>
+                    <img src="<%= imagen1 %>" alt="" data-index="<%= 1 %>"/>
                     <% } %>
 
                     <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
@@ -279,7 +289,7 @@
             <div class="content-type1 fade in">
                 <div class="datos">
                     <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
-                    <img src="<%= imagen1 %>" alt="" style="min-height: 190px"/>
+                    <img src="<%= imagen1 %>" alt="" style="min-height: 190px" data-index="<%= 1 %>"/>
                     <% } %>
 
                     <% if(typeof(contenido) !== 'undefined' && contenido != ''){ %>
@@ -337,17 +347,17 @@
             <div class="content-promo">
                 <% if(typeof(imagen1) !== 'undefined' && imagen1 != ''){ %>
                 <div>
-                    <img src="<%= imagen1 %>" alt="tipe3"/>
+                    <img src="<%= imagen1 %>" alt="tipe3" data-index="<%= 0 %>"/>
                 </div>
                 <% } %>
                 <% if(typeof(imagen2) !== 'undefined' && imagen2 != ''){ %>
                 <div>
-                    <img src="<%= imagen2 %>" alt="tipe3"/>
+                    <img src="<%= imagen2 %>" alt="tipe3" data-index="<%= 1 %>"/>
                 </div>
                 <% } %>
                 <% if(typeof(imagen3) !== 'undefined' && imagen3 != ''){ %>
                 <div>
-                    <img src="<%= imagen3 %>" alt="tipe3"/>
+                    <img src="<%= imagen3 %>" alt="tipe3" data-index="<%= 2 %>" />
                 </div>
                 <% } %>
             </div>
@@ -383,6 +393,17 @@
                         <% } %>
                     </div>
                 </div>
+                <menu type="toolbar" label="Tweets">
+                    <command label="Back" icon="assets/ave.png" disabled="false" action="alert();" accesskey="back" />
+                    <command label="New"  icon="assets/ave.png"  disabled="false" action="alert();"  accesskey=""     />
+                </menu>
+
+                <menu type="context">
+                    <command label="Tweets"  icon="assets/ave.png"  disabled="false" action="alert();"  accesskey=""       />
+                    <command label="Replies" icon="assets/ave.png"   disabled="false" action="alert();" accesskey=""       />
+                    <command label="Search"  icon="assets/ave.png"  disabled="false" action="alert();"  accesskey="search" />
+                    <command label="Profile" icon="assets/ave.png" disabled="false" action="alert();" accesskey=""       />
+                </menu>
             </div>
         </script>
 

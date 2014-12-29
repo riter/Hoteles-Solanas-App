@@ -131,9 +131,6 @@ Solana.Models.Banner = Backbone.Model.extend({
         });
     },
     parse:function(response){
-        //var model = response[_.keys(response)[0]];
-        //this.set('id',model.id);
-        //this.set('urlBanner',model[model.banner]);
         var promo = {id:response.Promo.id,urlPromo:response.Promo[response.Promo.banner]};
         this.set('Promo',promo);
 

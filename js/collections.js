@@ -107,10 +107,14 @@ Solana.Collections.DAS = Backbone.Collection.extend({
             this.url = this.url + '?id=' + options.id + '&tabla=' + options.tabla  + '&fecha=' + options.fecha;
     },
     ordenar:function(){
-        return this.sortBy(function(m) { return new Date(m.get('fechahora')).getTime() })
+        return this.sortBy(function(model) {
+            return model.get('fecha').toDate().getTime();
+        })
     },
     agrupar:function(){
-        return this.groupBy( function(model){ return new Date(model.get('fechahora')).yyyymmdd() });
+        return this.groupBy( function(model){
+            return model.get('fecha').toDate().yyyymmdd();
+        });
     },
     loadMore : function(callback){
         var self = this;
