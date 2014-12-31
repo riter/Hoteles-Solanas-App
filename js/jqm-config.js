@@ -87,22 +87,128 @@ function dowloadImage(url,nameFile,callback){
     try{
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
             var directoryEntry = fileSystem.root; // to get root path to directory
-            directoryEntry.getDirectory("solanas", {create: true, exclusive: false}, null, null);
-            var fp = fileSystem.root.toURI();
-            fp = fp+"/solanas/"+nameFile;
-            var fileTransfer = new FileTransfer();
-            fileTransfer.download(url,fp,
-                function(entry) {
-                    if(typeof callback == 'function') callback(entry.toURI());
-                },
-                function(error) {
-                    /*alert("Error:" + JSON.stringify(error));*/
-                }
-            );
+            directoryEntry.getDirectory("Solanas Images", {create: true, exclusive: false}, function(entry){
+                var fp = entry.toURI();
+                fp = fp+"/"+nameFile;
+                var fileTransfer = new FileTransfer();
+                fileTransfer.download(url,fp,
+                    function(entry) {
+                        if(typeof callback == 'function') callback(entry.toURI());
+                    },
+                    function(error) {
+                        //alert("Error:" + JSON.stringify(error));
+                    }
+                );
+            }, null);
         });
     }catch(e){
         //alert('Catch:' + JSON.stringify(e));
     }
+}
+
+function saveImageToPhoneAndriod(url, success, error, nameFile) {
+    try{
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+            var directoryEntry = fileSystem.root; // to get root path to directory
+            directoryEntry.getDirectory("Solanas Images", {create: true, exclusive: false}, function(entry){
+                var fp = entry.toURI();
+                fp = fp+"/"+nameFile;
+                var fileTransfer = new FileTransfer();
+                fileTransfer.download(url,fp,success,error);
+            }, null);
+        });
+    }catch(e){
+        //alert('Catch:' + JSON.stringify(e));
+    }
+}
+function saveImageToPhone(url, success, error) {
+    var canvas, context, imageDataUrl, imageData;
+    var img = new Image();
+
+    try {
+        img.onload = function() {
+            canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            context = canvas.getContext('2d');
+            context.drawImage(img, 0, 0);
+
+            try {
+                imageDataUrl = canvas.toDataURL('image/jpeg');
+                imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+                cordova.exec(
+                    success,
+                    error,
+                    'Canvas2ImagePlugin',
+                    'saveImageDataToLibrary',
+                    [imageData]
+                );
+            }
+            catch(e) {
+                error(e.message);
+            }
+
+            try {
+                imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+                imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+
+
+                window.canvas2ImagePlugin.saveImageDataToLibrary(
+                    function(msg){
+                        //alert('The image was saved to the photos gallery on your device.');
+                        $("#popupBasic").popup("open")
+                    },
+                    function(err){
+                        //alert('There was a problem saving the image to your device.');
+                    },
+                    canvas
+                );
+            }
+            catch(e) {
+                error(e.message);
+            }
+        };
+        img.src = url;
+    }
+    catch(e) {
+        error(e.message);
+    }
+}
+
+function saveImageToPhoneIOS(url, success, error) {
+    var canvas, context, imageDataUrl, imageData;
+    var img = new Image();
+    img.onload = function() {
+        canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        context = canvas.getContext('2d');
+        context.drawImage(img, 0, 0);
+        try {
+            imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+            imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+            window.canvas2ImagePlugin.saveImageDataToLibrary(
+                function(msg){
+                    //alert('The image was saved to the photos gallery on your device.');
+                },
+                function(err){
+                    //alert('There was a problem saving the image to your device.');
+                },
+                canvas
+            );
+            /*cordova.exec(
+                success,
+                error,
+                'Canvas2ImagePlugin',
+                'saveImageDataToLibrary',
+                [imageData]
+            );*/
+        }
+        catch(e) {
+            error(e.message);
+        }
+    };
+    img.src = url;
 }
 
 Date.prototype.yyyymmdd = function() {

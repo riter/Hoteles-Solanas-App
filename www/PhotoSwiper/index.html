@@ -3,7 +3,7 @@
 <head>
     <title>Hoteles Solana</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=4.0, user-scalable=yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 
     <meta http-equiv="Content-type" content="text/htm1;charset=utf-8">
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -18,94 +18,142 @@
     <script src="dist/idangerous.swiper.min.js"></script>
     <link rel="stylesheet" href="dist/idangerous.swiper.css">
 
-  <style>
-/* Demo Styles */
-.ui-mobile [data-role=page], .ui-mobile [data-role=dialog], .ui-page{
-    background: #ffffff;
-    height: 100%;
+    <script type="application/javascript" src="js/iscroll-zoom.js"></script>
 
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-html, body{
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-}
-.swiper-container {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-}
-.swiper-slide > div{
-    height: inherit;
-    display: table-cell;
-    vertical-align: middle;
-}
-    .swiper-slide img{
-        max-width: 100%;
-        display: block;
-    }
-  </style>
+    <style>
+        /* Demo Styles */
+        .ui-mobile [data-role=page], .ui-mobile [data-role=dialog], .ui-page{
+            background: #ffffff;
+            height: 100%;
+
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        html, body{
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+        .swiper-slide > div{
+            height: inherit;
+        }
+        .wrapper > div{
+            height: inherit;
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .wrapper img{
+            max-width: 100%;
+            display: block;
+        }
+        div#wrapper img { -webkit-transform:translate3d(0,0,0) }
+        .zoom{
+            position: fixed;
+            z-index: 99999999999999;
+            background: white;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-    <div data-role="page" id="page1">
-        <div data-role="content">
+<div data-role="page" id="page1">
+    <div data-role="content">
 
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div>
-                            <img src="HTTP://solana.html5cooks.com/app/webroot/uploads/paginas/gallery_3007/cuarto.jpg" alt=""/>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div>
-                          <img src="HTTP://solana.html5cooks.com/app/webroot/uploads/paginas/gallery_3007/tercero.jpg" alt=""/>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div>
-                            <img src="HTTP://solana.html5cooks.com/app/webroot/uploads/paginas/gallery_3007/cuarto.jpg" alt=""/>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div>
-                            <img src="HTTP://solana.html5cooks.com/app/webroot/uploads/paginas/gallery_3007/tercero.jpg" alt=""/>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="wrapper">
+                        <div class="content-zoom">
+                            <img src="http://solana.html5cooks.com/app/webroot/uploads/paginas/1207383062.85-test2.jpg" alt=""/>
                         </div>
                     </div>
                 </div>
-                  <div class="log" style="position: fixed; top: 50%; left: 0; z-index: 999999999"></div>
+                <div class="swiper-slide">
+                    <div class="wrapper">
+                        <div class="content-zoom">
+                            <img src="http://solana.html5cooks.com/app/webroot/uploads/paginas/pagina1_gallery_10000008/P1-1.jpg" alt=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="wrapper">
+                        <div class="content-zoom">
+                            <img src="http://solana.html5cooks.com/app/webroot/uploads/paginas/1207383062.85-test2.jpg" alt=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="wrapper">
+                        <div class="content-zoom">
+                            <img src="http://solana.html5cooks.com/app/webroot/uploads/paginas/pagina1_gallery_10000008/P1-1.jpg" alt=""/>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="log">
 
+            </div>
         </div>
+
     </div>
-  <script>
-      var mySwiper = null;
+</div>
+<script>
 
-  document.addEventListener("deviceready", function(){
-      setTimeout(function() {
-          try{
-              //alert('Ready');
-              screen.lockOrientation('portrait');
-          }catch(err){}
-      }, 100);
-      mySwiper = new Swiper('.swiper-container',{
-          noSwiping:true,
-          noSwipingClass:'no-swipe',
-          initialSlide:1
-      });
 
-      document.addEventListener('gestureend', function(event) {
-          if(event.scale <= 1){
-              mySwiper.activeSlide().classList.remove('no-swipe');
-          }else{
-              mySwiper.activeSlide().classList.add('no-swipe');
-          }
-      }, false);
+    var mySwiper = null;
+    var zoom = null;
 
-  }, false);
-  </script>
+    document.addEventListener("deviceready", function(){
+        setTimeout(function() {
+            try{
+                screen.lockOrientation('portrait');
+            }catch(err){}
+
+        }, 100);
+        mySwiper = new Swiper('.swiper-container',{
+            noSwiping:true,
+            noSwipingClass:'no-swipe',
+            initialSlide:0
+        });
+
+        function loadZoom(ele){
+            zoom = new IScroll(ele, {
+                zoom: true,
+                scrollX: true,
+                scrollY: true,
+                mouseWheel: true,
+                wheelAction: 'zoom'
+            });
+
+        }
+
+        $('img').on('touchstart',function(ev){
+
+            if(zoom == null && ev.originalEvent.touches.length == 2 ){
+                var view = mySwiper.activeSlide().querySelector('.wrapper');
+                $(view).css({width:'320px',height:'568px'}).addClass('zoom');
+                $(view).appendTo($('#page1'));
+                loadZoom(view);
+                zoom.on('zoomEnd',function(ev){
+                    var curTransform = new WebKitCSSMatrix(window.getComputedStyle(zoom.wrapper.querySelector('.content-zoom')).webkitTransform);
+
+                    if(curTransform.a <= 1){
+                        $(zoom.wrapper).appendTo($(mySwiper.activeSlide()));
+                        $(zoom.wrapper).css({width:'',height:''}).removeClass('zoom');
+                        zoom.destroy();
+                        zoom = null;
+                    }
+                });
+            }
+        });
+    }, false);
+</script>
 </body>
 </html>

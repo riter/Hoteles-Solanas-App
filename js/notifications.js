@@ -11,8 +11,8 @@ var onNotificationGCM = function(e){
 };
 
 var NotificationsPlugin = function(){
-    this.device_token = 'ae9ffef0d0d527799a48cbd0a3706f571a3325b4832e852d54f62c79aac5e03b';
-    this.device = 'ios';
+    this.device_token = null;
+    this.device = null;
     this.notification = null;
 
     this.tokenHandler = function (result) {

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="ui-mobile-rendering" lang="en">
+<head>
+    <title>Hoteles Solana</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=4.0, user-scalable=yes" />
+
+    <meta http-equiv="Content-type" content="text/htm1;charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <script type="text/javascript" src="phonegap.js"></script>
+    <script src="js/jquery-2.0.3.min.js"></script>
+
+    <link rel="stylesheet" href="css/jquery.mobile-1.3.2.css"/>
+    <script src="js/jqm-config.js"></script>
+    <script src="js/jquery.mobile-1.3.2.js"></script>
+
+    <script src="dist/idangerous.swiper.min.js"></script>
+    <link rel="stylesheet" href="dist/idangerous.swiper.css">
+
+  <style>
+/* Demo Styles */
+.ui-mobile [data-role=page], .ui-mobile [data-role=dialog], .ui-page{
+    background: #ffffff;
+    height: 100%;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+html, body{
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+.swiper-container {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
+.swiper-slide > div{
+    height: inherit;
+    display: table-cell;
+    vertical-align: middle;
+}
+    .swiper-slide img{
+        max-width: 100%;
+        display: block;
+    }
+
+    *{
+        -webkit-user-select: auto !important;
+    }
+
+.ui-popup-container{
+    max-width: 100%;
+    width: 100%;
+}
+.no-touch{
+    pointer-events: none;
+}
+
+ul.ui-listview li{
+    font-weight: normal;
+}
+    .popup-ios {
+        max-width: 100% !important;
+        top: auto !important;
+        bottom: 0 !important;
+        left: 0 !important;
+
+    }
+    .popup-ios .ui-popup{
+        /*background: transparent;*/
+        border-radius: 0;
+        border: 0;
+    }
+    .popup-ios ul.ui-listview li {
+        text-align: center;
+        color: #0066ff;
+        margin: 0 10px;
+        background-color: rgba(255, 255, 255,0.9);
+    }
+    .popup-ios ul.ui-listview li:first-child {
+            display: none;
+        }
+    .popup-ios ul.ui-listview li:last-child {
+        margin-top: 5px;
+        font-weight: bold;
+        background-color: rgba(255, 255, 255,1);
+    }
+  </style>
+</head>
+<body>
+    <div data-role="page" id="page1">
+        <div data-role="content">
+            <div class="ui-block-a" style="height: 100px;width: 100%;float: none;">
+                <a id="btnLink" href="http://solana.html5cooks.com/app/webroot/uploads/paginas/104325261.164-pag1.png" data-role="button" >Prueba</a>
+            </div>
+
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div>
+                            <input type="image" src="http://solana.html5cooks.com/app/webroot/uploads/paginas/104325261.164-pag1.png"     class="UpKeyImage" id="Up">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div>
+                                <img src="http://solana.html5cooks.com/app/webroot/uploads/paginas/104325261.164-pag1.png" alt=""/>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div>
+                            <img src="http://solana.html5cooks.com/app/webroot/uploads/paginas/104325261.164-pag1.png" alt=""/>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div>
+                            <img src="http://solana.html5cooks.com/app/webroot/uploads/paginas/104325261.164-pag1.png" alt=""/>
+                        </div>
+                    </div>
+                </div>
+                  <div class="log" style="position: fixed; top: 50%; left: 0; z-index: 999999999"></div>
+            </div>
+
+            <div data-role="popup" id="download" >
+                <ul data-role="listview" data-theme="d" style="min-width:210px;">
+                    <li data-role="divider" data-theme="a" style="border-top-width:0;word-wrap: break-word;">
+                        http://localhost:63342/app/www/PhotoSwiper/index.html
+                    </li>
+                    <li>Guardar imagen</li>
+                    <li>Cancelar</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+  <script>
+      function saveImageToPhoneIOS(url, success, error,nameFile) {
+          try{
+              window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+                  var directoryEntry = fileSystem.root; // to get root path to directory
+                  directoryEntry.getDirectory("Solanas Images", {create: true, exclusive: false}, function(entry){
+                      //var fp = fileSystem.root.toURI();
+                      var fp = entry.toURI();
+                      fp = fp+"/"+nameFile;
+                      var fileTransfer = new FileTransfer();
+                      fileTransfer.download(url,fp,success,error);
+                  }, null);
+              });
+          }catch(e){
+              alert('Catch:' + JSON.stringify(e));
+          }
+      }
+      function saveImageToPhone(url, success, error) {
+          var canvas, context, imageDataUrl, imageData;
+          var img = new Image();
+          img.onload = function() {
+              canvas = document.createElement('canvas');
+              canvas.width = img.width;
+              canvas.height = img.height;
+              context = canvas.getContext('2d');
+              context.drawImage(img, 0, 0);
+              try {
+                  imageDataUrl = canvas.toDataURL('image/jpeg');
+                  imageData = imageDataUrl.replace(/data:image\/jpeg;base64,/, '');
+                  cordova.exec(
+                          success,
+                          error,
+                          'Canvas2ImagePlugin',
+                          'saveImageDataToLibrary',
+                          [imageData]
+                  );
+              }
+              catch(e) {
+                  error(e.message);
+              }
+          };
+          img.src = url;
+      }
+
+  document.addEventListener("deviceready", function(){
+      /*if (window.device.platform == 'android' || device.platform == 'Android') {
+          saveImageToPhoneIOS('http://solana.html5cooks.com/app/webroot/uploads/paginas/128302307.093-promo1.jpg', function(msg){
+              //alert(JSON.stringify(msg));
+          }, function(err){
+              alert(JSON.stringify(err));
+          },'128302307.093-promo1.jpg');
+
+          saveImageToPhoneIOS('http://solana.html5cooks.com/app/webroot/uploads/paginas/104325261.164-pag1.png', function(msg){
+              //alert(JSON.stringify(msg));
+          }, function(err){
+              alert(JSON.stringify(err));
+          },'104325261.164-pag1.png');
+      }else{
+          saveImageToPhone('http://solana.html5cooks.com/app/webroot/uploads/paginas/128302307.093-promo1.jpg', function(msg){
+              //alert(JSON.stringify(msg));
+          }, function(err){
+              alert(JSON.stringify(err));
+          });
+
+          saveImageToPhone('http://solana.html5cooks.com/app/webroot/uploads/paginas/104325261.164-pag1.png', function(msg){
+              //alert(JSON.stringify(msg));
+          }, function(err){
+              alert(JSON.stringify(err));
+          });
+      }*/
+      $("#download").on("popupbeforeposition", function (e, ui) {
+
+         // $('#download-screen').addClass('no-touch');
+
+          if (window.device.platform == 'android' || device.platform == 'Android') {
+
+          }else{
+              $(e.target).parent('.ui-popup-container').addClass('popup-ios');
+          }
+      });
+
+      $( "img" ).bind( "taphold", function(ev){
+          ev.preventDefault();
+
+          if (window.device.platform == 'android' || device.platform == 'Android') {
+              $('#download').popup("open",{positionTo: "window", transition: "fade"});
+          }else{
+              $('#download').popup("open",{positionTo: "window", transition: "slideup"});
+          }
+
+          return false;
+      });
+
+      $( "img" ).bind('touchend',function(event) {
+          event.preventDefault();
+          //$('#download-screen').removeClass('no-touch');
+      });
+  }, false);
+  </script>
+</body>
+</html>

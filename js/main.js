@@ -3,7 +3,7 @@
 */
 
 /* Variables*/
-    var version = '0.1.2';
+    var version = '0.1.3';
     var pushNotification = null;
     window.views.menu = window.models.mobile = window.collections.favoritos = null;
     window.models.banner = null;

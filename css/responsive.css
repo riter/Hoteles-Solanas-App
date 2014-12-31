@@ -14,12 +14,21 @@
         padding-left: 67px;
     }
     /* paginas */
+    .content-type1 .datos img{
+        min-height: 400px;
+    }
     .description{
         margin-top: 15px;
     }
     .content-type1 .datos{
         margin: 3.5%;
         margin-bottom: 0;
+    }
+    .content-type2 img{
+        min-height: 400px;
+    }
+    .content-promo img{
+        min-height: 180px;
     }
     /* promo */
     .content-promo{

@@ -135,8 +135,8 @@ Solana.Views.Index = Backbone.View.extend({
 
             window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
                 if(getStorage(window.models.banner.url,null)){
-                    var uriPromo = fileSystem.root.toURL() + '/images/promo.jpg';
-                    var uriBanner = fileSystem.root.toURL() + '/images/banner.jpg';
+                    var uriPromo = encodeURI( fileSystem.root.toURL() + '/Solanas Images/promo.jpg');
+                    var uriBanner = encodeURI(fileSystem.root.toURL() + '/Solanas Images/banner.jpg');
 
                     self.$el.find('.loading').addClass('loading-notransition');
                     self.$el.find('.banner_promo').attr('data-url',uriPromo +'?time='+(new Date()).getTime());
@@ -271,11 +271,10 @@ Solana.Views.Categorias = Backbone.View.extend({
             return this;
         },
         events:{
-            'tap >div':'item'
+            'tap > div':'item'
         },
         item:function(ev){
             ev.preventDefault();
-            console.log(this.model.toJSON());
             if(this.model.get('urlexterna') && this.model.get('urlexterna') != ''){
                 var open = window.open(this.model.get('urlexterna'), '_blank', 'closebuttoncaption=Cerrar,transitionstyle=crossdissolve,EnableViewPortScale=yes,location=yes,toolbar=yes');
             }else{
@@ -296,7 +295,6 @@ Solana.Views.Categorias = Backbone.View.extend({
         },
         item:function(ev){
             ev.preventDefault();
-            console.log(this.model.toJSON());
             if(this.model.get('hijo')){
                 app.navigate('#'+this.model.get('hijo').tipo+'/'+this.model.get('id')+'/categoria/'+this.model.get('nombre'),{trigger:true});
             }
@@ -748,40 +746,75 @@ Solana.Views.FullView = Backbone.View.extend({
     template: _.template($('#fullView').html()),
     slider:null,
     view_parent:null,
+    download:null,
+    zoom:null,
 
     render:function () {
         this.setElement(this.template(this.model.toJSON()));
+        this.download = new Solana.Views.Download();
+        this.download.render();
 
         var self = this;
-        this.$el.find('.swiper-slide').on("gestureend", {self:self},function(ev){
-            var elem = (document.compatMode === "CSS1Compat") ?
-                document.documentElement :
-                document.body;
+        $(window).on("orientationchange",function(){
+                if(self.zoom != null){
+                    var view = self.el.querySelector('.zoom');
+                    $(view).css({width:window.innerWidth+'px',height:window.innerHeight+'px'});
 
-            var height = elem.clientHeight;
-            var width = elem.clientWidth;
-
-            //ev.data.self.slider.activeSlide().querySelector('.nombre-image').innerHTML =  width + ' | ' + height;
-
-            /*if($(document).height() < $(window).height()){
-                ev.data.self.slider.activeSlide().classList.remove('no-swipe');
-            }else{
-                ev.data.self.slider.activeSlide().classList.add('no-swipe');
-            }*/
-
+                    self.zoom.refresh();
+                }
         });
-        zoomEnable();
+
         return this;
     },
     events:{
+        'taphold img':'downloader',
+        'touchend img':'downloader_end',
         'tap .swiper-slide > div':'cancelar'
     },
+    zoomStart:function(ev){
+        var self = ev.data.self;
+        if(self.zoom == null && ev.originalEvent.touches.length == 2 ){
+            var view = self.slider.activeSlide().querySelector('.wrapper-zoom');
+            $(view).css({width:window.innerWidth+'px',height:window.innerHeight+'px'}).addClass('zoom');
+            $(view).appendTo(self.$el);
+
+            self.zoom = new IScroll(view, {
+                zoom: true,
+                scrollX: true,
+                scrollY: true,
+                mouseWheel: true,
+                wheelAction: 'zoom'
+            });
+
+
+            self.zoom.on('zoomEnd',function(ev){
+                var curTransform = new WebKitCSSMatrix(window.getComputedStyle(self.zoom.wrapper.firstElementChild).webkitTransform);
+
+                if(curTransform.a <= 1){
+                    $(self.slider.activeSlide()).css({width:window.innerWidth+'px',height:window.innerHeight+'px'});
+                    $(self.zoom.wrapper).appendTo($(self.slider.activeSlide()));
+                    $(self.zoom.wrapper).css({width:'',height:''}).removeClass('zoom');
+                    self.zoom.destroy();
+                    self.zoom = null;
+                }
+            });
+
+        }
+    },
+    downloader_end:function(){
+        $('#download-screen').removeClass('no-touch');
+    },
+    downloader:function(ev){
+        this.download.show(ev.target.getAttribute('src'));
+    },
     showSlider:function(index){
+        var self = this;
         this.slider = new Swiper(this.el.querySelector('.swiper-container'),{
             noSwiping:true,
             noSwipingClass:'no-swipe',
             initialSlide:index
         });
+        $('.swiper-container img').off('touchstart').on('touchstart',{self:self},self.zoomStart);
     },
     cancelar:function(ev){
         if(ev.target.tagName != 'IMG'){
@@ -796,12 +829,11 @@ Solana.Views.FullView = Backbone.View.extend({
 
             self.$el.fadeOut('250',function(){
                 self.$el.remove();
-                zoomDisable();
             });
         }
     }
 });
-/*  prueba de DAS*/
+/*  Categoria DAS*/
 Solana.Views.CronogramaDas = Backbone.View.extend({
     template: _.template($('#cronograma_das').html()),
     model:null,
@@ -1021,3 +1053,51 @@ Solana.Views.CronogramaDas = Backbone.View.extend({
             $(ev.target).toggleClass('active');
         }
     });
+
+/* Popup Download*/
+Solana.Views.Download = Backbone.View.extend({
+    template: _.template($('#download').html()),
+    url:null,
+
+    render:function () {
+        $('#download-popup,#download-screen').remove();
+
+        this.setElement(this.template());
+
+        this.$el.appendTo($('#pageActive'));
+        this.$el.popup();
+        this.$el.find('ul').listview();
+
+        this.$el.on("popupbeforeposition", function (e, ui) {
+            $('#download-screen').addClass('no-touch');
+            if (!(window.device.platform == 'android' || device.platform == 'Android')) {
+                $(e.target).parent('.ui-popup-container').addClass('popup-ios');
+            }
+        });
+    },
+    show:function(url){
+        this.url = url;
+        this.$el.find('.url').html(url);
+        if (window.device.platform == 'android' || device.platform == 'Android') {
+            this.$el.popup("open",{positionTo: "window", transition: "fade"});
+        }else{
+            this.$el.popup("open",{positionTo: "window", transition: "slideup"});
+        }
+    },
+    events:{
+        'tap .guardar':'guardar',
+        'tap .cancelar':'cancelar'
+    },
+    guardar:function(ev){
+        ev.preventDefault();
+        this.cancelar(ev);
+
+        setTimeout(function(self){
+            saveImageToPhoneIOS(self.url,null,null);
+        },50,this);
+    },
+    cancelar:function(ev){
+        ev.preventDefault();
+        this.$el.popup("close");
+    }
+});
